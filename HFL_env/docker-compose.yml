@@ -1,0 +1,95 @@
+version: '3'
+services:
+  central_server:
+    container_name: central_server
+    image: hfl_env-central_server
+    volumes:
+      - ./server:/ServerApp
+    networks:
+      - FLnetwork
+    stdin_open: true
+    tty: true
+
+  node1:
+    container_name: node1
+    image: hfl_env-node
+    depends_on:
+      - central_server
+    volumes:
+      - ./data/node1:/data 
+      - ./nodes:/NodeApp
+    environment:
+      - NODE_ID=1
+      - SERVER_ADDRESS=central_server:8080
+    networks:
+      - FLnetwork  
+    stdin_open: true
+    tty: true
+
+  node2:
+    container_name: node2
+    image: hfl_env-node
+    depends_on:
+      - central_server
+    volumes:
+      - ./data/node2:/data 
+      - ./nodes:/NodeApp
+    environment:
+      - NODE_ID=2
+      - SERVER_ADDRESS=central_server:8080
+    networks:
+      - FLnetwork  
+    stdin_open: true
+    tty: true
+
+  node3:
+    container_name: node3
+    image: hfl_env-node
+    depends_on:
+      - central_server
+    volumes:
+      - ./data/node3:/data 
+      - ./nodes:/NodeApp
+    environment:
+      - NODE_ID=3
+      - SERVER_ADDRESS=central_server:8080
+    networks:
+      - FLnetwork  
+    stdin_open: true
+    tty: true
+
+  node4:
+    container_name: node4
+    image: hfl_env-node
+    depends_on:
+      - central_server
+    volumes:
+      - ./data/node4:/data 
+      - ./nodes:/NodeApp
+    environment:
+      - NODE_ID=4
+      - SERVER_ADDRESS=central_server:8080
+    networks:
+      - FLnetwork  
+    stdin_open: true
+    tty: true
+
+  node5:
+    container_name: node5
+    image: hfl_env-node
+    depends_on:
+      - central_server
+    volumes:
+      - ./data/node5:/data 
+      - ./nodes:/NodeApp
+    environment:
+      - NODE_ID=5
+      - SERVER_ADDRESS=central_server:8080
+    networks:
+      - FLnetwork  
+    stdin_open: true
+    tty: true
+
+networks:
+  FLnetwork:
+    driver: bridge
