@@ -9,6 +9,11 @@ services:
       - FLnetwork
     stdin_open: true
     tty: true
+    expose:
+      - 5000
+    environment:
+      - IMPUTATION_STRATEGY=statistical
+# [ statistical - machine_learning - deep_learning ]
 
   node1:
     container_name: node1
@@ -16,11 +21,12 @@ services:
     depends_on:
       - central_server
     volumes:
-      - ./data/node1:/data 
+      - ./data/node1:/NodeApp/data 
       - ./nodes:/NodeApp
     environment:
       - NODE_ID=1
-      - SERVER_ADDRESS=central_server:8080
+      - SERVER_ADDRESS=central_server:5000
+      - IMPUTATION_STRATEGY=statistical
     networks:
       - FLnetwork  
     stdin_open: true
@@ -32,11 +38,12 @@ services:
     depends_on:
       - central_server
     volumes:
-      - ./data/node2:/data 
+      - ./data/node2:/NodeApp/data 
       - ./nodes:/NodeApp
     environment:
       - NODE_ID=2
-      - SERVER_ADDRESS=central_server:8080
+      - SERVER_ADDRESS=central_server:5000
+      - IMPUTATION_STRATEGY=statistical
     networks:
       - FLnetwork  
     stdin_open: true
@@ -48,11 +55,12 @@ services:
     depends_on:
       - central_server
     volumes:
-      - ./data/node3:/data 
+      - ./data/node3:/NodeApp/data 
       - ./nodes:/NodeApp
     environment:
       - NODE_ID=3
-      - SERVER_ADDRESS=central_server:8080
+      - SERVER_ADDRESS=central_server:5000
+      - IMPUTATION_STRATEGY=statistical
     networks:
       - FLnetwork  
     stdin_open: true
@@ -64,11 +72,12 @@ services:
     depends_on:
       - central_server
     volumes:
-      - ./data/node4:/data 
+      - ./data/node4:/NodeApp/data 
       - ./nodes:/NodeApp
     environment:
       - NODE_ID=4
-      - SERVER_ADDRESS=central_server:8080
+      - SERVER_ADDRESS=central_server:5000
+      - IMPUTATION_STRATEGY=statistical
     networks:
       - FLnetwork  
     stdin_open: true
@@ -80,11 +89,12 @@ services:
     depends_on:
       - central_server
     volumes:
-      - ./data/node5:/data 
+      - ./data/node5:/NodeApp/data 
       - ./nodes:/NodeApp
     environment:
       - NODE_ID=5
-      - SERVER_ADDRESS=central_server:8080
+      - SERVER_ADDRESS=central_server:5000
+      - IMPUTATION_STRATEGY=statistical
     networks:
       - FLnetwork  
     stdin_open: true
