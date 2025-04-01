@@ -1,0 +1,70 @@
+2025-04-01 01:31:55,800 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:31:55,802 - flwr - INFO - Starting Flower server, config: num_rounds=1, no round_timeout
+2025-04-01 01:31:55,833 - flwr - INFO - Flower ECE: gRPC server running (1 rounds), SSL is disabled
+2025-04-01 01:31:55,833 - flwr - INFO - [INIT]
+2025-04-01 01:31:55,834 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-01 01:31:58,708 - flwr - INFO - Received initial parameters from one random client
+2025-04-01 01:31:58,709 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-01 01:31:58,710 - flwr - INFO - Evaluation returned no results (`None`)
+2025-04-01 01:31:58,711 - flwr - INFO - 
+2025-04-01 01:31:58,711 - flwr - INFO - [ROUND 1]
+2025-04-01 01:32:02,892 - flwr - INFO - configure_fit: strategy sampled 3 clients (out of 3)
+2025-04-01 01:32:02,909 - flwr - INFO - aggregate_fit: received 3 results and 0 failures
+2025-04-01 01:32:02,911 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-04-01 01:32:02,911 - flwr - INFO - configure_evaluate: strategy sampled 3 clients (out of 3)
+2025-04-01 01:32:02,938 - flwr - INFO - aggregate_evaluate: received 3 results and 0 failures
+2025-04-01 01:32:02,939 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-01 01:32:02,940 - flwr - INFO - 
+2025-04-01 01:32:02,940 - flwr - INFO - [SUMMARY]
+2025-04-01 01:32:02,941 - flwr - INFO - Run finished 1 round(s) in 4.23s
+2025-04-01 01:32:02,942 - flwr - INFO - 	History (loss, distributed):
+2025-04-01 01:32:02,942 - flwr - INFO - 		round 1: 37.29823430379232
+2025-04-01 01:32:02,943 - flwr - INFO - 
+2025-04-01 01:43:54,209 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:43:54,210 - flwr - INFO - Starting Flower server, config: num_rounds=1, no round_timeout
+2025-04-01 01:43:54,232 - flwr - INFO - Flower ECE: gRPC server running (1 rounds), SSL is disabled
+2025-04-01 01:43:54,233 - flwr - INFO - [INIT]
+2025-04-01 01:43:54,234 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-01 01:44:05,673 - flwr - INFO - Received initial parameters from one random client
+2025-04-01 01:44:05,674 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-01 01:44:05,675 - flwr - INFO - Evaluation returned no results (`None`)
+2025-04-01 01:44:05,676 - flwr - INFO - 
+2025-04-01 01:44:05,676 - flwr - INFO - [ROUND 1]
+2025-04-01 01:44:40,600 - flwr - INFO - configure_fit: strategy sampled 4 clients (out of 4)
+2025-04-01 01:44:40,618 - flwr - INFO - aggregate_fit: received 4 results and 0 failures
+2025-04-01 01:44:40,619 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-04-01 01:44:40,620 - flwr - INFO - configure_evaluate: strategy sampled 4 clients (out of 4)
+2025-04-01 01:44:40,650 - flwr - INFO - aggregate_evaluate: received 4 results and 0 failures
+2025-04-01 01:44:40,651 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-01 01:44:40,652 - flwr - INFO - 
+2025-04-01 01:44:40,652 - flwr - INFO - [SUMMARY]
+2025-04-01 01:44:40,653 - flwr - INFO - Run finished 1 round(s) in 34.98s
+2025-04-01 01:44:40,654 - flwr - INFO - 	History (loss, distributed):
+2025-04-01 01:44:40,654 - flwr - INFO - 		round 1: 33.706246852874756
+2025-04-01 01:44:40,655 - flwr - INFO - 

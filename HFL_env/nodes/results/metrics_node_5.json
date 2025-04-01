@@ -1,0 +1,27 @@
+{
+    "local_mean": {
+        "value": 3.7297026027551943,
+        "accuracy": 76.27245508982035,
+        "mse": 29.529467541117967,
+        "closer_count": 1019
+    },
+    "aggregated_mean": {
+        "value": 4.224379389540467,
+        "accuracy": 23.727544910179642,
+        "mse": 29.809742980493,
+        "closer_count": 317
+    },
+    "local_median": {
+        "value": 1.898298611111111,
+        "accuracy": 31.2125748502994,
+        "mse": 32.751818864358434,
+        "closer_count": 417
+    },
+    "aggregated_median": {
+        "value": 2.419552951388889,
+        "accuracy": 68.7874251497006,
+        "mse": 32.751818864358434,
+        "closer_count": 919
+    },
+    "total_values": 1336
+}

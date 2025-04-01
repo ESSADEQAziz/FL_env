@@ -1,0 +1,171 @@
+2025-04-01 01:44:05,400 - node - INFO - Starting node 1
+2025-04-01 01:44:05,635 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:05,637 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:05,655 - flwr - DEBUG - Opened insecure gRPC connection (no certificates were passed)
+2025-04-01 01:44:05,657 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-04-01 01:44:05,660 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-04-01 01:44:05,663 - flwr - DEBUG - ChannelConnectivity.READY
+2025-04-01 01:44:05,666 - flwr - INFO - 
+2025-04-01 01:44:05,667 - flwr - INFO - Received: get_parameters message dbffa22e-de17-4b7e-b95a-bc9b58dd049b
+2025-04-01 01:44:05,670 - node - INFO - inside the get function for the node 1 the local parameters are : mean [3.5647001505920417, 1.9622743055555556] 
+2025-04-01 01:44:05,672 - flwr - INFO - Sent reply
+2025-04-01 01:44:17,103 - node - INFO - Starting node 2
+2025-04-01 01:44:17,315 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:17,316 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:17,323 - flwr - DEBUG - Opened insecure gRPC connection (no certificates were passed)
+2025-04-01 01:44:17,327 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-04-01 01:44:17,327 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-04-01 01:44:17,329 - flwr - DEBUG - ChannelConnectivity.READY
+2025-04-01 01:44:21,308 - node - INFO - Starting node 4
+2025-04-01 01:44:21,582 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:21,582 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:21,590 - flwr - DEBUG - Opened insecure gRPC connection (no certificates were passed)
+2025-04-01 01:44:21,592 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-04-01 01:44:21,603 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-04-01 01:44:21,606 - flwr - DEBUG - ChannelConnectivity.READY
+2025-04-01 01:44:40,376 - node - INFO - Starting node 5
+2025-04-01 01:44:40,584 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:40,585 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-01 01:44:40,593 - flwr - DEBUG - Opened insecure gRPC connection (no certificates were passed)
+2025-04-01 01:44:40,597 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-04-01 01:44:40,603 - flwr - DEBUG - ChannelConnectivity.READY
+2025-04-01 01:44:40,605 - flwr - INFO - 
+2025-04-01 01:44:40,606 - flwr - INFO - Received: train message 85a4910e-be0a-4473-8462-56fc4b19be16
+2025-04-01 01:44:40,608 - node - INFO - inside the fit function for the node 2 : the aggregated parameters are : [array(3.56470015), array(1.96227431)]
+2025-04-01 01:44:40,608 - flwr - INFO - 
+2025-04-01 01:44:40,608 - flwr - INFO - 
+2025-04-01 01:44:40,609 - flwr - INFO - Received: train message ae164d66-b5f7-40d1-9b1a-36b91dd6d2f6
+2025-04-01 01:44:40,609 - flwr - INFO - Received: train message 73cfa4b0-330c-48a5-846d-43a8b9e6e9d3
+2025-04-01 01:44:40,610 - flwr - INFO - 
+2025-04-01 01:44:40,610 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,611 - node - INFO - inside the fit function for the node 1 : the aggregated parameters are : [array(3.56470015), array(1.96227431)]
+2025-04-01 01:44:40,611 - node - INFO - inside the fit function for the node 5 : the aggregated parameters are : [array(3.56470015), array(1.96227431)]
+2025-04-01 01:44:40,612 - flwr - INFO - Received: train message 9461c2dc-6606-4db8-8712-62c06d770e6a
+2025-04-01 01:44:40,612 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,612 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,613 - node - INFO - inside the fit function for the node 4 : the aggregated parameters are : [array(3.56470015), array(1.96227431)]
+2025-04-01 01:44:40,615 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,621 - flwr - INFO - 
+2025-04-01 01:44:40,622 - flwr - INFO - Received: evaluate message 7af4cc83-4959-4311-9ff5-ebe44e57dd3f
+2025-04-01 01:44:40,622 - flwr - INFO - 
+2025-04-01 01:44:40,623 - flwr - INFO - 
+2025-04-01 01:44:40,623 - flwr - INFO - Received: evaluate message 9f33e5b4-484c-4a21-a3f4-c450ed3f7d82
+2025-04-01 01:44:40,624 - flwr - INFO - Received: evaluate message 21bf9feb-b2b3-4aee-8dbe-701c2754503d
+2025-04-01 01:44:40,624 - flwr - INFO - 
+2025-04-01 01:44:40,625 - flwr - INFO - Received: evaluate message c6fb7ead-e4b6-48f8-ad3e-eb86da93c921
+2025-04-01 01:44:40,638 - node - INFO - We are inside the evaluate function within the node 1 and the agg_mean is : 24.330357142857142
+2025-04-01 01:44:40,639 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,640 - node - INFO - We are inside the evaluate function within the node 4 and the agg_mean is : 62.140221402214024
+2025-04-01 01:44:40,641 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,643 - node - INFO - We are inside the evaluate function within the node 5 and the agg_mean is : 23.727544910179642
+2025-04-01 01:44:40,645 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,647 - node - INFO - We are inside the evaluate function within the node 2 and the agg_mean is : 24.62686567164179
+2025-04-01 01:44:40,648 - flwr - INFO - Sent reply
+2025-04-01 01:44:40,657 - flwr - INFO - 
+2025-04-01 01:44:40,658 - flwr - INFO - Received: reconnect message 6e0131d4-b9a0-438b-9f4e-ce89ccfa5c82
+2025-04-01 01:44:40,659 - flwr - INFO - 
+2025-04-01 01:44:40,659 - flwr - INFO - 
+2025-04-01 01:44:40,661 - flwr - INFO - Received: reconnect message 1d195bb9-82d0-42d7-b113-604fbcfb27a7
+2025-04-01 01:44:40,661 - flwr - INFO - Received: reconnect message 9b6d5594-6d49-43c1-9f2f-0b35c7eff66f
+2025-04-01 01:44:40,661 - flwr - INFO - 
+2025-04-01 01:44:40,663 - flwr - INFO - Received: reconnect message 2b7df963-68f8-4556-b975-ee9e9fcd0520
+2025-04-01 01:44:40,668 - flwr - DEBUG - gRPC channel closed
+2025-04-01 01:44:40,668 - flwr - DEBUG - gRPC channel closed
+2025-04-01 01:44:40,668 - flwr - DEBUG - gRPC channel closed
+2025-04-01 01:44:40,668 - flwr - DEBUG - gRPC channel closed
+2025-04-01 01:44:40,669 - flwr - INFO - Disconnect and shut down
+2025-04-01 01:44:40,669 - flwr - INFO - Disconnect and shut down
+2025-04-01 01:44:40,669 - flwr - INFO - Disconnect and shut down
+2025-04-01 01:44:40,669 - flwr - INFO - Disconnect and shut down

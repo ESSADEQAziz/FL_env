@@ -38,21 +38,21 @@ def start_server():
         aggregate_fn=aggregate,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=2,
-        min_evaluate_clients=2,
-        min_available_clients=2,
+        min_fit_clients=4,
+        min_evaluate_clients=4,
+        min_available_clients=4,
     )
 
     """
-    we start the server with 2 round because at the first round the flower server get the parameters
-    from a random node and sent them to all nodes as the defaults parameters, then at the second 
-    round the real process of aggragation is applyed after getting all parameters from all nodes 
+    the flower server get the parameters from a random node and sent them to all nodes as the defaults
+    parameters, then the real process of aggragation is applyed after getting all parameters 
+    from all nodes and send the aggregated parameters back to all nodes for evaluation. 
     """
 
     # Start the federated learning server 
     fl.server.start_server(
         server_address="central_server:5000",
-        config=fl.server.ServerConfig(num_rounds=2),
+        config=fl.server.ServerConfig(num_rounds=1),
         strategy=strategy,
     )
 
