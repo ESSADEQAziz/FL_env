@@ -19,13 +19,13 @@ NODE_ID = os.environ.get("NODE_ID", "1")
 logger.info(f"Starting node {NODE_ID}")
 
    
-def get_client(feature,path):
+def get_client(target_table,target_feature,path_to_missing_data):
     """Get the appropriate client based on the imputation strategy."""
     strategy = os.environ.get("IMPUTATION_STRATEGY", "statistical")
     
     if strategy == "statistical":
         from imputation.statistical import NodeClient
-        return NodeClient(feature,path)
+        return NodeClient(target_table,target_feature,path_to_missing_data)
     elif strategy == "machine_learning":
         from imputation.machine_learning import NodeClient
         return NodeClient()
@@ -36,8 +36,14 @@ def get_client(feature,path):
         raise ValueError(f"Unknown imputation strategy: {strategy}")
 
 if __name__ == "__main__":
-    path_to_missing_data = functions.create_missing_values('../data/chartevents.csv','valuenum',0.1)
-    client = get_client('valuenum',path_to_missing_data)
+
+    target_table='../data/icustays.csv'
+    target_feature='los'
+    missing_rate = 0.1
+
+    path_to_missing_data = functions.create_missing_values(target_table,target_feature,missing_rate)
+
+    client = get_client(target_table,target_feature,path_to_missing_data)
     fl.client.start_numpy_client(
         server_address="central_server:5000",
         client=client
