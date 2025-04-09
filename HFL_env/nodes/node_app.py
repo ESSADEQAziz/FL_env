@@ -1,7 +1,4 @@
 import logging
-import pandas as pd
-import numpy as np
-import json
 import os
 import flwr as fl
 from imputation import functions

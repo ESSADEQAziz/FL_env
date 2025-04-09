@@ -1,4 +1,4 @@
-2025-04-01 01:31:55,800 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+2025-04-09 15:01:26,737 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
 	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
 
 		$ flower-superlink --insecure
@@ -12,28 +12,77 @@
             This is a deprecated feature. It will be removed
             entirely in future versions of Flower.
         
-2025-04-01 01:31:55,802 - flwr - INFO - Starting Flower server, config: num_rounds=1, no round_timeout
-2025-04-01 01:31:55,833 - flwr - INFO - Flower ECE: gRPC server running (1 rounds), SSL is disabled
-2025-04-01 01:31:55,833 - flwr - INFO - [INIT]
-2025-04-01 01:31:55,834 - flwr - INFO - Requesting initial parameters from one random client
-2025-04-01 01:31:58,708 - flwr - INFO - Received initial parameters from one random client
-2025-04-01 01:31:58,709 - flwr - INFO - Starting evaluation of initial global parameters
-2025-04-01 01:31:58,710 - flwr - INFO - Evaluation returned no results (`None`)
-2025-04-01 01:31:58,711 - flwr - INFO - 
-2025-04-01 01:31:58,711 - flwr - INFO - [ROUND 1]
-2025-04-01 01:32:02,892 - flwr - INFO - configure_fit: strategy sampled 3 clients (out of 3)
-2025-04-01 01:32:02,909 - flwr - INFO - aggregate_fit: received 3 results and 0 failures
-2025-04-01 01:32:02,911 - flwr - WARNING - No fit_metrics_aggregation_fn provided
-2025-04-01 01:32:02,911 - flwr - INFO - configure_evaluate: strategy sampled 3 clients (out of 3)
-2025-04-01 01:32:02,938 - flwr - INFO - aggregate_evaluate: received 3 results and 0 failures
-2025-04-01 01:32:02,939 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
-2025-04-01 01:32:02,940 - flwr - INFO - 
-2025-04-01 01:32:02,940 - flwr - INFO - [SUMMARY]
-2025-04-01 01:32:02,941 - flwr - INFO - Run finished 1 round(s) in 4.23s
-2025-04-01 01:32:02,942 - flwr - INFO - 	History (loss, distributed):
-2025-04-01 01:32:02,942 - flwr - INFO - 		round 1: 37.29823430379232
-2025-04-01 01:32:02,943 - flwr - INFO - 
-2025-04-01 01:43:54,209 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+2025-04-09 15:01:26,738 - flwr - INFO - Starting Flower server, config: num_rounds=5, no round_timeout
+2025-04-09 15:01:26,768 - flwr - INFO - Flower ECE: gRPC server running (5 rounds), SSL is disabled
+2025-04-09 15:01:26,769 - flwr - INFO - [INIT]
+2025-04-09 15:01:26,770 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 15:01:31,961 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 15:01:31,962 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 15:01:31,962 - flwr - INFO - Evaluation returned no results (`None`)
+2025-04-09 15:01:31,963 - flwr - INFO - 
+2025-04-09 15:01:31,963 - flwr - INFO - [ROUND 1]
+2025-04-09 15:01:34,378 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:38,015 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:01:38,015 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fcbec9c1ed0> with num_exemples 13106 
+2025-04-09 15:01:38,017 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-04-09 15:01:38,018 - central_server - INFO - The aggregated parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 1), }                                                          \n\xb4P\x91\xbelJ\xd2\xbey~\x16\xbe`\x8c\x08?\xc8j\xeb\xbc\n\xa7\xba>\x8f\xcf\xc2\xbd\x92v\x96\xbc", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nP\xc1\x01\xbeF\xe2|\xbf\xe5P\x00\xbd\x00=\xa5@\x1cn\x82@\xc3NVA\xd6\xc6\xd8@\xfc\xa9\x86@", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \nV+=>\xf2t\xaf\xbe\xfcvj>\xa4\xb6{\xbd\xd8\x92\xda\xbcD\x9e\xc0\xbe`P\x96>\xe8\x82\x00\xbeD\x94\xfe=\xdc\x9ff\xbe\xda\xe4\x1d>3\x16e=\xb1\xce\x81\xbd\x90J\x88\xbe{\x0b\xc9\xbe\x97|S\xbe\x84\xeb\x13\xbe8\xa6\x13<\xf6(\xaa>K\x86\x87\xbess0\xbe\xa00\x9a=d\xd1\xa1\xbe\xe8\x03\x80\xbe\x8c\xe1\x82\xbb4\xf7\xf4\xbd\xc4HN>\xf4\xf3V\xbeB\x03\x1a=\x9c2\x9f\xbe\xc9\xe4\x06\xber\x0b\x10=\xf2\xd1H>\xcf\x1d[\xbe\x8c\xbd%\xbeg\xa8!\xbeN\x1f \xbf\x98qP\xbd\x87Q\xee?ZE\x86\xbf\x1cD\x90>\x96\x0b\xff\xbd0z\x19\xbee\xad\xbb\xbc\xf1\xe8\xa9\xbe\xf4\x87m>\xc2\xab\x00>\xa4,\x9d\xbe \xb1\xa9\xbd"\xb3k\xbe\xe4-#=$0\xbf=6o0>5c\xbb\xbd c\xb4\xbdYk\x05>\xe5\x93\x1c>2\xc0\x8c\xbe\xbc\xbb0\xbe*\xc4c>\xaf>\xa0\xbe\xe8\x14\x19>R\\v?\xca=\xb9\xbe', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n@$\xdc\xbc\x17\xdc2=2|\x81\xbd\xbe\xf6I\xbe\xd6\x89\x1a@\xa5\xcb\x9aAV2\xda?\x86\x06\x15@", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \nc%\x80>\x944\x8a\xbb\x84w\x0f\xbe\xa4h\x8a\xbe\xea0\xa0\xbf\x82M\xa9=\x1c]\x06\xbd\xa2'M>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x04i\x08B"], tensor_type='numpy.ndarray') and the metrics are : {}
+2025-04-09 15:01:38,018 - central_server - INFO - the metrics are for round 1 are : 206.00979988385663
+2025-04-09 15:01:38,019 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:38,049 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:01:38,050 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 15:01:38,050 - flwr - INFO - 
+2025-04-09 15:01:38,050 - flwr - INFO - [ROUND 2]
+2025-04-09 15:01:38,051 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:41,902 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:01:41,903 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fcbec9c2d50> with num_exemples 13106 
+2025-04-09 15:01:41,905 - central_server - INFO - The aggregated parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 1), }                                                          \n\xb4P\x91\xbelJ\xd2\xbez~\x16\xbe8\xd4\x8c>\xa7\x9a\xa6\xbd\x0b\xe1\xf8<*}\x98\xbd&\x0c/\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nP\xc1\x01\xbeF\xe2|\xbf\xe6P\x00\xbd\xb6\\\x99@\x8c\xcf\x96@L\xb2\x91A\x90\xa3 A\xbd\x99:@", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \nV+=>\xf2t\xaf\xbe\xfcvj>\xa4\xb6{\xbd\xd8\x92\xda\xbcD\x9e\xc0\xbe`P\x96>\xe8\x82\x00\xbeD\x94\xfe=\xdc\x9ff\xbe\xda\xe4\x1d>6\x01\x86\xbe\x92Ud\xbe@w\x15\xbf|\x0b\xc9\xbebu\xbb\xbe\x84\xeb\x13\xbe8\xa6\x13<\xf6(\xaa>K\x86\x87\xbess0\xbe\xa00\x9a=d\xd1\xa1\xbe\xe8\x03\x80\xbe\x8c\xe1\x82\xbb4\xf7\xf4\xbd\xc4HN>\xf4\xf3V\xbeB\x03\x1a=\x9c2\x9f\xbe\xc9\xe4\x06\xber\x0b\x10=\xf2\xd1H>\xcf\x1d[\xbe\x8c\xbd%\xbe\xee\x83@\xbf\x04q\x84?\x0e\x17\x03?\xd5\xd4Q@"\x01\x8d>\x1cD\x90>\x96\x0b\xff\xbd0z\x19\xbe9\x90\x83\xbeV\xa2\xb1\xbep\x05\x9f:B\x99\xd1=\xd4\xba\x9e\xbe \xb1\xa9\xbd"\xb3k\xbe\xe4-#=;\x0bS\xbc\x9a\xddj=\xbe8\xec\xbd\x8e\xa4e\xbd\t,\xbb=\xe5\x93\x1c>2\xc0\x8c\xbe\xbc\xbb0\xbe|}\xc2<:\xb0\xee\xbeT\r\x92\xbc<\x0eL?^Z\xde\xbe', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n@$\xdc\xbc^H\x8c\xbe2|\x81\xbd\xbe\xf6I\xbe\t\xd6u@\xfa)\xf2A\x14`\xd6\xc0N\x85,A", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \nd%\x80>*{\xa0>\x84w\x0f\xbe\xa4h\x8a\xbe\xd2\x0f\xe2\xbf\x179\x9b=\xdb4\x9c\xbd?\x9dM=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xb6\xb7\x9cB"], tensor_type='numpy.ndarray') and the metrics are : {}
+2025-04-09 15:01:41,905 - central_server - INFO - the metrics are for round 2 are : 9.698014084498087
+2025-04-09 15:01:41,906 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:41,936 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:01:41,937 - flwr - INFO - 
+2025-04-09 15:01:41,937 - flwr - INFO - [ROUND 3]
+2025-04-09 15:01:41,938 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:45,703 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:01:45,704 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fcbec9c3650> with num_exemples 13234 
+2025-04-09 15:01:45,705 - central_server - INFO - The aggregated parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 1), }                                                          \n\xb4P\x91\xbelJ\xd2\xbez~\x16\xbe\x8b\xbew>\xd9\x91u>d\xb3\x18\xbe\xfar^\xbd\xaaJo\xbe", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \nP\xc1\x01\xbeF\xe2|\xbf\xe6P\x00\xbd\x02j\x80@j\xb3\xa4@\xfe\xdd\xa5A\x10"JA\xbe}\x14@', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \nV+=>\xf2t\xaf\xbe\xfcvj>Z\x0e\xdc\xbd\xfc\xe3\x9d>\xf4\x81\x8d\xbfN\x9ad?\xf0a\xff\xbeD\x94\xfe=\xdc\x9ff\xbe\xda\xe4\x1d>6\x01\x86\xbe\x92Ud\xbe@w\x15\xbf|\x0b\xc9\xbebu\xbb\xbe\x84\xeb\x13\xbe8\xa6\x13<\xf6(\xaa>K\x86\x87\xbess0\xbe\xdd\x82\xa9\xbd\x0e\xbe\xf2\xbe\xe8\x03\x80\xbe\x8c\xe1\x82\xbb4\xf7\xf4\xbd\xc4HN>[f\x07\xbfft\xd2\xbd|\x1f\xf0\xbecJ\xb8\xbe\xdb\xad\xfb\xbd\xf2\xd1H>\xcf\x1d[\xbe\x8c\xbd%\xbeV\xe1\x94\xbf\xe1\x8a\x14?\xfa\xaf\x87?\x8b\xd6j@\xda\xba\x8b\xbd\x1cD\x90>\x96\x0b\xff\xbd0z\x19\xbe;7\xef={\x87v\xbf\xcbR\n?\x03\xec\xae\xbe\xc9\xcfO\xbe \xb1\xa9\xbd"\xb3k\xbe\xe4-#=\xae\x1c\x8e\xbc\xa5J,<\xbe8\xec\xbd\x8e\xa4e\xbd\n,\xbb=\xe5\x93\x1c>2\xc0\x8c\xbe\xbc\xbb0\xbe\xb9\xf3\xd4\xbc\xfc@&\xbf\xe2\xee3=\xc9\xde+?\xb8\xfa\xca\xbe', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nr_\x14@^H\x8c\xbe\xde\x97b\xbe\x9d\xf7\x02\xbf\xc8Hv@\xae\xbc\x1fB\xe8\xee\xda\xc0MI\xa1A", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xef\xe7:?*{\xa0>`\x11\x93<\x1a\x1d/\xbe:\x03\xf2\xbf\x1b*7?b\xba\x9b\xbd\xaa\xa3\xf6>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nE\x01\xbdB"], tensor_type='numpy.ndarray') and the metrics are : {}
+2025-04-09 15:01:45,706 - central_server - INFO - the metrics are for round 3 are : 63.220762819219196
+2025-04-09 15:01:45,706 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:45,755 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:01:45,755 - flwr - INFO - 
+2025-04-09 15:01:45,756 - flwr - INFO - [ROUND 4]
+2025-04-09 15:01:45,756 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:49,361 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:01:49,362 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fcbec9c2dd0> with num_exemples 13106 
+2025-04-09 15:01:49,363 - central_server - INFO - The aggregated parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 1), }                                                          \n\xb4P\x91\xbelJ\xd2\xbez~\x16\xbe\x16\xfa2\xbej\xed\\\xbe\\\xc1N\xbd2\x84G\xbe\xa7\xed\x96\xbe", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nP\xc1\x01\xbeF\xe2|\xbf\xe6P\x00\xbdJ\xf6\xb0@,A\xb8@F\xd7\xa5A\xf8]\x89AF\x11$@", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \nV+=>\xf2t\xaf\xbe\xfcvj>\x00\xb8m\xbc\\\r\xfd>\xcc\xd3\x15\xc0|\xb2q\xbf\xff\xf4\'\xbfD\x94\xfe=\xdc\x9ff\xbe\xda\xe4\x1d>6\x01\x86\xbe\x92Ud\xbe@w\x15\xbf|\x0b\xc9\xbebu\xbb\xbe\x84\xeb\x13\xbe8\xa6\x13<\xf6(\xaa>K\x86\x87\xbess0\xbe\xdd\x82\xa9\xbd\x0e\xbe\xf2\xbe\xe8\x03\x80\xbe\x8c\xe1\x82\xbb4\xf7\xf4\xbd\xc4HN>\\f\x07\xbfft\xd2\xbd|\x1f\xf0\xbecJ\xb8\xbe\xdc\xad\xfb\xbd\xf2\xd1H>\xcf\x1d[\xbe\x8c\xbd%\xbe\xe03 \xbf&\xa6\r?\x0e\x86\xa3?^\xd5|@\x94E\x1e=\x1cD\x90>\x96\x0b\xff\xbd0z\x19\xbeV\xb4\xf1\xbe\x19\xd6m\xbf\x9c\xabd>\x8c@m\xc0\xe0\'\x8a= \xb1\xa9\xbd"\xb3k\xbe\xe4-#=v\x08\xd2\xbf\x06u\xbc>\xe4\x17\x02\xc0\xf4VN\xbe\xa8tz=\xe5\x93\x1c>2\xc0\x8c\xbe\xbc\xbb0\xbe\xd6\x08,\xbf8J\xe9\xbfT\x9b\x14\xc0\xbc\xab|=f@\xaa\xbf', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\xf7\xd8\xb6@^H\x8c\xbe\xde\x97b\xbe\x9e\xf7\x02\xbfl4\x95?*x!B\xf0\xca\r\xc1(\x80\xabA", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x00\x0b\xab?*{\xa0>`\x11\x93<\x1a\x1d/\xbe\xed\xee\x8a\xbfB\xa5\r?\x14\x19\xb1\xbe\x98'\x16@", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xd8\x95\xc1B"], tensor_type='numpy.ndarray') and the metrics are : {}
+2025-04-09 15:01:49,363 - central_server - INFO - the metrics are for round 4 are : 1377.9842540370214
+2025-04-09 15:01:49,364 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:49,398 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:01:49,398 - flwr - INFO - 
+2025-04-09 15:01:49,398 - flwr - INFO - [ROUND 5]
+2025-04-09 15:01:49,398 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:52,920 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:01:52,921 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fcbec9d4390> with num_exemples 13234 
+2025-04-09 15:01:52,922 - central_server - INFO - The aggregated parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 1), }                                                          \n\xb4P\x91\xbelJ\xd2\xbez~\x16\xbe\x97e\x9d\xbd\xe4\xebY\xbe\x14\xab2\xbe\x01\xf1\xef\xbdq\xf0\x9e\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nP\xc1\x01\xbeF\xe2|\xbf\xe6P\x00\xbd'\xc6\xe3@l\x90\xdd@\xf6\xb3\xc4A\x94\xe8\xadAf\xad\x12A", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \nV+=>\xf2t\xaf\xbe\xfcvj>\x13\xf0@>\xe7a0?\xc0\x869\xc0\xf9\x8aB\xc08\\\x19\xbeD\x94\xfe=\xdc\x9ff\xbe\xda\xe4\x1d>6\x01\x86\xbe\x92Ud\xbe@w\x15\xbf|\x0b\xc9\xbebu\xbb\xbe\x84\xeb\x13\xbe8\xa6\x13<\xf6(\xaa>K\x86\x87\xbess0\xbe\xdd\x82\xa9\xbd\x0e\xbe\xf2\xbe\xe8\x03\x80\xbe\x8c\xe1\x82\xbb4\xf7\xf4\xbd\xc4HN>\\f\x07\xbfft\xd2\xbd|\x1f\xf0\xbecJ\xb8\xbe\xdc\xad\xfb\xbd\xf2\xd1H>\xcf\x1d[\xbe\x8c\xbd%\xbe\xf8\xe8W\xbd5\x05\xd9?\x88\xceJ?\x16kK@\xe1\xeb\xbb\xbe\x1cD\x90>\x96\x0b\xff\xbd0z\x19\xbe\xc4f\x1f\xbfkx{\xbf\xb5\xf94?\xea\x81\x00\xc1.Qk= \xb1\xa9\xbd"\xb3k\xbe\xe4-#=v\x08\xd2\xbf\x0e*\x17>\xe4\x17\x02\xc0\xf4VN\xbeZQ\x87<\xe5\x93\x1c>2\xc0\x8c\xbe\xbc\xbb0\xbe\x97s\xc7\xbf\x1b\xb4\x06\xc0\xf8\xa6?\xc0\xa0\x9e\xa0>\xc2r\xce\xbf', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xc2\xee\xd0@^H\x8c\xbe\xde\x97b\xbe\x9e\xf7\x02\xbf\xda!{?=\xf4"B\xd3\xf6\x17\xc1`D\xaaA', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xed\x82\xa2?*{\xa0>`\x11\x93<\x1a\x1d/\xbe\xa9\xe0z\xbf\xdc\x89i?f,Y\xbd\xa86,@", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x18\xdf\xc2B"], tensor_type='numpy.ndarray') and the metrics are : {}
+2025-04-09 15:01:52,923 - central_server - INFO - the metrics are for round 5 are : 75.62576133707027
+2025-04-09 15:01:52,924 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:01:52,961 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:01:52,962 - flwr - INFO - 
+2025-04-09 15:01:52,962 - flwr - INFO - [SUMMARY]
+2025-04-09 15:01:52,962 - flwr - INFO - Run finished 5 round(s) in 21.00s
+2025-04-09 15:01:52,963 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 15:01:52,963 - flwr - INFO - 		round 1: 5381.143249298536
+2025-04-09 15:01:52,964 - flwr - INFO - 		round 2: 2034.4288852653997
+2025-04-09 15:01:52,964 - flwr - INFO - 		round 3: 3636.3613114967434
+2025-04-09 15:01:52,965 - flwr - INFO - 		round 4: 1740.8641539507773
+2025-04-09 15:01:52,965 - flwr - INFO - 		round 5: 1849.4437641395796
+2025-04-09 15:01:52,966 - flwr - INFO - 	History (metrics, distributed, fit):
+2025-04-09 15:01:52,966 - flwr - INFO - 	{'loss': [(1, 206.00979988385663),
+2025-04-09 15:01:52,967 - flwr - INFO - 	          (2, 9.698014084498087),
+2025-04-09 15:01:52,967 - flwr - INFO - 	          (3, 63.220762819219196),
+2025-04-09 15:01:52,967 - flwr - INFO - 	          (4, 1377.9842540370214),
+2025-04-09 15:01:52,968 - flwr - INFO - 	          (5, 75.62576133707027)]}
+2025-04-09 15:01:52,968 - flwr - INFO - 
+2025-04-09 15:15:44,985 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
 	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
 
 		$ flower-superlink --insecure
@@ -47,24 +96,725 @@
             This is a deprecated feature. It will be removed
             entirely in future versions of Flower.
         
-2025-04-01 01:43:54,210 - flwr - INFO - Starting Flower server, config: num_rounds=1, no round_timeout
-2025-04-01 01:43:54,232 - flwr - INFO - Flower ECE: gRPC server running (1 rounds), SSL is disabled
-2025-04-01 01:43:54,233 - flwr - INFO - [INIT]
-2025-04-01 01:43:54,234 - flwr - INFO - Requesting initial parameters from one random client
-2025-04-01 01:44:05,673 - flwr - INFO - Received initial parameters from one random client
-2025-04-01 01:44:05,674 - flwr - INFO - Starting evaluation of initial global parameters
-2025-04-01 01:44:05,675 - flwr - INFO - Evaluation returned no results (`None`)
-2025-04-01 01:44:05,676 - flwr - INFO - 
-2025-04-01 01:44:05,676 - flwr - INFO - [ROUND 1]
-2025-04-01 01:44:40,600 - flwr - INFO - configure_fit: strategy sampled 4 clients (out of 4)
-2025-04-01 01:44:40,618 - flwr - INFO - aggregate_fit: received 4 results and 0 failures
-2025-04-01 01:44:40,619 - flwr - WARNING - No fit_metrics_aggregation_fn provided
-2025-04-01 01:44:40,620 - flwr - INFO - configure_evaluate: strategy sampled 4 clients (out of 4)
-2025-04-01 01:44:40,650 - flwr - INFO - aggregate_evaluate: received 4 results and 0 failures
-2025-04-01 01:44:40,651 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
-2025-04-01 01:44:40,652 - flwr - INFO - 
-2025-04-01 01:44:40,652 - flwr - INFO - [SUMMARY]
-2025-04-01 01:44:40,653 - flwr - INFO - Run finished 1 round(s) in 34.98s
-2025-04-01 01:44:40,654 - flwr - INFO - 	History (loss, distributed):
-2025-04-01 01:44:40,654 - flwr - INFO - 		round 1: 33.706246852874756
-2025-04-01 01:44:40,655 - flwr - INFO - 
+2025-04-09 15:15:44,987 - flwr - INFO - Starting Flower server, config: num_rounds=5, no round_timeout
+2025-04-09 15:15:45,015 - flwr - INFO - Flower ECE: gRPC server running (5 rounds), SSL is disabled
+2025-04-09 15:15:45,016 - flwr - INFO - [INIT]
+2025-04-09 15:15:45,017 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 15:15:56,206 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 15:15:56,207 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 15:15:56,207 - flwr - INFO - initial parameters (loss, other metrics): None, {'aggregated_MSE': None}
+2025-04-09 15:15:56,208 - flwr - INFO - 
+2025-04-09 15:15:56,208 - flwr - INFO - [ROUND 1]
+2025-04-09 15:15:56,209 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,274 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:15:56,276 - central_server - INFO - the received parameters : a = [141.76549984] and b = [44.61209222]
+2025-04-09 15:15:56,277 - central_server - INFO - the received parameters : a = [1826.04767507] and b = [67.10564771]
+2025-04-09 15:15:56,278 - central_server - INFO - Round 1: Aggregated a=[982.8367038], b=[55.84458169]
+2025-04-09 15:15:56,279 - flwr - INFO - fit progress: (1, None, {'aggregated_MSE': None}, 0.07061230199906277)
+2025-04-09 15:15:56,279 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,299 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:15:56,300 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 15:15:56,300 - flwr - INFO - 
+2025-04-09 15:15:56,301 - flwr - INFO - [ROUND 2]
+2025-04-09 15:15:56,301 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,366 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:15:56,368 - central_server - INFO - the received parameters : a = [141.77526936] and b = [44.61216797]
+2025-04-09 15:15:56,369 - central_server - INFO - the received parameters : a = [1818.83868395] and b = [67.0137402]
+2025-04-09 15:15:56,369 - central_server - INFO - Round 2: Aggregated a=[979.24167847], b=[55.79872424]
+2025-04-09 15:15:56,370 - flwr - INFO - fit progress: (2, None, {'aggregated_MSE': None}, 0.16166862200043397)
+2025-04-09 15:15:56,370 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,396 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:15:56,398 - flwr - INFO - 
+2025-04-09 15:15:56,399 - flwr - INFO - [ROUND 3]
+2025-04-09 15:15:56,401 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,485 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:15:56,486 - central_server - INFO - the received parameters : a = [1831.68558896] and b = [67.16499146]
+2025-04-09 15:15:56,487 - central_server - INFO - the received parameters : a = [141.75521966] and b = [44.61160711]
+2025-04-09 15:15:56,488 - central_server - INFO - Round 3: Aggregated a=[985.64693283], b=[55.87397301]
+2025-04-09 15:15:56,489 - flwr - INFO - fit progress: (3, None, {'aggregated_MSE': None}, 0.28085977799491957)
+2025-04-09 15:15:56,490 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,522 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:15:56,523 - flwr - INFO - 
+2025-04-09 15:15:56,524 - flwr - INFO - [ROUND 4]
+2025-04-09 15:15:56,526 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,593 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:15:56,594 - central_server - INFO - the received parameters : a = [1829.60052568] and b = [67.11922213]
+2025-04-09 15:15:56,596 - central_server - INFO - the received parameters : a = [141.75874612] and b = [44.61280304]
+2025-04-09 15:15:56,597 - central_server - INFO - Round 4: Aggregated a=[984.60749113], b=[55.85171614]
+2025-04-09 15:15:56,598 - flwr - INFO - fit progress: (4, None, {'aggregated_MSE': None}, 0.38962343800085364)
+2025-04-09 15:15:56,598 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,626 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:15:56,628 - flwr - INFO - 
+2025-04-09 15:15:56,629 - flwr - INFO - [ROUND 5]
+2025-04-09 15:15:56,630 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,696 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:15:56,697 - central_server - INFO - the received parameters : a = [1816.65239898] and b = [66.98614353]
+2025-04-09 15:15:56,698 - central_server - INFO - the received parameters : a = [141.76435728] and b = [44.61236328]
+2025-04-09 15:15:56,698 - central_server - INFO - Round 5: Aggregated a=[978.14446178], b=[55.78504121]
+2025-04-09 15:15:56,699 - flwr - INFO - fit progress: (5, None, {'aggregated_MSE': None}, 0.49111148299562046)
+2025-04-09 15:15:56,700 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:15:56,729 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:15:56,731 - flwr - INFO - 
+2025-04-09 15:15:56,732 - flwr - INFO - [SUMMARY]
+2025-04-09 15:15:56,733 - flwr - INFO - Run finished 5 round(s) in 0.52s
+2025-04-09 15:15:56,736 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 15:15:56,737 - flwr - INFO - 		round 1: 7378199.276079015
+2025-04-09 15:15:56,738 - flwr - INFO - 		round 2: 7315299.509335309
+2025-04-09 15:15:56,739 - flwr - INFO - 		round 3: 7427554.98435747
+2025-04-09 15:15:56,740 - flwr - INFO - 		round 4: 7409279.668882303
+2025-04-09 15:15:56,741 - flwr - INFO - 		round 5: 7296156.0276134005
+2025-04-09 15:15:56,742 - flwr - INFO - 	History (loss, centralized):
+2025-04-09 15:15:56,743 - flwr - INFO - 		round 0: None
+2025-04-09 15:15:56,744 - flwr - INFO - 		round 1: None
+2025-04-09 15:15:56,746 - flwr - INFO - 		round 2: None
+2025-04-09 15:15:56,747 - flwr - INFO - 		round 3: None
+2025-04-09 15:15:56,749 - flwr - INFO - 		round 4: None
+2025-04-09 15:15:56,750 - flwr - INFO - 		round 5: None
+2025-04-09 15:15:56,751 - flwr - INFO - 	History (metrics, distributed, fit):
+2025-04-09 15:15:56,752 - flwr - INFO - 	{'aggregated_MSE': [(1, None), (2, None), (3, None), (4, None), (5, None)]}
+2025-04-09 15:15:56,753 - flwr - INFO - 	History (metrics, centralized):
+2025-04-09 15:15:56,754 - flwr - INFO - 	{'aggregated_MSE': [(0, None),
+2025-04-09 15:15:56,755 - flwr - INFO - 	                    (1, None),
+2025-04-09 15:15:56,756 - flwr - INFO - 	                    (2, None),
+2025-04-09 15:15:56,756 - flwr - INFO - 	                    (3, None),
+2025-04-09 15:15:56,757 - flwr - INFO - 	                    (4, None),
+2025-04-09 15:15:56,758 - flwr - INFO - 	                    (5, None)]}
+2025-04-09 15:15:56,759 - flwr - INFO - 
+2025-04-09 15:15:56,789 - central_server - INFO - [✓] Saved: ../results/ml_results/metrics_round_1.json
+2025-04-09 15:15:56,803 - central_server - INFO - [✓] Saved: ../results/ml_results/metrics_round_2.json
+2025-04-09 15:15:56,815 - central_server - INFO - [✓] Saved: ../results/ml_results/metrics_round_3.json
+2025-04-09 15:15:56,827 - central_server - INFO - [✓] Saved: ../results/ml_results/metrics_round_4.json
+2025-04-09 15:15:56,848 - central_server - INFO - [✓] Saved: ../results/ml_results/metrics_round_5.json
+2025-04-09 15:59:19,616 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-09 15:59:19,619 - flwr - INFO - Starting Flower server, config: num_rounds=5, no round_timeout
+2025-04-09 15:59:19,660 - flwr - INFO - Flower ECE: gRPC server running (5 rounds), SSL is disabled
+2025-04-09 15:59:19,661 - flwr - INFO - [INIT]
+2025-04-09 15:59:19,662 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 15:59:31,593 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 15:59:31,594 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 15:59:31,595 - flwr - INFO - Evaluation returned no results (`None`)
+2025-04-09 15:59:31,595 - flwr - INFO - 
+2025-04-09 15:59:31,595 - flwr - INFO - [ROUND 1]
+2025-04-09 15:59:38,269 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:59:44,151 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:59:44,151 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f48251b2010> with num_exemples 13234 
+2025-04-09 15:59:44,173 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-04-09 15:59:44,174 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:59:44,212 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:59:44,212 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 15:59:44,213 - flwr - INFO - 
+2025-04-09 15:59:44,213 - flwr - INFO - [ROUND 2]
+2025-04-09 15:59:44,214 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:59:50,277 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:59:50,278 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f48251b2990> with num_exemples 13234 
+2025-04-09 15:59:50,279 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:59:50,322 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:59:50,323 - flwr - INFO - 
+2025-04-09 15:59:50,323 - flwr - INFO - [ROUND 3]
+2025-04-09 15:59:50,325 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 15:59:56,177 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 15:59:56,178 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f48251b3810> with num_exemples 13234 
+2025-04-09 15:59:56,179 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 15:59:56,219 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 15:59:56,220 - flwr - INFO - 
+2025-04-09 15:59:56,221 - flwr - INFO - [ROUND 4]
+2025-04-09 15:59:56,223 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:00:02,178 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:00:02,178 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f48251b3dd0> with num_exemples 13106 
+2025-04-09 16:00:02,180 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:00:02,200 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:00:02,202 - flwr - INFO - 
+2025-04-09 16:00:02,202 - flwr - INFO - [ROUND 5]
+2025-04-09 16:00:02,204 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:00:08,128 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:00:08,128 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f48251c8250> with num_exemples 13106 
+2025-04-09 16:00:08,165 - central_server - INFO - The model saved successfully.
+2025-04-09 16:00:08,166 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:00:08,189 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:00:08,190 - flwr - INFO - 
+2025-04-09 16:00:08,190 - flwr - INFO - [SUMMARY]
+2025-04-09 16:00:08,190 - flwr - INFO - Run finished 5 round(s) in 36.60s
+2025-04-09 16:00:08,191 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 16:00:08,192 - flwr - INFO - 		round 1: 2544.946622971612
+2025-04-09 16:00:08,192 - flwr - INFO - 		round 2: 2309.6766234146617
+2025-04-09 16:00:08,193 - flwr - INFO - 		round 3: 1786.8740197763175
+2025-04-09 16:00:08,193 - flwr - INFO - 		round 4: 2057.494781387549
+2025-04-09 16:00:08,194 - flwr - INFO - 		round 5: 2012.4898724369868
+2025-04-09 16:00:08,194 - flwr - INFO - 
+2025-04-09 16:40:56,724 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-09 16:40:56,726 - flwr - INFO - Starting Flower server, config: num_rounds=5, no round_timeout
+2025-04-09 16:40:56,760 - flwr - INFO - Flower ECE: gRPC server running (5 rounds), SSL is disabled
+2025-04-09 16:40:56,761 - flwr - INFO - [INIT]
+2025-04-09 16:40:56,761 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 16:41:04,806 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 16:41:04,806 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 16:41:04,807 - flwr - INFO - initial parameters (loss, other metrics): None, {'aggregated_MSE': None}
+2025-04-09 16:41:04,807 - flwr - INFO - 
+2025-04-09 16:41:04,808 - flwr - INFO - [ROUND 1]
+2025-04-09 16:41:04,808 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:04,880 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:41:04,882 - central_server - INFO - the received parameters : a = [1818.60464998] and b = [67.01157289]
+2025-04-09 16:41:04,884 - central_server - INFO - the received parameters : a = [141.76746743] and b = [44.61240464]
+2025-04-09 16:41:04,884 - central_server - INFO - Round 1: Aggregated a=[979.12090423], b=[55.79776044]
+2025-04-09 16:41:04,885 - flwr - INFO - fit progress: (1, None, {'aggregated_MSE': None}, 0.07783231500070542)
+2025-04-09 16:41:04,886 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:04,917 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:41:04,918 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 16:41:04,919 - flwr - INFO - 
+2025-04-09 16:41:04,920 - flwr - INFO - [ROUND 2]
+2025-04-09 16:41:04,922 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:04,990 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:41:04,991 - central_server - INFO - the received parameters : a = [141.76961988] and b = [44.61222879]
+2025-04-09 16:41:04,992 - central_server - INFO - the received parameters : a = [1822.69850102] and b = [67.07387895]
+2025-04-09 16:41:04,993 - central_server - INFO - Round 2: Aggregated a=[981.16630686], b=[55.82878586]
+2025-04-09 16:41:04,993 - flwr - INFO - fit progress: (2, None, {'aggregated_MSE': None}, 0.18636816100479336)
+2025-04-09 16:41:04,994 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:05,024 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:41:05,026 - flwr - INFO - 
+2025-04-09 16:41:05,027 - flwr - INFO - [ROUND 3]
+2025-04-09 16:41:05,028 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:05,098 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:41:05,099 - central_server - INFO - the received parameters : a = [1820.26298632] and b = [67.02720906]
+2025-04-09 16:41:05,100 - central_server - INFO - the received parameters : a = [141.75964364] and b = [44.61202954]
+2025-04-09 16:41:05,101 - central_server - INFO - Round 3: Aggregated a=[979.94510213], b=[55.80538081]
+2025-04-09 16:41:05,101 - flwr - INFO - fit progress: (3, None, {'aggregated_MSE': None}, 0.2942892920036684)
+2025-04-09 16:41:05,102 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:05,132 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:41:05,133 - flwr - INFO - 
+2025-04-09 16:41:05,135 - flwr - INFO - [ROUND 4]
+2025-04-09 16:41:05,136 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:05,200 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:41:05,201 - central_server - INFO - the received parameters : a = [1827.67045977] and b = [67.12175366]
+2025-04-09 16:41:05,202 - central_server - INFO - the received parameters : a = [141.75996527] and b = [44.61194711]
+2025-04-09 16:41:05,203 - central_server - INFO - Round 4: Aggregated a=[983.64429453], b=[55.85255179]
+2025-04-09 16:41:05,203 - flwr - INFO - fit progress: (4, None, {'aggregated_MSE': None}, 0.3963291850013775)
+2025-04-09 16:41:05,204 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:05,225 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:41:05,225 - flwr - INFO - 
+2025-04-09 16:41:05,226 - flwr - INFO - [ROUND 5]
+2025-04-09 16:41:05,226 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:05,296 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:41:05,297 - central_server - INFO - the received parameters : a = [141.76545906] and b = [44.61195613]
+2025-04-09 16:41:05,299 - central_server - INFO - the received parameters : a = [1820.32763012] and b = [67.03050937]
+2025-04-09 16:41:05,300 - central_server - INFO - Round 5: Aggregated a=[979.98029438], b=[55.80699212]
+2025-04-09 16:41:05,300 - flwr - INFO - fit progress: (5, None, {'aggregated_MSE': None}, 0.49308161200315226)
+2025-04-09 16:41:05,301 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:41:05,328 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:41:05,329 - flwr - INFO - 
+2025-04-09 16:41:05,330 - flwr - INFO - [SUMMARY]
+2025-04-09 16:41:05,331 - flwr - INFO - Run finished 5 round(s) in 0.52s
+2025-04-09 16:41:05,332 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 16:41:05,333 - flwr - INFO - 		round 1: 7313191.193046809
+2025-04-09 16:41:05,334 - flwr - INFO - 		round 2: 7348940.005898653
+2025-04-09 16:41:05,335 - flwr - INFO - 		round 3: 7327585.5978420535
+2025-04-09 16:41:05,336 - flwr - INFO - 		round 4: 7392366.024578366
+2025-04-09 16:41:05,337 - flwr - INFO - 		round 5: 7328200.626822228
+2025-04-09 16:41:05,338 - flwr - INFO - 	History (loss, centralized):
+2025-04-09 16:41:05,339 - flwr - INFO - 		round 0: None
+2025-04-09 16:41:05,340 - flwr - INFO - 		round 1: None
+2025-04-09 16:41:05,341 - flwr - INFO - 		round 2: None
+2025-04-09 16:41:05,342 - flwr - INFO - 		round 3: None
+2025-04-09 16:41:05,342 - flwr - INFO - 		round 4: None
+2025-04-09 16:41:05,342 - flwr - INFO - 		round 5: None
+2025-04-09 16:41:05,343 - flwr - INFO - 	History (metrics, distributed, fit):
+2025-04-09 16:41:05,344 - flwr - INFO - 	{'aggregated_MSE': [(1, None), (2, None), (3, None), (4, None), (5, None)]}
+2025-04-09 16:41:05,344 - flwr - INFO - 	History (metrics, centralized):
+2025-04-09 16:41:05,345 - flwr - INFO - 	{'aggregated_MSE': [(0, None),
+2025-04-09 16:41:05,346 - flwr - INFO - 	                    (1, None),
+2025-04-09 16:41:05,346 - flwr - INFO - 	                    (2, None),
+2025-04-09 16:41:05,347 - flwr - INFO - 	                    (3, None),
+2025-04-09 16:41:05,347 - flwr - INFO - 	                    (4, None),
+2025-04-09 16:41:05,348 - flwr - INFO - 	                    (5, None)]}
+2025-04-09 16:41:05,349 - flwr - INFO - 
+2025-04-09 16:43:16,698 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-09 16:43:16,700 - flwr - INFO - Starting Flower server, config: num_rounds=5, no round_timeout
+2025-04-09 16:43:16,715 - flwr - INFO - Flower ECE: gRPC server running (5 rounds), SSL is disabled
+2025-04-09 16:43:16,716 - flwr - INFO - [INIT]
+2025-04-09 16:43:16,716 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 16:43:20,649 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 16:43:20,650 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 16:43:20,650 - flwr - INFO - initial parameters (loss, other metrics): None, {'aggregated_MSE': None}
+2025-04-09 16:43:20,651 - flwr - INFO - 
+2025-04-09 16:43:20,651 - flwr - INFO - [ROUND 1]
+2025-04-09 16:43:23,559 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,635 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:43:23,637 - central_server - INFO - the received parameters : a = [1815.37828045] and b = [66.98051676]
+2025-04-09 16:43:23,638 - central_server - INFO - the received parameters : a = [141.76784881] and b = [44.61230959]
+2025-04-09 16:43:23,639 - central_server - INFO - Round 1: Aggregated a=[977.50995984], b=[55.78220452]
+2025-04-09 16:43:23,639 - flwr - INFO - fit progress: (1, None, {'aggregated_MSE': None}, 2.988406622003822)
+2025-04-09 16:43:23,640 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,661 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:43:23,661 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 16:43:23,662 - flwr - INFO - 
+2025-04-09 16:43:23,662 - flwr - INFO - [ROUND 2]
+2025-04-09 16:43:23,663 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,728 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:43:23,730 - central_server - INFO - the received parameters : a = [1838.50284786] and b = [67.23600869]
+2025-04-09 16:43:23,730 - central_server - INFO - the received parameters : a = [141.76083786] and b = [44.61214649]
+2025-04-09 16:43:23,731 - central_server - INFO - Round 2: Aggregated a=[989.05404452], b=[55.90970655]
+2025-04-09 16:43:23,732 - flwr - INFO - fit progress: (2, None, {'aggregated_MSE': None}, 3.0806682629990974)
+2025-04-09 16:43:23,732 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,758 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:43:23,759 - flwr - INFO - 
+2025-04-09 16:43:23,759 - flwr - INFO - [ROUND 3]
+2025-04-09 16:43:23,760 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,824 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:43:23,825 - central_server - INFO - the received parameters : a = [141.75017699] and b = [44.61134305]
+2025-04-09 16:43:23,826 - central_server - INFO - the received parameters : a = [1817.69673382] and b = [67.00745591]
+2025-04-09 16:43:23,827 - central_server - INFO - Round 3: Aggregated a=[978.65886667], b=[55.7951731]
+2025-04-09 16:43:23,828 - flwr - INFO - fit progress: (3, None, {'aggregated_MSE': None}, 3.1766035740001826)
+2025-04-09 16:43:23,828 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,862 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:43:23,863 - flwr - INFO - 
+2025-04-09 16:43:23,864 - flwr - INFO - [ROUND 4]
+2025-04-09 16:43:23,865 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,932 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:43:23,933 - central_server - INFO - the received parameters : a = [141.75709737] and b = [44.61202309]
+2025-04-09 16:43:23,934 - central_server - INFO - the received parameters : a = [1826.72508751] and b = [67.1088184]
+2025-04-09 16:43:23,935 - central_server - INFO - Round 4: Aggregated a=[983.17077315], b=[55.84613041]
+2025-04-09 16:43:23,935 - flwr - INFO - fit progress: (4, None, {'aggregated_MSE': None}, 3.284437453999999)
+2025-04-09 16:43:23,936 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:23,967 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:43:23,968 - flwr - INFO - 
+2025-04-09 16:43:23,969 - flwr - INFO - [ROUND 5]
+2025-04-09 16:43:23,970 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:24,035 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:43:24,036 - central_server - INFO - the received parameters : a = [141.75585457] and b = [44.61192764]
+2025-04-09 16:43:24,037 - central_server - INFO - the received parameters : a = [1821.14146063] and b = [67.03679879]
+2025-04-09 16:43:24,038 - central_server - INFO - Round 5: Aggregated a=[980.38188433], b=[55.81011857]
+2025-04-09 16:43:24,039 - flwr - INFO - fit progress: (5, None, {'aggregated_MSE': None}, 3.387726749999274)
+2025-04-09 16:43:24,039 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:43:24,084 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:43:24,085 - flwr - INFO - 
+2025-04-09 16:43:24,086 - flwr - INFO - [SUMMARY]
+2025-04-09 16:43:24,087 - flwr - INFO - Run finished 5 round(s) in 3.43s
+2025-04-09 16:43:24,089 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 16:43:24,090 - flwr - INFO - 		round 1: 7285097.509466041
+2025-04-09 16:43:24,091 - flwr - INFO - 		round 2: 7487615.097172186
+2025-04-09 16:43:24,092 - flwr - INFO - 		round 3: 7305128.24701706
+2025-04-09 16:43:24,093 - flwr - INFO - 		round 4: 7384057.842007899
+2025-04-09 16:43:24,094 - flwr - INFO - 		round 5: 7335219.67978466
+2025-04-09 16:43:24,095 - flwr - INFO - 	History (loss, centralized):
+2025-04-09 16:43:24,096 - flwr - INFO - 		round 0: None
+2025-04-09 16:43:24,096 - flwr - INFO - 		round 1: None
+2025-04-09 16:43:24,097 - flwr - INFO - 		round 2: None
+2025-04-09 16:43:24,098 - flwr - INFO - 		round 3: None
+2025-04-09 16:43:24,099 - flwr - INFO - 		round 4: None
+2025-04-09 16:43:24,100 - flwr - INFO - 		round 5: None
+2025-04-09 16:43:24,101 - flwr - INFO - 	History (metrics, distributed, fit):
+2025-04-09 16:43:24,102 - flwr - INFO - 	{'aggregated_MSE': [(1, None), (2, None), (3, None), (4, None), (5, None)]}
+2025-04-09 16:43:24,102 - flwr - INFO - 	History (metrics, centralized):
+2025-04-09 16:43:24,103 - flwr - INFO - 	{'aggregated_MSE': [(0, None),
+2025-04-09 16:43:24,104 - flwr - INFO - 	                    (1, None),
+2025-04-09 16:43:24,104 - flwr - INFO - 	                    (2, None),
+2025-04-09 16:43:24,105 - flwr - INFO - 	                    (3, None),
+2025-04-09 16:43:24,106 - flwr - INFO - 	                    (4, None),
+2025-04-09 16:43:24,107 - flwr - INFO - 	                    (5, None)]}
+2025-04-09 16:43:24,108 - flwr - INFO - 
+2025-04-09 16:43:24,133 - central_server - INFO - [✓] Saved: ../results/ml_results/metrics.json
+2025-04-09 16:43:51,342 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-09 16:43:51,344 - flwr - INFO - Starting Flower server, config: num_rounds=5, no round_timeout
+2025-04-09 16:43:51,360 - flwr - INFO - Flower ECE: gRPC server running (5 rounds), SSL is disabled
+2025-04-09 16:43:51,360 - flwr - INFO - [INIT]
+2025-04-09 16:43:51,361 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 16:43:57,624 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 16:43:57,626 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 16:43:57,627 - flwr - INFO - Evaluation returned no results (`None`)
+2025-04-09 16:43:57,628 - flwr - INFO - 
+2025-04-09 16:43:57,629 - flwr - INFO - [ROUND 1]
+2025-04-09 16:44:00,540 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:06,524 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:44:06,525 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7ff2c0582590> with num_exemples 13234 
+2025-04-09 16:44:06,528 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-04-09 16:44:06,529 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:06,558 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:44:06,559 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 16:44:06,561 - flwr - INFO - 
+2025-04-09 16:44:06,562 - flwr - INFO - [ROUND 2]
+2025-04-09 16:44:06,563 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:12,518 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:44:12,519 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7ff2c05831d0> with num_exemples 13234 
+2025-04-09 16:44:12,526 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:12,574 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:44:12,575 - flwr - INFO - 
+2025-04-09 16:44:12,575 - flwr - INFO - [ROUND 3]
+2025-04-09 16:44:12,576 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:18,506 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:44:18,506 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7ff2c0583c10> with num_exemples 13234 
+2025-04-09 16:44:18,508 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:18,524 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:44:18,525 - flwr - INFO - 
+2025-04-09 16:44:18,526 - flwr - INFO - [ROUND 4]
+2025-04-09 16:44:18,526 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:24,372 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:44:24,373 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7ff2c05b0090> with num_exemples 13106 
+2025-04-09 16:44:24,374 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:24,399 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:44:24,399 - flwr - INFO - 
+2025-04-09 16:44:24,399 - flwr - INFO - [ROUND 5]
+2025-04-09 16:44:24,400 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:30,046 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:44:30,046 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7ff2c05b0510> with num_exemples 13106 
+2025-04-09 16:44:30,129 - central_server - INFO - The model saved successfully.
+2025-04-09 16:44:30,130 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:44:30,165 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:44:30,166 - flwr - INFO - 
+2025-04-09 16:44:30,167 - flwr - INFO - [SUMMARY]
+2025-04-09 16:44:30,168 - flwr - INFO - Run finished 5 round(s) in 32.54s
+2025-04-09 16:44:30,168 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 16:44:30,169 - flwr - INFO - 		round 1: 3197.6808589671723
+2025-04-09 16:44:30,169 - flwr - INFO - 		round 2: 1925.881220288809
+2025-04-09 16:44:30,170 - flwr - INFO - 		round 3: 101459.76729820675
+2025-04-09 16:44:30,171 - flwr - INFO - 		round 4: 1947.2217143482392
+2025-04-09 16:44:30,171 - flwr - INFO - 		round 5: 1995.2583562458476
+2025-04-09 16:44:30,172 - flwr - INFO - 
+2025-04-09 16:47:03,240 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-09 16:47:03,244 - flwr - INFO - Starting Flower server, config: num_rounds=10, no round_timeout
+2025-04-09 16:47:03,270 - flwr - INFO - Flower ECE: gRPC server running (10 rounds), SSL is disabled
+2025-04-09 16:47:03,271 - flwr - INFO - [INIT]
+2025-04-09 16:47:03,271 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 16:47:07,156 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 16:47:07,156 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 16:47:07,157 - flwr - INFO - Evaluation returned no results (`None`)
+2025-04-09 16:47:07,157 - flwr - INFO - 
+2025-04-09 16:47:07,158 - flwr - INFO - [ROUND 1]
+2025-04-09 16:47:08,954 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:14,842 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:14,842 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f8568e69b10> with num_exemples 13106 
+2025-04-09 16:47:14,846 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-04-09 16:47:14,846 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:14,864 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:14,865 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 16:47:14,866 - flwr - INFO - 
+2025-04-09 16:47:14,867 - flwr - INFO - [ROUND 2]
+2025-04-09 16:47:14,868 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:20,322 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:20,322 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f8568e6b210> with num_exemples 13234 
+2025-04-09 16:47:20,324 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:20,365 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:20,366 - flwr - INFO - 
+2025-04-09 16:47:20,366 - flwr - INFO - [ROUND 3]
+2025-04-09 16:47:20,366 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:25,892 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:25,893 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f8568e6bad0> with num_exemples 13234 
+2025-04-09 16:47:25,895 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:25,926 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:25,929 - flwr - INFO - 
+2025-04-09 16:47:25,930 - flwr - INFO - [ROUND 4]
+2025-04-09 16:47:25,930 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:31,824 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:31,824 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f856849c0d0> with num_exemples 13106 
+2025-04-09 16:47:31,826 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:31,868 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:31,869 - flwr - INFO - 
+2025-04-09 16:47:31,869 - flwr - INFO - [ROUND 5]
+2025-04-09 16:47:31,870 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:37,572 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:37,573 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f856849c650> with num_exemples 13234 
+2025-04-09 16:47:37,575 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:37,616 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:37,617 - flwr - INFO - 
+2025-04-09 16:47:37,618 - flwr - INFO - [ROUND 6]
+2025-04-09 16:47:37,620 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:43,657 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:43,657 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f856849c990> with num_exemples 13234 
+2025-04-09 16:47:43,659 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:43,696 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:43,696 - flwr - INFO - 
+2025-04-09 16:47:43,697 - flwr - INFO - [ROUND 7]
+2025-04-09 16:47:43,697 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:49,608 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:49,608 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f856849c310> with num_exemples 13106 
+2025-04-09 16:47:49,610 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:49,631 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:49,631 - flwr - INFO - 
+2025-04-09 16:47:49,632 - flwr - INFO - [ROUND 8]
+2025-04-09 16:47:49,632 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:55,407 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:47:55,408 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f856849ced0> with num_exemples 13106 
+2025-04-09 16:47:55,410 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:47:55,467 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:47:55,468 - flwr - INFO - 
+2025-04-09 16:47:55,468 - flwr - INFO - [ROUND 9]
+2025-04-09 16:47:55,469 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:48:01,754 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:48:01,754 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f856849d2d0> with num_exemples 13234 
+2025-04-09 16:48:01,757 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:48:01,778 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:48:01,779 - flwr - INFO - 
+2025-04-09 16:48:01,779 - flwr - INFO - [ROUND 10]
+2025-04-09 16:48:01,780 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:48:07,613 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:48:07,614 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7f856849d3d0> with num_exemples 13106 
+2025-04-09 16:48:07,639 - central_server - INFO - The model saved successfully.
+2025-04-09 16:48:07,640 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:48:07,674 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:48:07,674 - flwr - INFO - 
+2025-04-09 16:48:07,675 - flwr - INFO - [SUMMARY]
+2025-04-09 16:48:07,675 - flwr - INFO - Run finished 10 round(s) in 60.52s
+2025-04-09 16:48:07,676 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 16:48:07,677 - flwr - INFO - 		round 1: 9809.669247512991
+2025-04-09 16:48:07,678 - flwr - INFO - 		round 2: 4301.731782104214
+2025-04-09 16:48:07,678 - flwr - INFO - 		round 3: 1874.9661044480679
+2025-04-09 16:48:07,679 - flwr - INFO - 		round 4: 1711.5353105757938
+2025-04-09 16:48:07,680 - flwr - INFO - 		round 5: 1703.201523209487
+2025-04-09 16:48:07,680 - flwr - INFO - 		round 6: 1989.7729705462966
+2025-04-09 16:48:07,680 - flwr - INFO - 		round 7: 1642.8497374978497
+2025-04-09 16:48:07,681 - flwr - INFO - 		round 8: 1681.3672104264174
+2025-04-09 16:48:07,681 - flwr - INFO - 		round 9: 1842.0733975792075
+2025-04-09 16:48:07,682 - flwr - INFO - 		round 10: 7297.635138046045
+2025-04-09 16:48:07,682 - flwr - INFO - 
+2025-04-09 16:49:20,991 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-04-09 16:49:20,993 - flwr - INFO - Starting Flower server, config: num_rounds=20, no round_timeout
+2025-04-09 16:49:21,011 - flwr - INFO - Flower ECE: gRPC server running (20 rounds), SSL is disabled
+2025-04-09 16:49:21,012 - flwr - INFO - [INIT]
+2025-04-09 16:49:21,012 - flwr - INFO - Requesting initial parameters from one random client
+2025-04-09 16:49:26,350 - flwr - INFO - Received initial parameters from one random client
+2025-04-09 16:49:26,351 - flwr - INFO - Starting evaluation of initial global parameters
+2025-04-09 16:49:26,352 - flwr - INFO - Evaluation returned no results (`None`)
+2025-04-09 16:49:26,353 - flwr - INFO - 
+2025-04-09 16:49:26,353 - flwr - INFO - [ROUND 1]
+2025-04-09 16:49:27,832 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:33,719 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:49:33,720 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16ca4d0> with num_exemples 13106 
+2025-04-09 16:49:33,724 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-04-09 16:49:33,725 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:33,783 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:49:33,784 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-04-09 16:49:33,785 - flwr - INFO - 
+2025-04-09 16:49:33,785 - flwr - INFO - [ROUND 2]
+2025-04-09 16:49:33,786 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:40,136 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:49:40,137 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16cb450> with num_exemples 13234 
+2025-04-09 16:49:40,140 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:40,195 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:49:40,196 - flwr - INFO - 
+2025-04-09 16:49:40,197 - flwr - INFO - [ROUND 3]
+2025-04-09 16:49:40,197 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:46,163 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:49:46,164 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16cbbd0> with num_exemples 13234 
+2025-04-09 16:49:46,165 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:46,225 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:49:46,226 - flwr - INFO - 
+2025-04-09 16:49:46,227 - flwr - INFO - [ROUND 4]
+2025-04-09 16:49:46,227 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:52,030 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:49:52,031 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f84d0> with num_exemples 13106 
+2025-04-09 16:49:52,033 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:52,064 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:49:52,064 - flwr - INFO - 
+2025-04-09 16:49:52,065 - flwr - INFO - [ROUND 5]
+2025-04-09 16:49:52,065 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:57,920 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:49:57,920 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f87d0> with num_exemples 13106 
+2025-04-09 16:49:57,922 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:49:57,967 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:49:57,968 - flwr - INFO - 
+2025-04-09 16:49:57,969 - flwr - INFO - [ROUND 6]
+2025-04-09 16:49:57,969 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:04,054 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:04,055 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f8b50> with num_exemples 13106 
+2025-04-09 16:50:04,056 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:04,090 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:04,090 - flwr - INFO - 
+2025-04-09 16:50:04,090 - flwr - INFO - [ROUND 7]
+2025-04-09 16:50:04,091 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:10,708 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:10,709 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f8d90> with num_exemples 13106 
+2025-04-09 16:50:10,711 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:10,736 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:10,738 - flwr - INFO - 
+2025-04-09 16:50:10,739 - flwr - INFO - [ROUND 8]
+2025-04-09 16:50:10,741 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:16,840 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:16,841 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f90d0> with num_exemples 13106 
+2025-04-09 16:50:16,843 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:16,895 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:16,895 - flwr - INFO - 
+2025-04-09 16:50:16,896 - flwr - INFO - [ROUND 9]
+2025-04-09 16:50:16,897 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:22,749 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:22,750 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f91d0> with num_exemples 13106 
+2025-04-09 16:50:22,752 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:22,793 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:22,793 - flwr - INFO - 
+2025-04-09 16:50:22,794 - flwr - INFO - [ROUND 10]
+2025-04-09 16:50:22,794 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:29,552 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:29,552 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f96d0> with num_exemples 13234 
+2025-04-09 16:50:29,554 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:29,594 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:29,595 - flwr - INFO - 
+2025-04-09 16:50:29,595 - flwr - INFO - [ROUND 11]
+2025-04-09 16:50:29,596 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:35,642 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:35,642 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f8e90> with num_exemples 13234 
+2025-04-09 16:50:35,643 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:35,664 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:35,665 - flwr - INFO - 
+2025-04-09 16:50:35,665 - flwr - INFO - [ROUND 12]
+2025-04-09 16:50:35,667 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:41,560 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:41,561 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f82d0> with num_exemples 13106 
+2025-04-09 16:50:41,562 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:41,586 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:41,586 - flwr - INFO - 
+2025-04-09 16:50:41,586 - flwr - INFO - [ROUND 13]
+2025-04-09 16:50:41,587 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:47,262 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:47,262 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16fa090> with num_exemples 13106 
+2025-04-09 16:50:47,264 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:47,320 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:47,321 - flwr - INFO - 
+2025-04-09 16:50:47,321 - flwr - INFO - [ROUND 14]
+2025-04-09 16:50:47,322 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:53,071 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:53,072 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f8310> with num_exemples 13234 
+2025-04-09 16:50:53,073 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:53,099 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:53,100 - flwr - INFO - 
+2025-04-09 16:50:53,100 - flwr - INFO - [ROUND 15]
+2025-04-09 16:50:53,101 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:58,856 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:50:58,856 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f9290> with num_exemples 13106 
+2025-04-09 16:50:58,859 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:50:58,896 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:50:58,897 - flwr - INFO - 
+2025-04-09 16:50:58,897 - flwr - INFO - [ROUND 16]
+2025-04-09 16:50:58,900 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:05,482 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:51:05,482 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f8110> with num_exemples 13234 
+2025-04-09 16:51:05,484 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:05,512 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:51:05,513 - flwr - INFO - 
+2025-04-09 16:51:05,513 - flwr - INFO - [ROUND 17]
+2025-04-09 16:51:05,514 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:11,818 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:51:11,818 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f9ed0> with num_exemples 13234 
+2025-04-09 16:51:11,820 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:11,877 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:51:11,877 - flwr - INFO - 
+2025-04-09 16:51:11,878 - flwr - INFO - [ROUND 18]
+2025-04-09 16:51:11,878 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:17,790 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:51:17,790 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16fa950> with num_exemples 13234 
+2025-04-09 16:51:17,791 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:17,853 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:51:17,853 - flwr - INFO - 
+2025-04-09 16:51:17,854 - flwr - INFO - [ROUND 19]
+2025-04-09 16:51:17,855 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:23,737 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:51:23,737 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16faa50> with num_exemples 13234 
+2025-04-09 16:51:23,739 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:23,764 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:51:23,765 - flwr - INFO - 
+2025-04-09 16:51:23,766 - flwr - INFO - [ROUND 20]
+2025-04-09 16:51:23,767 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:29,477 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-04-09 16:51:29,478 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fddf16f9850> with num_exemples 13234 
+2025-04-09 16:51:29,501 - central_server - INFO - The model saved successfully.
+2025-04-09 16:51:29,502 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-04-09 16:51:29,544 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-04-09 16:51:29,544 - flwr - INFO - 
+2025-04-09 16:51:29,545 - flwr - INFO - [SUMMARY]
+2025-04-09 16:51:29,545 - flwr - INFO - Run finished 20 round(s) in 123.20s
+2025-04-09 16:51:29,546 - flwr - INFO - 	History (loss, distributed):
+2025-04-09 16:51:29,547 - flwr - INFO - 		round 1: 2341.8638944378204
+2025-04-09 16:51:29,548 - flwr - INFO - 		round 2: 1932.7892888537663
+2025-04-09 16:51:29,549 - flwr - INFO - 		round 3: 2218.260959253912
+2025-04-09 16:51:29,550 - flwr - INFO - 		round 4: 1890.4734521725363
+2025-04-09 16:51:29,550 - flwr - INFO - 		round 5: 3622.387366028527
+2025-04-09 16:51:29,551 - flwr - INFO - 		round 6: 2188.669789442151
+2025-04-09 16:51:29,551 - flwr - INFO - 		round 7: 1698.8774692034306
+2025-04-09 16:51:29,552 - flwr - INFO - 		round 8: 5830.037542951695
+2025-04-09 16:51:29,552 - flwr - INFO - 		round 9: 2475.21041155028
+2025-04-09 16:51:29,553 - flwr - INFO - 		round 10: 1782.1179795481712
+2025-04-09 16:51:29,553 - flwr - INFO - 		round 11: 1815.6855031725304
+2025-04-09 16:51:29,554 - flwr - INFO - 		round 12: 1993.6327661559178
+2025-04-09 16:51:29,554 - flwr - INFO - 		round 13: 1639.7841030529257
+2025-04-09 16:51:29,555 - flwr - INFO - 		round 14: 1859.5542860582912
+2025-04-09 16:51:29,556 - flwr - INFO - 		round 15: 2602.770320730709
+2025-04-09 16:51:29,557 - flwr - INFO - 		round 16: 1724.3968425035296
+2025-04-09 16:51:29,557 - flwr - INFO - 		round 17: 2308.033742106676
+2025-04-09 16:51:29,558 - flwr - INFO - 		round 18: 1719.6503567474758
+2025-04-09 16:51:29,559 - flwr - INFO - 		round 19: 1811.4216915654883
+2025-04-09 16:51:29,559 - flwr - INFO - 		round 20: 1760.1833813040928
+2025-04-09 16:51:29,560 - flwr - INFO - 

@@ -3,9 +3,22 @@ import numpy as np
 import os
 import math
 import json
+from pathlib import Path
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
+from cryptography import x509
+import torch
+import torch.nn as nn
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
-def evaluate_values(reference_json_path, local_parameters, aggegated_parameters,results_path):
- 
+def evaluate_statistical_values(reference_json_path, local_parameters, aggegated_parameters,NODE_ID):
+
+    results_path= f'../results/statistical_results/metrics_node_{NODE_ID}.json'
+    
+        # Ensure the directory exists
+    os.makedirs(os.path.dirname(results_path), exist_ok=True)
+    
     # Load the reference data
     with open(reference_json_path, 'r') as f:
         reference_data = json.load(f)
@@ -117,8 +130,118 @@ def evaluate_values(reference_json_path, local_parameters, aggegated_parameters,
 
         # we return the accuracy of the aggregated mean 
     return accuracy[1]
-
 # This function aims to create some random missing data within a table based on a given missing_rate 
+
+def evaluate_ml_values(node_id, aggregated_parameters, local_mse, round=0):
+
+    results_path = f'../results/ml_results/metrics_node_{node_id}.json'
+    
+    # Convert NumPy arrays to Python native types
+    def numpy_to_python(obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, list):
+            return [numpy_to_python(item) for item in obj]
+        elif isinstance(obj, dict):
+            return {k: numpy_to_python(v) for k, v in obj.items()}
+        else:
+            return obj
+    
+    # Convert parameters to JSON-serializable format
+    try:
+        if hasattr(aggregated_parameters, 'tensors'):
+            # Handle Flower parameters format
+            from flwr.common.parameter import parameters_to_ndarrays
+            params_list = parameters_to_ndarrays(aggregated_parameters)
+            if len(params_list) >= 2:
+                parameters = [params_list[0], params_list[1]]
+            else:
+                parameters = params_list
+        else:
+            # Handle direct numpy arrays or lists
+            parameters = aggregated_parameters
+            
+        # Convert to Python native types
+        parameters = numpy_to_python(parameters)
+        
+        # Make sure we have a and b parameters
+        if isinstance(parameters, list) and len(parameters) >= 2:
+            a = parameters[0]
+            b = parameters[1]
+        else:
+            print(f"Unexpected parameter format: {parameters}. Using default values.")
+            a = 0.0
+            b = 0.0
+            
+    except Exception as e:
+        print(f"Error processing parameters: {e}")
+        a = 0.0
+        b = 0.0
+    
+    # Convert MSE values to Python native types
+    local_mse = numpy_to_python(local_mse)
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(results_path), exist_ok=True)
+    
+    # Prepare the metrics for this round
+    metrics_entry = {
+        "node_id": node_id,
+        "round": round,
+        "parameters": {
+            "a": parameters[0],
+            "b": parameters[1]
+        },
+        "local_mse": float(local_mse),
+    }
+    
+    # Load existing data or create new file
+    try:
+        if os.path.exists(results_path):
+            with open(results_path, 'r') as f:
+                data = json.load(f)
+                # Check if data is a list or a single record
+                if not isinstance(data, list):
+                    data = [data]
+        else:
+            data = []
+    except json.JSONDecodeError:
+        print(f"Could not decode existing JSON at {results_path}. Creating new file.")
+        data = []
+    except Exception as e:
+        print(f"Error reading existing metrics file: {e}")
+        data = []
+    
+    # Add new metrics
+    data.append(metrics_entry)
+    
+    # Write back to file
+    try:
+        with open(results_path, 'w') as f:
+            json.dump(data, f, indent=2)
+        print(f"Successfully updated metrics for node {node_id} at round {round}")
+    except Exception as e:
+        print(f"Error writing metrics to file: {e}")
+    
+# def load_data(input_features=["x1", "x2"], target="y", path="data.csv"):
+#     df = pd.read_csv(path)
+#     X = df[input_features].values
+#     y = df[target].values.reshape(-1, 1)
+
+#     scaler_X = StandardScaler()
+#     scaler_y = StandardScaler()
+#     X = scaler_X.fit_transform(X)
+#     y = scaler_y.fit_transform(y)
+
+#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+#     return (torch.tensor(X_train, dtype=torch.float32),
+#             torch.tensor(y_train, dtype=torch.float32),
+#             torch.tensor(X_test, dtype=torch.float32),
+#             torch.tensor(y_test, dtype=torch.float32))
+
 def create_missing_values(csv_path: str, feature_name: str, missing_rate: float, 
                           node_id) -> str:
     output_dir = f"../missing_data/node{node_id}"
@@ -188,3 +311,84 @@ def calculate_statistics(file_path, feature):
 
 def remove_nan_values(lst):
     return [x for x in lst if not (isinstance(x, float) and math.isnan(x))]
+
+def load_and_preprocess_data(target_table, feature_x, feature_y):
+        """Load and preprocess data from a CSV file."""
+        df = pd.read_csv(target_table)
+
+        # Convert string values to numeric, coercing strings to NaN
+        df[feature_x] = pd.to_numeric(df[feature_x], errors='coerce')
+        df[feature_y] = pd.to_numeric(df[feature_y], errors='coerce')
+
+        # Keep only required features and drop missing values
+        df = df[[feature_x, feature_y]].dropna()
+
+        # Convert to NumPy arrays
+        X = df[feature_x].values.reshape(-1, 1)
+        Y = df[feature_y].values.reshape(-1, 1)
+
+        return X, Y
+
+def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
+     # Split data into train and test sets
+        X_train, X_test, Y_train, Y_test = train_test_split(
+            X, Y, test_size=0.2, random_state=42
+        )
+
+        # Ensure X and Y are float64 before fitting
+        X_train = np.asarray(X_train, dtype=np.float64)
+        Y_train = np.asarray(Y_train, dtype=np.float64)
+        X_test = np.asarray(X_test, dtype=np.float64)
+        Y_test = np.asarray(Y_test, dtype=np.float64)
+
+        # Normalization
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
+
+        return X_train, X_test, Y_train, Y_test
+
+# def process_cert_key(node_id):
+#     client_key = Path(f"../certs/node{node_id}.key").read_bytes()
+#     client_cert = Path(f"../certs/node{node_id}.pem").read_bytes()
+#     ca_cert = Path(f"../certs/ca.pem").read_bytes()
+
+#     private_key = serialization.load_pem_private_key(
+#     client_key,
+#     password=None,
+#     backend=default_backend()
+#     )
+
+#     public_key = serialization.load_pem_public_key(
+#         client_cert,
+#         backend=default_backend()
+#     )
+
+#     cert = x509.load_pem_x509_certificate(client_cert, default_backend())
+#     public_key = cert.public_key()
+
+#     return ca_cert,private_key,public_key
+
+
+
+
+class SimpleRegressor(nn.Module):
+    def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
+        super(SimpleRegressor, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, output_dim)
+        )
+    
+    def forward(self, x):
+        return self.model(x)
+
+
+
+
+
+
+

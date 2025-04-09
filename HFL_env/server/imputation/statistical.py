@@ -1,5 +1,6 @@
 import logging
 import flwr as fl
+from pathlib import Path
 from typing import Dict
 
 # Configure logging
@@ -38,9 +39,9 @@ def start_server():
         aggregate_fn=aggregate,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=4,
-        min_evaluate_clients=4,
-        min_available_clients=4,
+        min_fit_clients=2,
+        min_evaluate_clients=2,
+        min_available_clients=2,
     )
 
     """
@@ -48,12 +49,17 @@ def start_server():
     parameters, then the real process of aggragation is applyed after getting all parameters 
     from all nodes and send the aggregated parameters back to all nodes for evaluation. 
     """
+    # Load certificates (as bytes)
+    # ca_cert = Path("../certs/ca.pem").read_bytes()
+    # server_cert = Path("../certs/central_server.pem").read_bytes()
+    # server_key = Path("../certs/central_server.key").read_bytes()
 
     # Start the federated learning server 
     fl.server.start_server(
         server_address="central_server:5000",
         config=fl.server.ServerConfig(num_rounds=1),
         strategy=strategy,
+        # certificates=(ca_cert, server_cert, server_key),
     )
 
 if __name__ == "__main__":

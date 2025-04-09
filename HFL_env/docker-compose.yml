@@ -5,6 +5,7 @@ services:
     image: hfl_env-central_server
     volumes:
       - ./server:/ServerApp
+      - ./certificates/central_server:/ServerApp/certs
     networks:
       - FLnetwork
     stdin_open: true
@@ -21,8 +22,9 @@ services:
     depends_on:
       - central_server
     volumes:
+      - ./nodes:/NodeApp   
       - ./data/node1:/NodeApp/data 
-      - ./nodes:/NodeApp
+      - ./certificates/node1:/NodeApp/certs
     environment:
       - NODE_ID=1
       - SERVER_ADDRESS=central_server:5000
@@ -38,8 +40,9 @@ services:
     depends_on:
       - central_server
     volumes:
+      - ./nodes:/NodeApp    
       - ./data/node2:/NodeApp/data 
-      - ./nodes:/NodeApp
+      - ./certificates/node2:/NodeApp/certs
     environment:
       - NODE_ID=2
       - SERVER_ADDRESS=central_server:5000
@@ -55,8 +58,9 @@ services:
     depends_on:
       - central_server
     volumes:
+      - ./nodes:/NodeApp    
       - ./data/node3:/NodeApp/data 
-      - ./nodes:/NodeApp
+      - ./certificates/node3:/NodeApp/certs
     environment:
       - NODE_ID=3
       - SERVER_ADDRESS=central_server:5000
@@ -72,8 +76,9 @@ services:
     depends_on:
       - central_server
     volumes:
+      - ./nodes:/NodeApp    
       - ./data/node4:/NodeApp/data 
-      - ./nodes:/NodeApp
+      - ./certificates/node4:/NodeApp/certs
     environment:
       - NODE_ID=4
       - SERVER_ADDRESS=central_server:5000
@@ -89,8 +94,9 @@ services:
     depends_on:
       - central_server
     volumes:
+      - ./nodes:/NodeApp    
       - ./data/node5:/NodeApp/data 
-      - ./nodes:/NodeApp
+      - ./certificates/node5:/NodeApp/certs
     environment:
       - NODE_ID=5
       - SERVER_ADDRESS=central_server:5000

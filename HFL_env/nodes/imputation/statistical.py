@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 import flwr as fl
 import functions
 
@@ -12,7 +13,7 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger("node")
-NODE_ID = os.environ.get("NODE_ID", "1")
+NODE_ID = os.environ.get("NODE_ID", "0")
 logger.info(f"Starting node {NODE_ID}")
 
 
@@ -34,7 +35,7 @@ class NodeClient(fl.client.NumPyClient):
 
     def evaluate(self, parameters, config):
         
-        agg_mean = functions.evaluate_values(self.path_to_missing_data,self.local_parameters,parameters,f'../results/metrics_node_{NODE_ID}.json')
+        agg_mean = functions.evaluate_statistical_values(self.path_to_missing_data,self.local_parameters,parameters,NODE_ID)
         logger.info(f'We are inside the evaluate function within the node {NODE_ID} and the agg_mean is : {agg_mean}')
         return agg_mean, len(parameters), {}
 
@@ -46,8 +47,18 @@ if __name__ == "__main__":
     target_feature='los'
     missing_rate = 0.1
 
+    # Load certificates 
+    # ca_cert, private_key, public_key = functions.process_cert_key(NODE_ID)
+    
+    # private_key = Path(f"../certs/node{NODE_ID}.key").read_bytes()
+    # public_key = Path(f"../certs/node{NODE_ID}.pem").read_bytes()
+    # ca_cert = Path(f"../certs/ca.pem").read_bytes()
+
     path_to_missing_data = functions.create_missing_values(target_table,target_feature,missing_rate,NODE_ID)
-    client = NodeClient(target_table,target_feature,path_to_missing_data)
-    fl.client.start_numpy_client(server_address="central_server:5000", client=client)
+    client = NodeClient(target_table,target_feature,path_to_missing_data).to_client()
+    fl.client.start_client(server_address="central_server:5000", client=client)
+        # root_certificates=ca_cert,
+        # insecure=False,
+        # authentication_keys=(private_key, public_key),)
     
 
