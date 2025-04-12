@@ -110,5 +110,6 @@ if __name__ == "__main__":
     client = NodeClient(target_table, feature_x, feature_y,missing_rate).to_client()
     fl.client.start_client(server_address="central_server:5000", client=client,
         root_certificates=ca_cert,
-        insecure=False,
-        authentication_keys=(private_key, public_key),)
+        insecure=False,)
+      # authentication_keys=(private_key, public_key),) authentication_keys are not supported in the default gRPC+TLS transport, This feature (authentication_keys) only works with the experimental HTTP/2-based transport layer
+    
