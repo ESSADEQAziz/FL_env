@@ -34,14 +34,10 @@ def get_client(target_table,target_feature,path_to_missing_data):
 
 if __name__ == "__main__":
 
-    target_table='../data/icustays.csv'
-    target_feature='los'
-    missing_rate = 0.1
 
-    path_to_missing_data = functions.create_missing_values(target_table,target_feature,missing_rate)
-
-    client = get_client(target_table,target_feature,path_to_missing_data)
     fl.client.start_numpy_client(
         server_address="central_server:5000",
-        client=client
+
+
+
     )

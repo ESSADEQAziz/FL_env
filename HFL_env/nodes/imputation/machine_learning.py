@@ -2,6 +2,7 @@ import logging
 import os
 import flwr as fl
 import numpy as np
+from pathlib import Path
 import functions
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error
@@ -95,10 +96,18 @@ if __name__ == "__main__":
     missing_rate = 0.1
     feature_x = "value"
     feature_y = "valuenum"
+
+
+    private_key = Path(f"../auth_keys/node{NODE_ID}_key")
+    public_key = Path(f"../auth_keys/node{NODE_ID}_key.pub")
+    ca_cert = Path(f"../certs/ca.pem").read_bytes()
     
     """ For the machine learning approche, we don't need the create_missing_values() function,
     because the purpose of it is to perserve a data nerver seen by the model to evalute the performence,
     and we already apply the same process implecitlly using the train_test_split logic where (missing_rate = = test_size)  """
 
-    client = NodeClient(target_table, feature_x, feature_y,missing_rate)
-    fl.client.start_numpy_client(server_address="central_server:5000", client=client)
+    client = NodeClient(target_table, feature_x, feature_y,missing_rate).to_client()
+    fl.client.start_client(server_address="central_server:5000", client=client,
+        root_certificates=ca_cert,
+        insecure=False,
+        authentication_keys=(private_key, public_key),)

@@ -15,28 +15,22 @@ logger = logging.getLogger("central_server")
 
 
 class CustomFedAvg(fl.server.strategy.FedAvg):
-    def __init__(self, aggregate_fn, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.aggregate_fn = aggregate_fn
 
     def aggregate(self, results: Dict):
-        # Custom aggregation function
-        return self.aggregate_fn(results)
-    
-
-def start_server():
-    def aggregate(results: Dict):
-        logger.info(f'the result comming from the nodes are : {results}')
-        # Aggregate the mean and median values
+        logger.info(f'The result coming from the nodes: {results}')
         means = [r[1][0] for r in results]
         medians = [r[1][1] for r in results]
         aggregated_mean = sum(means) / len(means)
         aggregated_median = sum(medians) / len(medians)
         return [aggregated_mean, aggregated_median]
+    
+
+def start_server():
 
     # Create the custom FedAvg strategy
     strategy = CustomFedAvg(
-        aggregate_fn=aggregate,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
         min_fit_clients=2,
@@ -49,20 +43,19 @@ def start_server():
     parameters, then the real process of aggragation is applyed after getting all parameters 
     from all nodes and send the aggregated parameters back to all nodes for evaluation. 
     """
-    # Load certificates (as bytes)
-    # ca_cert = Path("../certs/ca.pem").read_bytes()
-    # server_cert = Path("../certs/central_server.pem").read_bytes()
-    # server_key = Path("../certs/central_server.key").read_bytes()
 
     # Start the federated learning server 
     fl.server.start_server(
         server_address="central_server:5000",
         config=fl.server.ServerConfig(num_rounds=1),
         strategy=strategy,
-        # certificates=(ca_cert, server_cert, server_key),
+         certificates=(
+        Path("../certs/ca.pem").read_bytes(),
+        Path("../certs/central_server.pem").read_bytes(),
+        Path("../certs/central_server.key").read_bytes()
+    )
     )
 
 if __name__ == "__main__":
     # Start Flower client
     start_server()
-    

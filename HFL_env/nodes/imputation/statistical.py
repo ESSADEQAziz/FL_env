@@ -47,18 +47,16 @@ if __name__ == "__main__":
     target_feature='los'
     missing_rate = 0.1
 
-    # Load certificates 
-    # ca_cert, private_key, public_key = functions.process_cert_key(NODE_ID)
     
-    # private_key = Path(f"../certs/node{NODE_ID}.key").read_bytes()
-    # public_key = Path(f"../certs/node{NODE_ID}.pem").read_bytes()
-    # ca_cert = Path(f"../certs/ca.pem").read_bytes()
+    private_key = Path(f"../auth_keys/node{NODE_ID}_key")
+    public_key = Path(f"../auth_keys/node{NODE_ID}_key.pub")
+    ca_cert = Path(f"../certs/ca.pem").read_bytes()
 
     path_to_missing_data = functions.create_missing_values(target_table,target_feature,missing_rate,NODE_ID)
     client = NodeClient(target_table,target_feature,path_to_missing_data).to_client()
-    fl.client.start_client(server_address="central_server:5000", client=client)
-        # root_certificates=ca_cert,
-        # insecure=False,
-        # authentication_keys=(private_key, public_key),)
+    fl.client.start_client(server_address="central_server:5000", client=client,
+        root_certificates=ca_cert,
+        insecure=False,
+        authentication_keys=(private_key, public_key),)
     
 

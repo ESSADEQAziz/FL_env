@@ -2,6 +2,7 @@ import logging
 import numpy as np
 import flwr as fl
 import functions
+from pathlib import Path
 from flwr.server.strategy import FedAvg
 
 # Configure logging
@@ -94,7 +95,13 @@ def start_server():
         min_available_clients=2,
         on_fit_config_fn=fit_config)
     
-    history = fl.server.start_server(server_address="central_server:5000", strategy=strategy, config=fl.server.ServerConfig(num_rounds=5))
+    history = fl.server.start_server(server_address="central_server:5000", strategy=strategy,
+        config=fl.server.ServerConfig(num_rounds=5),
+        certificates=(
+        Path("../certs/ca.pem").read_bytes(),
+        Path("../certs/central_server.pem").read_bytes(),
+        Path("../certs/central_server.key").read_bytes()
+    ))
     return history ,strategy.param_log
     
 if __name__ == "__main__":

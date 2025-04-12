@@ -348,28 +348,6 @@ def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
 
         return X_train, X_test, Y_train, Y_test
 
-# def process_cert_key(node_id):
-#     client_key = Path(f"../certs/node{node_id}.key").read_bytes()
-#     client_cert = Path(f"../certs/node{node_id}.pem").read_bytes()
-#     ca_cert = Path(f"../certs/ca.pem").read_bytes()
-
-#     private_key = serialization.load_pem_private_key(
-#     client_key,
-#     password=None,
-#     backend=default_backend()
-#     )
-
-#     public_key = serialization.load_pem_public_key(
-#         client_cert,
-#         backend=default_backend()
-#     )
-
-#     cert = x509.load_pem_x509_certificate(client_cert, default_backend())
-#     public_key = cert.public_key()
-
-#     return ca_cert,private_key,public_key
-
-
 
 
 class SimpleRegressor(nn.Module):

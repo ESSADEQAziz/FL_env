@@ -6,6 +6,7 @@ services:
     volumes:
       - ./server:/ServerApp
       - ./certificates/central_server:/ServerApp/certs
+      - ./auth_keys/central_server:/ServerApp/auth_keys
     networks:
       - FLnetwork
     stdin_open: true
@@ -25,6 +26,7 @@ services:
       - ./nodes:/NodeApp   
       - ./data/node1:/NodeApp/data 
       - ./certificates/node1:/NodeApp/certs
+      - ./auth_keys/node1:/NodeApp/auth_keys
     environment:
       - NODE_ID=1
       - SERVER_ADDRESS=central_server:5000
@@ -43,6 +45,7 @@ services:
       - ./nodes:/NodeApp    
       - ./data/node2:/NodeApp/data 
       - ./certificates/node2:/NodeApp/certs
+      - ./auth_keys/node2:/NodeApp/auth_keys
     environment:
       - NODE_ID=2
       - SERVER_ADDRESS=central_server:5000
@@ -61,6 +64,7 @@ services:
       - ./nodes:/NodeApp    
       - ./data/node3:/NodeApp/data 
       - ./certificates/node3:/NodeApp/certs
+      - ./auth_keys/node3:/NodeApp/auth_keys
     environment:
       - NODE_ID=3
       - SERVER_ADDRESS=central_server:5000
@@ -79,6 +83,7 @@ services:
       - ./nodes:/NodeApp    
       - ./data/node4:/NodeApp/data 
       - ./certificates/node4:/NodeApp/certs
+      - ./auth_keys/node4:/NodeApp/auth_keys
     environment:
       - NODE_ID=4
       - SERVER_ADDRESS=central_server:5000
@@ -97,6 +102,7 @@ services:
       - ./nodes:/NodeApp    
       - ./data/node5:/NodeApp/data 
       - ./certificates/node5:/NodeApp/certs
+      - ./auth_keys/node5:/NodeApp/auth_keys
     environment:
       - NODE_ID=5
       - SERVER_ADDRESS=central_server:5000
