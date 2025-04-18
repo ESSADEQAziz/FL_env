@@ -1,7 +1,7 @@
 import logging
 import flwr as fl
 from pathlib import Path
-from typing import Dict
+
 
 # Configure logging
 logging.basicConfig(
@@ -15,16 +15,18 @@ logger = logging.getLogger("central_server")
 
 
 class CustomFedAvg(fl.server.strategy.FedAvg):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args,**kwargs)
 
-    def aggregate(self, results: Dict):
-        logger.info(f'The result coming from the nodes: {results}')
-        means = [r[1][0] for r in results]
-        medians = [r[1][1] for r in results]
-        aggregated_mean = sum(means) / len(means)
-        aggregated_median = sum(medians) / len(medians)
-        return [aggregated_mean, aggregated_median]
+    
+    # we can delet this function and flwr will do aggregation(Avg) automaticlly
+    def aggregate_fit(self, server_round,results,failures):
+        logger.info(f"(aggregate_fit) The result coming from the nodes are : {results}")
+
+        # Call aggregate_fit from base class
+        aggregated_parameters, metrics = super().aggregate_fit(server_round, results, failures)
+
+        return aggregated_parameters, metrics
     
 
 def start_server():
@@ -54,6 +56,7 @@ def start_server():
         Path("../certs/central_server.pem").read_bytes(),
         Path("../certs/central_server.key").read_bytes()
     )
+
     )
 
 if __name__ == "__main__":

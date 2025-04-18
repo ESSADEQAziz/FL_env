@@ -128,8 +128,6 @@ def evaluate_statistical_values(reference_json_path, local_parameters, aggegated
     with open(results_path, "w") as json_file:
         json.dump(data, json_file, indent=4)
 
-        # we return the accuracy of the aggregated mean 
-    return accuracy[1]
 # This function aims to create some random missing data within a table based on a given missing_rate 
 
 def evaluate_ml_values(node_id, aggregated_parameters, local_mse, round=0):

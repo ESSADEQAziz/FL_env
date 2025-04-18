@@ -1,0 +1,74 @@
+import flwr as fl
+import os
+import torch
+from torch.utils.data import TensorDataset, DataLoader
+from flwr.common import parameters_to_ndarrays, ndarrays_to_parameters
+import functions
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("../logs/nodes.log"),
+    ]
+)
+logger = logging.getLogger("node")
+NODE_ID = os.environ.get("NODE_ID", "0")
+logger.info(f"Starting node {NODE_ID} ... ")
+
+class VFLClient(fl.client.NumPyClient):
+    def __init__(self, target_table,drop_labels, device="cpu"):
+        self.data=functions.preprocess_client_data(target_table,drop_labels)
+        self.encoder = functions.ClientEncoder(input_dim=self.data.shape[1])
+
+        self.data = self.data.to(device)
+        self.encoder = self.encoder.to(device)
+
+        self.device = device
+        self.optimizer = torch.optim.Adam(self.encoder.parameters(), lr=0.01)
+        self.latest_embedding = None
+
+        logger.info(f"Initializing the client class within node {NODE_ID} , with features {self.data.shape} .")
+        
+    def get_parameters(self, config):
+        logger.info(f"(get function) node {NODE_ID}.")
+        return []
+    
+
+    def fit(self, parameters, config):
+        logger.info(f"(fit function) node {NODE_ID} , the received parameters are : {parameters} ")
+        embeddings = self.encoder(self.data)
+        logger.info(f"the sent embedding from node {NODE_ID} is : {[embeddings.detach().numpy()]}")
+        return [embeddings.detach().numpy()], len(self.data), {"node_id": NODE_ID}
+    
+    
+    def evaluate(self, parameters, config):
+        logger.info(f"(evaluate) node {NODE_ID} , the received parameters are : {parameters}")
+
+        grad_np = parameters[int(NODE_ID) - 1] # Because the received list from the server is sorted based on NODE_ID (node 1 -> 1st grads within the list -> index 0 of the list)
+
+
+
+        if grad_np is None:
+            logger.warning(f"(evaluate) node {NODE_ID} did not receive a gradient.")
+            return 0.0, 1, {}
+
+        grad = torch.tensor(grad_np, dtype=torch.float32).to(self.device)
+        embeddings = self.encoder(self.data)
+
+        embeddings.backward(grad)
+        self.optimizer.step()
+        self.optimizer.zero_grad()
+        
+        return 0.0, len(self.data), {}
+    
+
+if __name__ == "__main__" :
+
+    target_table = "../data/patients.csv"
+    droped_labels = ["subject_id","dod","anchor_year_group"]
+
+    fl.client.start_numpy_client(server_address="v_central_server:5000", client=VFLClient(target_table,droped_labels))
+

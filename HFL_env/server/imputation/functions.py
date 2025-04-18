@@ -103,7 +103,3 @@ def evaluate_dl_values(history):
     return history
 
 
-
-
-
-

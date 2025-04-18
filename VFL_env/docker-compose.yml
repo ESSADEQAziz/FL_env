@@ -1,17 +1,14 @@
 version: '3'
 services:
-  central_server:
-    container_name: central_server
+  v_central_server:
+    container_name: v_central_server
     image: hfl_env-central_server
     volumes:
-      - ./server/imputation:/ServerApp/imputation
-      - ./server/imputation:/ServerApp/imputation
-      - ./server/logs:/ServerApp/logs
-      - ./server/results:/ServerApp/results
+      - ./server:/ServerApp
       - ./certificates/central_server:/ServerApp/certs
       - ./auth_keys/central_server:/ServerApp/auth_keys
     networks:
-      - HFLnetwork
+      - VFLnetwork
     stdin_open: true
     tty: true
     expose:
@@ -20,116 +17,101 @@ services:
       - IMPUTATION_STRATEGY=statistical
 # [ statistical - machine_learning - deep_learning ]
 
-  node1:
-    container_name: node1
+  v_node1:
+    container_name: v_node1
     image: hfl_env-node
     depends_on:
-      - central_server
+      - v_central_server
     volumes:
-      - ./nodes/imputation:/NodeApp/imputation
-      - ./nodes/logs:/NodeApp/logs
-      - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py
+      - ./nodes:/NodeApp   
       - ./data/node1:/NodeApp/data 
       - ./certificates/node1:/NodeApp/certs
       - ./auth_keys/node1:/NodeApp/auth_keys
     environment:
       - NODE_ID=1
-      - SERVER_ADDRESS=central_server:5000
+      - SERVER_ADDRESS=v_central_server:5000
       - IMPUTATION_STRATEGY=statistical
     networks:
-      - HFLnetwork  
+      - VFLnetwork  
     stdin_open: true
     tty: true
 
-  node2:
-    container_name: node2
+  v_node2:
+    container_name: v_node2
     image: hfl_env-node
     depends_on:
-      - central_server
+      - v_central_server
     volumes:
-      - ./nodes/imputation:/NodeApp/imputation
-      - ./nodes/logs:/NodeApp/logs
-      - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py 
+      - ./nodes:/NodeApp    
       - ./data/node2:/NodeApp/data 
       - ./certificates/node2:/NodeApp/certs
       - ./auth_keys/node2:/NodeApp/auth_keys
     environment:
       - NODE_ID=2
-      - SERVER_ADDRESS=central_server:5000
+      - SERVER_ADDRESS=v_central_server:5000
       - IMPUTATION_STRATEGY=statistical
     networks:
-      - HFLnetwork  
+      - VFLnetwork  
     stdin_open: true
     tty: true
 
-  node3:
-    container_name: node3
+  v_node3:
+    container_name: v_node3
     image: hfl_env-node
     depends_on:
-      - central_server
+      - v_central_server
     volumes:
-      - ./nodes/imputation:/NodeApp/imputation
-      - ./nodes/logs:/NodeApp/logs
-      - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py  
+      - ./nodes:/NodeApp    
       - ./data/node3:/NodeApp/data 
       - ./certificates/node3:/NodeApp/certs
       - ./auth_keys/node3:/NodeApp/auth_keys
     environment:
       - NODE_ID=3
-      - SERVER_ADDRESS=central_server:5000
+      - SERVER_ADDRESS=v_central_server:5000
       - IMPUTATION_STRATEGY=statistical
     networks:
-      - HFLnetwork  
+      - VFLnetwork  
     stdin_open: true
     tty: true
 
-  node4:
-    container_name: node4
+  v_node4:
+    container_name: v_node4
     image: hfl_env-node
     depends_on:
-      - central_server
+      - v_central_server
     volumes:
-      - ./nodes/imputation:/NodeApp/imputation
-      - ./nodes/logs:/NodeApp/logs
-      - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py    
+      - ./nodes:/NodeApp    
       - ./data/node4:/NodeApp/data 
       - ./certificates/node4:/NodeApp/certs
       - ./auth_keys/node4:/NodeApp/auth_keys
     environment:
       - NODE_ID=4
-      - SERVER_ADDRESS=central_server:5000
+      - SERVER_ADDRESS=v_central_server:5000
       - IMPUTATION_STRATEGY=statistical
     networks:
-      - HFLnetwork  
+      - VFLnetwork  
     stdin_open: true
     tty: true
 
-  node5:
-    container_name: node5
+  v_node5:
+    container_name: v_node5
     image: hfl_env-node
     depends_on:
-      - central_server
+      - v_central_server
     volumes:
-      - ./nodes/imputation:/NodeApp/imputation
-      - ./nodes/logs:/NodeApp/logs
-      - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py  
+      - ./nodes:/NodeApp    
       - ./data/node5:/NodeApp/data 
       - ./certificates/node5:/NodeApp/certs
       - ./auth_keys/node5:/NodeApp/auth_keys
     environment:
       - NODE_ID=5
-      - SERVER_ADDRESS=central_server:5000
+      - SERVER_ADDRESS=v_central_server:5000
       - IMPUTATION_STRATEGY=statistical
     networks:
-      - HFLnetwork  
+      - VFLnetwork  
     stdin_open: true
     tty: true
 
 networks:
-  HFLnetwork:
+  VFLnetwork:
     driver: bridge

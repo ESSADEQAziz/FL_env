@@ -73,8 +73,6 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
        # The returned results after the evaluations within the distributed server test data
         return aggregated_parameters, {"aggregated_MSE":None}
     
-
-
     
     def evaluate(self, server_round, parameters):
        """Send the round number and aggregated loss to nodes."""

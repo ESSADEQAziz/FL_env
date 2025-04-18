@@ -26,18 +26,18 @@ class NodeClient(fl.client.NumPyClient):
         self.local_parameters=functions.calculate_statistics(target_table, target_feature)
         
     def get_parameters(self,config):
-        logger.info(f"inside the get function for the node {self.node_id} the local parameters are : mean {self.local_parameters} ")
+        logger.info(f"inside the get function for the node {self.node_id}, No need to initilise with any parameters (we just sent those parameters just to run the process). ")
         return self.local_parameters
 
     def fit(self, parameters, config):
-        logger.info(f'inside the fit function for the node {self.node_id} : the aggregated parameters are : {parameters}')
+        logger.info(f'inside the fit function for the node {self.node_id}, the sent parameters are : {self.local_parameters}')
         return self.local_parameters, len(parameters), {}
 
     def evaluate(self, parameters, config):
         
-        agg_mean = functions.evaluate_statistical_values(self.path_to_missing_data,self.local_parameters,parameters,NODE_ID)
-        logger.info(f'We are inside the evaluate function within the node {NODE_ID} and the agg_mean is : {agg_mean}')
-        return agg_mean, len(parameters), {}
+        functions.evaluate_statistical_values(self.path_to_missing_data,self.local_parameters,parameters,NODE_ID)
+        logger.info(f'We are inside the evaluate function within the node {NODE_ID}, the metrics saved successfully .')
+        return 0.0, len(parameters), {}
 
     
 
