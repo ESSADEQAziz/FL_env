@@ -19,7 +19,7 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
         super().__init__(*args,**kwargs)
 
     
-    # we can delet this function and flwr will do aggregation(Avg) automaticlly
+    # we can delete this function and flwr will do aggregation(Avg) automaticlly
     def aggregate_fit(self, server_round,results,failures):
         logger.info(f"(aggregate_fit) The result coming from the nodes are : {results}")
 

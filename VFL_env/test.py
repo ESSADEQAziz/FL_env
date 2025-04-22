@@ -1,52 +1,64 @@
-import torch
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, OneHotEncoder ,LabelEncoder
+import torch
+from sklearn.preprocessing import StandardScaler, OneHotEncoder,LabelEncoder
 from sklearn.compose import ColumnTransformer
 
-path = './data/node1/patients.csv'
-target = "anchor_age"
-
-def preprocess_server_target(csv_path,target_feature):
+def preprocess_client_data(csv_path,target_features):
     df = pd.read_csv(csv_path)
+    column_names = df.columns
+    print("===============================================================")
+    print(f"the columns name : {column_names}")
+    print("===============================================================")
 
-    # Separate features (X) and target (y)
-    X = df.drop(columns=[target_feature])
-    y = df[target_feature]
+    num_features=[]
+    cat_features=[]
 
-        # Identify numeric and categorical features in the feature set
-    num_features = X.select_dtypes(include=['int64', 'float64']).columns.tolist()
-    cat_features = X.select_dtypes(include=['object']).columns.tolist()
+    for item in column_names:
+        if item in target_features :
+            if df[item].dtype in ['int64', 'float64'] :
+                num_features.append(item)
+                pass
+            elif df[item].dtype in ['object']:
+                cat_features.append(item)
+                pass
+    print(f"the num_features are :{num_features} / and the cat_features are {cat_features}")
+    print("===============================================================")
 
-
-        # Create preprocessor for features
     preprocessor = ColumnTransformer([
         ('num', StandardScaler(), num_features),
         ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
-    ])
+        ])
 
+    X = preprocessor.fit_transform(df)
+    print(f"The value of X is : {X}")
 
-    # Process features using fit_transform for training data
-    # X_processed = preprocessor.fit_transform(X)
-    
-    # Process target if needed (for classification)
-    if y.dtype == 'object':  # If target is categorical
-        label_encoder = LabelEncoder()
-        y_processed = label_encoder.fit(y).transform(y)
-    else:  # If target is numerical
+    return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32)
+
+def preprocess_server_target(csv_path,target_feature):
+    df = pd.read_csv(csv_path)
+    y=df[target_feature]
+
+    if y.dtype in ['int64', 'float64'] :
         y_processed = y
 
+    elif y.dtype in ['object']:
+        label_encoder = LabelEncoder()
+        y_processed = label_encoder.fit(y).transform(y)
 
 
-    return torch.tensor(y_processed, dtype=torch.float32)
+    return torch.tensor(y_processed, dtype=torch.long)
 
+target_features=["race","anchor_age","gender"]
+target_table = "./data/node2_admissions/data.csv"
 
-y=preprocess_server_target(path,target)
-# print(f"the shape of x :{x.shape[0]}")
-print(f"the shape of y :{y.shape[0]}")
-print("==============================================================================")
-
-
-
-
-
-
+res=preprocess_client_data(target_table,target_features)
+print(res.shape)
+print("===============================================================")
+print(res.dtype)
+print("===============================================================")
+# num_values=res
+# num_values = min(100, res.size(0))
+# first_100 = res[:num_values].detach().cpu().numpy()
+# print(num_values)
+# print("===============================================================")
+# print(first_100)

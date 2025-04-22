@@ -29,7 +29,7 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
         # Call aggregate_fit from base class
         aggregated_parameters, metrics = super().aggregate_fit(server_round, results, failures)
 
-        if functions.save_dl_model(aggregated_parameters,server_round,10,f"../results/dl_results/agg_model/model_round{server_round}.pt"):
+        if functions.save_dl_model(aggregated_parameters,server_round,5,f"../results/dl_results/agg_model/model_round{server_round}.pt"):
             logger.info("The model saved successfully.")
                 
         return aggregated_parameters, metrics

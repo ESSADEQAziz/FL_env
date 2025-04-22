@@ -24,7 +24,7 @@ services:
       - v_central_server
     volumes:
       - ./nodes:/NodeApp   
-      - ./data/node1:/NodeApp/data 
+      - ./data/node1_patients:/NodeApp/data 
       - ./certificates/node1:/NodeApp/certs
       - ./auth_keys/node1:/NodeApp/auth_keys
     environment:
@@ -43,7 +43,7 @@ services:
       - v_central_server
     volumes:
       - ./nodes:/NodeApp    
-      - ./data/node2:/NodeApp/data 
+      - ./data/node2_admissions:/NodeApp/data 
       - ./certificates/node2:/NodeApp/certs
       - ./auth_keys/node2:/NodeApp/auth_keys
     environment:
@@ -62,7 +62,7 @@ services:
       - v_central_server
     volumes:
       - ./nodes:/NodeApp    
-      - ./data/node3:/NodeApp/data 
+      - ./data/node3_chartevents:/NodeApp/data 
       - ./certificates/node3:/NodeApp/certs
       - ./auth_keys/node3:/NodeApp/auth_keys
     environment:
@@ -81,7 +81,7 @@ services:
       - v_central_server
     volumes:
       - ./nodes:/NodeApp    
-      - ./data/node4:/NodeApp/data 
+      - ./data/node4_labevents:/NodeApp/data 
       - ./certificates/node4:/NodeApp/certs
       - ./auth_keys/node4:/NodeApp/auth_keys
     environment:
@@ -100,7 +100,7 @@ services:
       - v_central_server
     volumes:
       - ./nodes:/NodeApp    
-      - ./data/node5:/NodeApp/data 
+      - ./data/node5_icustays:/NodeApp/data 
       - ./certificates/node5:/NodeApp/certs
       - ./auth_keys/node5:/NodeApp/auth_keys
     environment:

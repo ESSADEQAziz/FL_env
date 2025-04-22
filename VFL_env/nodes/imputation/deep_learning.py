@@ -1,8 +1,6 @@
 import flwr as fl
 import os
 import torch
-from torch.utils.data import TensorDataset, DataLoader
-from flwr.common import parameters_to_ndarrays, ndarrays_to_parameters
 import functions
 import logging
 
@@ -19,14 +17,16 @@ NODE_ID = os.environ.get("NODE_ID", "0")
 logger.info(f"Starting node {NODE_ID} ... ")
 
 class VFLClient(fl.client.NumPyClient):
-    def __init__(self, target_table,drop_labels, device="cpu"):
-        self.data=functions.preprocess_client_data(target_table,drop_labels)
-        self.encoder = functions.ClientEncoder(input_dim=self.data.shape[1])
-
-        self.data = self.data.to(device)
-        self.encoder = self.encoder.to(device)
-
+    def __init__(self, target_table,target_features, device="cpu"):
+        self.data=functions.preprocess_client_data(target_table,target_features)
+        self.embedding_size = self.data.shape[1]
+        self.encoder = functions.ClientEncoder(input_dim=self.embedding_size)
+        logger.info(f"the input dimention for the node {NODE_ID} is : {self.embedding_size}")
         self.device = device
+        self.data = self.data.to(self.device)
+        self.encoder = self.encoder.to(self.device)
+
+        
         self.optimizer = torch.optim.Adam(self.encoder.parameters(), lr=0.01)
         self.latest_embedding = None
 
@@ -41,15 +41,13 @@ class VFLClient(fl.client.NumPyClient):
         logger.info(f"(fit function) node {NODE_ID} , the received parameters are : {parameters} ")
         embeddings = self.encoder(self.data)
         logger.info(f"the sent embedding from node {NODE_ID} is : {[embeddings.detach().numpy()]}")
-        return [embeddings.detach().numpy()], len(self.data), {"node_id": NODE_ID}
+        return [embeddings.detach().numpy()], len(self.data), {"node_id": NODE_ID} 
     
     
     def evaluate(self, parameters, config):
         logger.info(f"(evaluate) node {NODE_ID} , the received parameters are : {parameters}")
 
         grad_np = parameters[int(NODE_ID) - 1] # Because the received list from the server is sorted based on NODE_ID (node 1 -> 1st grads within the list -> index 0 of the list)
-
-
 
         if grad_np is None:
             logger.warning(f"(evaluate) node {NODE_ID} did not receive a gradient.")
@@ -67,8 +65,10 @@ class VFLClient(fl.client.NumPyClient):
 
 if __name__ == "__main__" :
 
-    target_table = "../data/patients.csv"
-    droped_labels = ["subject_id","dod","anchor_year_group"]
+    # before testing , make sure that the numbers of sum(embeddings) from nodes == the input dimention of the global model within the server (because it may be some categorical features can scale dimention due to one hot encoder)
+    target_features=["race","gender","anchor_age"]
+    target_table = "../data/data.csv"
 
-    fl.client.start_numpy_client(server_address="v_central_server:5000", client=VFLClient(target_table,droped_labels))
+
+    fl.client.start_numpy_client(server_address="v_central_server:5000", client=VFLClient(target_table,target_features))
 

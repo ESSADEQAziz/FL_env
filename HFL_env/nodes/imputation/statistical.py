@@ -27,7 +27,7 @@ class NodeClient(fl.client.NumPyClient):
         
     def get_parameters(self,config):
         logger.info(f"inside the get function for the node {self.node_id}, No need to initilise with any parameters (we just sent those parameters just to run the process). ")
-        return self.local_parameters
+        return []
 
     def fit(self, parameters, config):
         logger.info(f'inside the fit function for the node {self.node_id}, the sent parameters are : {self.local_parameters}')

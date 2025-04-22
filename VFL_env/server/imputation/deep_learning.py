@@ -19,8 +19,8 @@ logger.info("Strating v_central_server ... ")
 class VFLServer(fl.server.strategy.FedAvg):
     def __init__(self,csv_path, target_feature, device="cpu",*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.model = functions.SimpleRegressor(input_dim=8)  # depends on final embedding size
-        self.target = functions.preprocess_server_target(csv_path,target_feature)
+        self.model = functions.SimpleRegressor(input_dim=8)  # depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ') 
+        self.target = functions.preprocess_server_num_target(csv_path,target_feature)
 
         self.device=device
         self.model = self.model.to(self.device)
@@ -42,7 +42,7 @@ class VFLServer(fl.server.strategy.FedAvg):
             # Convert to torch.Tensor, enable gradient, and move to device
             emb = torch.tensor(embedding_np, dtype=torch.float32, requires_grad=True).to(self.device)
 
-            logger.info(f"the getting parameters from node {node_id} are : {emb}")
+            logger.info(f"the getting parameters from node {node_id} are  (size : {emb.shape}) : {emb}")
             # Add to map
             embedding_map[node_id] = emb
 
@@ -50,10 +50,12 @@ class VFLServer(fl.server.strategy.FedAvg):
         sorted_ids = sorted(embedding_map.keys())
         embeddings = [embedding_map[cid] for cid in sorted_ids]
 
-        logger.warning(f"the sorted embeddings are : {embeddings}")
+        logger.warning(f"the sorted embeddings are (size {len(embeddings)}): {embeddings}")
 
             # 2. Concatenate embeddings
         x = torch.cat(embeddings, dim=1)  # Shape: [batch_size, total_embedding_dim]
+
+        logger.warning(f"the x shape is {x.shape}")
  
 
         # 2. Forward pass
@@ -77,8 +79,8 @@ class VFLServer(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = VFLServer(
-        csv_path="./patients.csv",
-        target_feature="anchor_age",
+        csv_path="./data.csv",
+        target_feature="anchor_year",
         fraction_fit=1.0,
         fraction_evaluate=1.0,
         min_fit_clients=2,
@@ -87,7 +89,7 @@ def start_server():
     )
     
     history = fl.server.start_server(server_address="v_central_server:5000", strategy=strategy, 
-        config=fl.server.ServerConfig(num_rounds=10))
+        config=fl.server.ServerConfig(num_rounds=100))
     
     return history 
 
