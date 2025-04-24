@@ -1,22 +1,10 @@
 import torch
 import torch.nn as nn
 import pandas as pd
+import os
+import pickle
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
-
-class SimpleRegressor(nn.Module):
-    def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
-        super(SimpleRegressor, self).__init__()
-        self.model = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, output_dim)
-        )
-    
-    def forward(self, x):
-        return self.model(x)
 
 class ClientEncoder(nn.Module):
     def __init__(self, input_dim, embed_dim=4):
@@ -29,16 +17,8 @@ class ClientEncoder(nn.Module):
     def forward(self, x):
         return self.encoder(x)
     
-# class ClientLinearEncoder(nn.Module):
-#     def __init__(self, input_dim):
-#         super(ClientEncoder, self).__init__()
-#         self.linear = nn.Linear(input_dim, input_dim)  # Identity-like map
 
-#     def forward(self, x):
-#         return self.linear(x)
-    
-
-def preprocess_client_data(csv_path,target_features):
+def preprocess_client_data(csv_path,target_features,approche):
     df = pd.read_csv(csv_path)
     column_names = df.columns
 
@@ -58,8 +38,15 @@ def preprocess_client_data(csv_path,target_features):
         ('num', StandardScaler(), num_features),
         ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
         ])
-
+    
+    
+    # Save the features processor for the future tests and evaluations 
+    preprocessor_path = f"../results/dl_{approche}/"  
+    os.makedirs(preprocessor_path, exist_ok=True)
     X = preprocessor.fit_transform(df)
+    with open(f"../results/dl_{approche}/preprocessor.pkl", "wb") as f:
+        pickle.dump(preprocessor, f)
+        #X = preprocessor.transform(df)
 
     return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32)
 

@@ -1,64 +1,56 @@
 import pandas as pd
 import torch
-from sklearn.preprocessing import StandardScaler, OneHotEncoder,LabelEncoder
-from sklearn.compose import ColumnTransformer
+import torch.nn as nn
+import pickle
 
-def preprocess_client_data(csv_path,target_features):
-    df = pd.read_csv(csv_path)
-    column_names = df.columns
-    print("===============================================================")
-    print(f"the columns name : {column_names}")
-    print("===============================================================")
+class SimpleClassifier(nn.Module):
+    def __init__(self, input_dim, num_classes):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 16),
+            nn.ReLU(),
+            nn.Linear(16, num_classes)
+        )
 
-    num_features=[]
-    cat_features=[]
+    def forward(self, x):
+        return self.model(x)
+    
+with open("./server/results/dl_classification/preprocessor.pkl", "rb") as f:
+    preprocessor = pickle.load(f)
 
-    for item in column_names:
-        if item in target_features :
-            if df[item].dtype in ['int64', 'float64'] :
-                num_features.append(item)
-                pass
-            elif df[item].dtype in ['object']:
-                cat_features.append(item)
-                pass
-    print(f"the num_features are :{num_features} / and the cat_features are {cat_features}")
-    print("===============================================================")
-
-    preprocessor = ColumnTransformer([
-        ('num', StandardScaler(), num_features),
-        ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
-        ])
-
-    X = preprocessor.fit_transform(df)
-    print(f"The value of X is : {X}")
-
-    return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32)
-
-def preprocess_server_target(csv_path,target_feature):
-    df = pd.read_csv(csv_path)
-    y=df[target_feature]
-
-    if y.dtype in ['int64', 'float64'] :
-        y_processed = y
-
-    elif y.dtype in ['object']:
-        label_encoder = LabelEncoder()
-        y_processed = label_encoder.fit(y).transform(y)
+with open("./server/results/dl_classification/label_map.pkl", "rb") as f:
+    label_map = pickle.load(f)
 
 
-    return torch.tensor(y_processed, dtype=torch.long)
+# Sample input
+sample = {
+    "race": "Asian",
+    "gender": "Female",
+    "anchor_age": 67
+}
 
-target_features=["race","anchor_age","gender"]
-target_table = "./data/node2_admissions/data.csv"
+# Convert to DataFrame
+df_sample = pd.DataFrame([sample])
+print(df_sample)
+print("===================================================")
 
-res=preprocess_client_data(target_table,target_features)
-print(res.shape)
-print("===============================================================")
-print(res.dtype)
-print("===============================================================")
-# num_values=res
-# num_values = min(100, res.size(0))
-# first_100 = res[:num_values].detach().cpu().numpy()
-# print(num_values)
-# print("===============================================================")
-# print(first_100)
+# Preprocess features
+# Apply preprocessing
+X_sample = preprocessor.transform(df_sample)
+print(X_sample)
+print("===================================================")
+X_tensor = torch.tensor(X_sample.toarray() if hasattr(X_sample, "toarray") else X_sample, dtype=torch.float32)
+
+input_dim = X_tensor.shape[1]
+output_dim = len(label_map)
+
+model = SimpleClassifier(input_dim=input_dim, num_classes=output_dim)
+model.load_state_dict(torch.load("./server/results/dl_classification/final_vfl_model.pth", map_location=torch.device("cpu")))
+model.eval()
+
+with torch.no_grad():
+    output = model(X_tensor)
+    pred_class = torch.argmax(output, dim=1).item()
+    pred_label = label_map[pred_class]
+
+print(f"Predicted insurance class: {pred_label}")

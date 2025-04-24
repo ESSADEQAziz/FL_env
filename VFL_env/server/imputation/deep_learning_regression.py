@@ -20,11 +20,15 @@ class VFLServer(fl.server.strategy.FedAvg):
     def __init__(self,csv_path, target_feature, device="cpu",*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.model = functions.SimpleRegressor(input_dim=8)  # depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ') 
-        self.target = functions.preprocess_server_num_target(csv_path,target_feature)
+        self.train_target, self.test_target, self.train_indices, self.test_indices = functions.preprocess_server_target(csv_path,target_feature,test_size=0.2)
 
         self.device=device
         self.model = self.model.to(self.device)
-        self.target = self.target.to(self.device)
+        self.train_target = self.train_target.to(self.device)
+        self.test_target = self.test_target.to(self.device)
+
+        self.test_output = None
+        self.test_input = None
 
     def aggregate_fit(self, server_round, results, failures):
 
@@ -56,11 +60,21 @@ class VFLServer(fl.server.strategy.FedAvg):
         x = torch.cat(embeddings, dim=1)  # Shape: [batch_size, total_embedding_dim]
 
         logger.warning(f"the x shape is {x.shape}")
- 
+
+        self.test_input = x.detach()
 
         # 2. Forward pass
         output = self.model(x)
-        loss = torch.nn.functional.mse_loss(output.squeeze(), self.target)
+
+
+
+        # Match only the embeddings related to train_indices
+        train_output = output.squeeze()[self.train_indices]
+        loss = torch.nn.functional.mse_loss(train_output, self.train_target.squeeze())
+
+
+
+
         logger.info(f"Server loss: {loss.item()}")
         
         # 3. Backward pass
@@ -72,8 +86,13 @@ class VFLServer(fl.server.strategy.FedAvg):
             for cid, emb in zip(sorted_ids, embeddings)
         }
 
+        self.test_output = output.detach()[self.test_indices].cpu().numpy()
+        functions.save_metrics(self.test_output, self.test_target.cpu().numpy(), "../results/dl_regression", server_round)
+        functions.save_model("../results/dl_regression",self.model)
+
         logger.info(f"Final : Sending gradients: {list(grad_map.items())}")
         final_grads=ndarrays_to_parameters(grad_map.values())
+
         return final_grads, {"loss":loss.item()}
     
 

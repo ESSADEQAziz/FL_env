@@ -1,0 +1,64 @@
+import os
+import torch
+import flwr as fl
+import functions
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("../logs/nodes.log"),
+    ]
+)
+logger = logging.getLogger("node")
+NODE_ID = os.environ.get("NODE_ID", "0")
+logger.info(f"Starting node {NODE_ID} ... ")
+
+class VFLClient(fl.client.NumPyClient):
+    def __init__(self, csv_path, features, device="cpu"):
+        self.data = functions.preprocess_client_data(csv_path, features,"classification").to(device)
+        self.embedding_size = self.data.shape[1]
+        self.encoder = functions.ClientEncoder(input_dim=self.embedding_size).to(device)
+        self.device = device
+        self.optimizer = torch.optim.Adam(self.encoder.parameters(), lr=0.01)
+        logger.info(f"Node {NODE_ID} initialized with input size : {self.embedding_size}")
+
+    def get_parameters(self, config):
+        logger.info(f"(get function) node {NODE_ID}.")
+        return []
+
+    def fit(self, parameters, config):
+        embeddings = self.encoder(self.data)
+        logger.info(f" (fit function) Node {NODE_ID} sent embeddings with shape {embeddings.shape}.embeddings : {[embeddings.detach().numpy()]}")
+        return [embeddings.detach().numpy()], len(self.data), {"node_id": NODE_ID}
+
+    def evaluate(self, parameters, config):
+        grad_np = parameters[int(NODE_ID) - 1]  # node1 -> index 0
+
+        if grad_np is None:
+            logger.warning(f"(evaluate) node {NODE_ID} did not receive a gradient.")
+            return 0.0, 1, {}
+        
+        logger.info(f"(evaluation function) node {NODE_ID}, the received gradients has a shape {grad_np.shape}, values: {grad_np}")
+        grad = torch.tensor(grad_np, dtype=torch.float32).to(self.device)
+
+        embeddings = self.encoder(self.data)
+        embeddings.backward(grad)
+        self.optimizer.step()
+        self.optimizer.zero_grad()
+
+        return 0.0, len(self.data), {}
+
+if __name__ == "__main__":
+
+    # before testing , make sure that the numbers of sum(embeddings) from nodes == the input dimention of the global model within the server (because it may be some categorical features can scale dimention due to one hot encoder)
+    target_features=["race","gender","anchor_age"]
+    target_table = "../data/data.csv"
+
+
+    fl.client.start_numpy_client(
+        server_address="v_central_server:5000",
+        client=VFLClient(csv_path=target_table, features=target_features)
+    )
