@@ -60,8 +60,8 @@ def preprocess_server_target_ml_r(data_path, target_col):
     data = pd.read_csv(data_path)
     if data[target_col].dtype in ['int64', 'float64'] :
         preprocessor = ColumnTransformer([('num', StandardScaler(),[target_col])])
-        X = preprocessor.fit_transform(data)
-        return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32).view(-1, 1)
+        Y = preprocessor.fit_transform(data)
+        return torch.tensor(Y.toarray() if hasattr(Y, "toarray") else Y, dtype=torch.float32).view(-1, 1)
  
     else : 
         raise ValueError(f"Target '{target_col}' is categorical.")
@@ -71,8 +71,9 @@ def preprocess_server_target(csv_path, target_feature, test_size=0.2, random_sta
     df = pd.read_csv(csv_path)
 
     if df[target_feature].dtype in ['int64', 'float64']:
-        target = df[target_feature].values
-        y = torch.tensor(target, dtype=torch.float32).view(-1, 1)
+        preprocessor = ColumnTransformer([('num', StandardScaler(),[target_feature])])
+        Y = preprocessor.fit_transform(df)
+        y = torch.tensor(Y.toarray() if hasattr(Y, "toarray") else Y, dtype=torch.float32).view(-1, 1)
 
         n = len(y)
         indices = np.arange(n)
