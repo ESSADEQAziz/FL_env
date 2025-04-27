@@ -3,6 +3,7 @@ import functions
 import torch
 import logging
 import os 
+import numpy as np
 
 
 # Configure logging
@@ -39,7 +40,9 @@ class VFLClient(fl.client.NumPyClient):
 
 
     def evaluate(self, parameters, config):
-        dz = parameters[int(NODE_ID) - 1]  # Gradient of loss w.r.t. z
+        dz = parameters[int(NODE_ID)]  # Gradient of loss w.r.t. z
+        if np.all(dz == 0) :
+            raise ValueError(f"the node {NODE_ID} rceived a none value as gradients.")
         logger.info(f"(evaluation function) node {NODE_ID} the receided parameters are : {parameters}")
         logger.info(f"(evaluation function) node {NODE_ID}, the received gradients are : {dz}")
         

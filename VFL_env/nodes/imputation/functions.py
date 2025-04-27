@@ -45,9 +45,6 @@ def preprocess_node_data_ml(csv_path,target_features,approche):
 
 
 
-
-
-
 def preprocess_node_data_NN(csv_path,target_features,approche):
     df = pd.read_csv(csv_path)
     column_names = df.columns

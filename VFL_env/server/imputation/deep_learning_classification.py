@@ -1,5 +1,6 @@
 import torch
 import os
+import numpy as np
 import json 
 import flwr as fl
 import functions
@@ -63,17 +64,22 @@ class VFLServer(fl.server.strategy.FedAvg):
             os.makedirs("../results/dl_classification/", exist_ok=True)
             torch.save(self.model.state_dict(), "../results/dl_classification/final_vfl_model.pth")
 
-        grad_map = {
-            cid: emb.grad.detach().cpu().numpy()
-            for cid, emb in zip(sorted_ids, embeddings)
-        }
+        # 3. Extract gradients per client_id
+        sorted_ids = [int(s) for s in sorted_ids]
+        sorted_ids = functions.reshape_list_with_none((sorted_ids))
+        grads = []
+        for i in sorted_ids:
+            if i is None:
+                grads.append(np.zeros((1,), dtype=np.float32))  # Dummy gradient for missing nodes
+            else:
+                grads.append(embedding_map[str(i)].grad.clone().numpy())
 
         # Save results per round
         with open("../results/dl_classification/metrics.json", "a") as f:
             json.dump({"round": server_round, "loss": loss.item(), "accuracy": acc}, f)
             f.write("\n")
 
-        return ndarrays_to_parameters(grad_map.values()), {"loss": loss.item(), "accuracy": acc}
+        return ndarrays_to_parameters(grads), {"loss": loss.item(), "accuracy": acc}
     
       
 def start_server():
@@ -91,7 +97,7 @@ def start_server():
     fl.server.start_server(
         server_address="v_central_server:5000",
         strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=100) # change also the final_round attribute within the strategy.
+        config=fl.server.ServerConfig(num_rounds=10) # change also the final_round attribute within the strategy.
     )
 
 if __name__ == "__main__":

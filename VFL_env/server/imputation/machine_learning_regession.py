@@ -1,5 +1,6 @@
 import flwr as fl
 import torch
+import numpy as np
 import functions
 from flwr.common import parameters_to_ndarrays, ndarrays_to_parameters
 import logging
@@ -51,7 +52,10 @@ class LinearVFLServer(fl.server.strategy.FedAvg):
         functions.save_metrics_ml("../results/ml_regression",server_round,loss.item())
 
         # Compute and return gradients
-        grads = [z_map[i].grad.clone().numpy() for i in sorted_ids]
+        sorted_ids = [int(s) for s in sorted_ids]
+        sorted_ids = functions.reshape_list_with_none((sorted_ids)) 
+        grads = [z_map[str(i)].grad.clone().numpy() if i is not None else np.zeros((1,), dtype=np.float32) for i in sorted_ids]
+
         logger.info(f"[Server] Round {server_round} loss: {loss.item():.4f}")
         logger.info(f"the sent gradients are : {grads}")
 

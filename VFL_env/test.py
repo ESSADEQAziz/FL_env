@@ -1,6 +1,15 @@
-z_map = {
-    '1':[],
-    '3':[]
+def reshape_list_with_none(numbers):
+    max_index = max(numbers)
+    new_list = [None] * (max_index + 1)
+    for i, num in enumerate(numbers):
+        new_list[i + (max_index + 1 - len(numbers))] = num
+    return new_list
+
+ls = [6]
+ls = reshape_list_with_none(ls)
+dic = {
+    '1':"a",
+    '2':"b"
 }
-sorted_ids = sorted(z_map.keys())
-print(sorted_ids)
+print(dic.values())
+print(type([dic.values()]))

@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import torch
 import flwr as fl
 import functions
@@ -35,13 +36,12 @@ class VFLClient(fl.client.NumPyClient):
         return [embeddings.detach().numpy()], len(self.data), {"node_id": NODE_ID}
 
     def evaluate(self, parameters, config):
-        grad_np = parameters[int(NODE_ID) - 1]  # node1 -> index 0
+        logger.info(f"(evaluation function) node {NODE_ID}, the received parameters are : {parameters}")
+        grad_np = parameters[int(NODE_ID)] 
 
-        if grad_np is None:
-            logger.warning(f"(evaluate) node {NODE_ID} did not receive a gradient.")
-            return 0.0, 1, {}
+        if np.all(grad_np == 0) :
+            raise ValueError(f"the node {NODE_ID} rceived a none value as gradients.")
         
-        logger.info(f"(evaluation function) node {NODE_ID}, the received gradients has a shape {grad_np.shape}, values: {grad_np}")
         grad = torch.tensor(grad_np, dtype=torch.float32).to(self.device)
 
         embeddings = self.encoder(self.data)

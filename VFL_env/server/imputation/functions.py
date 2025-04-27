@@ -116,4 +116,12 @@ class SimpleClassifier(nn.Module):
     def forward(self, x):
         return self.model(x)
     
+    # we apply it to orchestrate the sent and received index between nodes and the server
+def reshape_list_with_none(numbers):
+    max_index = max(numbers)
+    new_list = [None] * (max_index + 1)
+    for i, num in enumerate(numbers):
+        new_list[i + (max_index + 1 - len(numbers))] = num
+    return new_list
+
 

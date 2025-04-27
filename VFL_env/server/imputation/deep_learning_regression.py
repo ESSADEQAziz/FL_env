@@ -1,6 +1,7 @@
 import flwr as fl
 import torch
 import functions
+import numpy as np
 import logging
 from flwr.common import parameters_to_ndarrays
 from flwr.common import ndarrays_to_parameters
@@ -66,9 +67,11 @@ class VFLServer(fl.server.strategy.FedAvg):
         # 2. Forward pass
         output = self.model(x)
 
+
         # Match only the embeddings related to train_indices
         train_output = output.squeeze()[self.train_indices]
         loss = torch.nn.functional.mse_loss(train_output, self.train_target.squeeze())
+
 
         logger.info(f"Server loss: {loss.item()}")
         
@@ -76,19 +79,22 @@ class VFLServer(fl.server.strategy.FedAvg):
         loss.backward()
 
         # 3. Extract gradients per client_id
-        grad_map = {
-            cid: emb.grad.clone().detach().cpu().numpy()
-            for cid, emb in zip(sorted_ids, embeddings)
-        }
+        sorted_ids = [int(s) for s in sorted_ids]
+        sorted_ids = functions.reshape_list_with_none((sorted_ids))
+        grads = []
+        for i in sorted_ids:
+            if i is None:
+                grads.append(np.zeros((1,), dtype=np.float32))  # Dummy gradient for missing nodes
+            else:
+                grads.append(embedding_map[str(i)].grad.clone().numpy())
 
         self.test_output = output.detach()[self.test_indices].cpu().numpy()
         functions.save_metrics(self.test_output, self.test_target.cpu().numpy(), "../results/dl_regression", server_round)
         functions.save_model("../results/dl_regression",self.model)
 
-        logger.info(f"Final : Sending gradients: {list(grad_map.items())}")
-        final_grads=ndarrays_to_parameters(grad_map.values())
+        logger.info(f"Final : Sending gradients: {grads}")
 
-        return final_grads, {"loss":loss.item()}
+        return ndarrays_to_parameters(grads), {"loss":loss.item()}
     
 
 def start_server():
@@ -103,7 +109,7 @@ def start_server():
     )
     
     history = fl.server.start_server(server_address="v_central_server:5000", strategy=strategy, 
-        config=fl.server.ServerConfig(num_rounds=100))
+        config=fl.server.ServerConfig(num_rounds=10))
     
     return history 
 

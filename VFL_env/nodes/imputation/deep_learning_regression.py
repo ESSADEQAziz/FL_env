@@ -3,6 +3,7 @@ import os
 import torch
 import functions
 import logging
+import numpy as np 
 
 # Configure logging
 logging.basicConfig(
@@ -46,12 +47,9 @@ class VFLClient(fl.client.NumPyClient):
     
     def evaluate(self, parameters, config):
         logger.info(f"(evaluate) node {NODE_ID} , the received parameters are : {parameters}")
-
-        grad_np = parameters[int(NODE_ID) - 1] # Because the received list from the server is sorted based on NODE_ID (node 1 -> 1st grads within the list -> index 0 of the list)
-
-        if grad_np is None:
-            logger.warning(f"(evaluate) node {NODE_ID} did not receive a gradient.")
-            return 0.0, 1, {}
+        grad_np = parameters[int(NODE_ID)]
+        if np.all(grad_np == 0) :
+            raise ValueError(f"the node {NODE_ID} received a none value as gradients.")
 
         grad = torch.tensor(grad_np, dtype=torch.float32).to(self.device)
         embeddings = self.encoder(self.data)
