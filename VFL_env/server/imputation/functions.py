@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
 
 class SimpleRegressor(nn.Module):
     def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
@@ -22,6 +24,11 @@ class SimpleRegressor(nn.Module):
     def forward(self, x):
         return self.model(x)
 
+def save_metrics_ml(metrics_path,round_num,mse):
+    os.makedirs(metrics_path, exist_ok=True)
+    with open(os.path.join(metrics_path, "metrics.json"), "a") as f:
+        json.dump({"round": round_num, "Global_MSE": mse}, f)
+        f.write("\n")
 
 def save_metrics(test_output,test_target,metrics_path, round_num):
     if test_output is None:
@@ -43,6 +50,23 @@ def save_model(model_path,model):
     os.makedirs(model_path, exist_ok=True)
     torch.save(model.state_dict(), os.path.join(model_path, "final_model.pth"))
 
+# def save_model(self, model_dict):
+#     model_path = "../results/final_model_weights.json"
+#     with open(model_path, "w") as f:
+#         json.dump(model_dict, f, indent=2)
+#     print(f"Final model saved to {model_path}")
+
+def preprocess_server_target_ml_r(data_path, target_col):
+    data = pd.read_csv(data_path)
+    if data[target_col].dtype in ['int64', 'float64'] :
+        preprocessor = ColumnTransformer([('num', StandardScaler(),[target_col])])
+        X = preprocessor.fit_transform(data)
+        return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32).view(-1, 1)
+ 
+    else : 
+        raise ValueError(f"Target '{target_col}' is categorical.")
+    
+    
 def preprocess_server_target(csv_path, target_feature, test_size=0.2, random_state=42):
     df = pd.read_csv(csv_path)
 

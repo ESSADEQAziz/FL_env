@@ -18,7 +18,7 @@ logger.info(f"Starting node {NODE_ID} ... ")
 
 class VFLClient(fl.client.NumPyClient):
     def __init__(self, csv_path, features, device="cpu"):
-        self.data = functions.preprocess_client_data(csv_path, features,"classification").to(device)
+        self.data = functions.preprocess_node_data_NN(csv_path, features,"classification").to(device)
         self.embedding_size = self.data.shape[1]
         self.encoder = functions.ClientEncoder(input_dim=self.embedding_size).to(device)
         self.device = device

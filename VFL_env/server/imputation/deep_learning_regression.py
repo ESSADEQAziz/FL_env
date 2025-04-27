@@ -66,14 +66,9 @@ class VFLServer(fl.server.strategy.FedAvg):
         # 2. Forward pass
         output = self.model(x)
 
-
-
         # Match only the embeddings related to train_indices
         train_output = output.squeeze()[self.train_indices]
         loss = torch.nn.functional.mse_loss(train_output, self.train_target.squeeze())
-
-
-
 
         logger.info(f"Server loss: {loss.item()}")
         
