@@ -8,7 +8,7 @@ from pathlib import Path
 from torch.utils.data import DataLoader, TensorDataset
 from functions import SimpleRegressor
 from functions import split_reshape_normalize
-from functions import preprocess_node_data_NN 
+from functions import preprocess_node_data
 
 
 # Configure logging
@@ -21,7 +21,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("node")
 NODE_ID = os.environ.get("NODE_ID", "0")
-logger.info(f"Starting node {NODE_ID}")
+logger.info(f"Starting node {NODE_ID} ...")
 
 # Define a Flower client
 class NodeClient(fl.client.NumPyClient):
@@ -31,7 +31,8 @@ class NodeClient(fl.client.NumPyClient):
         self.server_round=0   
 
         # Load and preprocess data
-        X, Y = preprocess_node_data_NN(target_table, feature_x, feature_y)
+        X, Y = preprocess_node_data(target_table, feature_x, feature_y,'dl')
+        self.input_dim = X.shape[1]
         logger.info(f"Loaded {len(X)} samples from {target_table} node {NODE_ID} using features {feature_x} and {feature_y}")
         logger.info(f"The size of the features is: '{X.shape}' and '{Y.shape}'")
 
@@ -39,7 +40,7 @@ class NodeClient(fl.client.NumPyClient):
         self.X_train, self.X_test, self.Y_train, self.Y_test = split_reshape_normalize(X, Y, test_size=missing_rate, random_state=42)
 
         logger.info(f"the result of test_split_reshape() : x_train = {self.X_train.shape} x_test = {self.X_test.shape} y_train = {self.Y_train.shape} y_test= {self.Y_test.shape}")
-        self.model = SimpleRegressor(input_dim= X.shape[1]) 
+        self.model = SimpleRegressor(input_dim= self.input_dim) 
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
         self.criterion = nn.MSELoss()
@@ -74,7 +75,7 @@ class NodeClient(fl.client.NumPyClient):
         
         logger.info(f"(fit function ) node {NODE_ID}, the sent parameters are : {self.get_parameters(config)}")
 
-        return self.get_parameters(config), len(dataset), {}
+        return self.get_parameters(config), len(dataset), {"input_dim": self.input_dim}
     
     def evaluate(self, parameters, config):
         logger.info(f"(evaluation function) node {NODE_ID} the getting parameters are : {parameters} ")
@@ -89,7 +90,7 @@ class NodeClient(fl.client.NumPyClient):
 if __name__ == "__main__":
     target_table = "../data/labevents.csv"
     missing_rate = 0.2
-    feature_x = ['valuenum']
+    feature_x = ['valuenum','flag']
     feature_y = "ref_range_lower"
 
 

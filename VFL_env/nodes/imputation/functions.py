@@ -44,7 +44,6 @@ def preprocess_node_data_ml(csv_path,target_features,approche):
     return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32)
 
 
-
 def preprocess_node_data_NN(csv_path,target_features,approche):
     df = pd.read_csv(csv_path)
     column_names = df.columns
@@ -82,3 +81,4 @@ def insure_none(x):
 
 
 
+ 

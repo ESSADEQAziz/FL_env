@@ -294,11 +294,9 @@ def calculate_statistics(file_path, feature):
 def remove_nan_values(lst):
     return [x for x in lst if not (isinstance(x, float) and math.isnan(x))]
 
-
 #-----------------------------------------------------------------------------------------------------------------
 
-
-def preprocess_node_data_NN(csv_path,features,target):
+def preprocess_node_data(csv_path,features,target,indx):
     df = pd.read_csv(csv_path)
     column_names = df.columns
 
@@ -324,55 +322,45 @@ def preprocess_node_data_NN(csv_path,features,target):
     target_scaler = StandardScaler()
     Y = target_scaler.fit_transform(df[[target]])  # Keep as 2D array (n_samples, 1)
 
-    # Save the features processor for the future tests and evaluations 
-    preprocessor_path = "../results/dl_regression/"  
-    os.makedirs(preprocessor_path, exist_ok=True)
-    X = preprocessor.fit_transform(df[features])
+    if indx == 'dl':
+        # Save the features processor for the future tests and evaluations 
+        preprocessor_path = "../results/dl_regression/"  
+        os.makedirs(preprocessor_path, exist_ok=True)
+        X = preprocessor.fit_transform(df[features])
+        
+        with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
+            pickle.dump(preprocessor, f)
+
+        # Save target scaler separately
+        with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
+            pickle.dump(target_scaler, f)
+    elif indx == 'ml' :
+        # Save the features processor for the future tests and evaluations 
+        preprocessor_path = "../results/ml_regression/"  
+        os.makedirs(preprocessor_path, exist_ok=True)
+        X = preprocessor.fit_transform(df[features])
+        
+        with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
+            pickle.dump(preprocessor, f)
+
+        # Save target scaler separately
+        with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
+            pickle.dump(target_scaler, f)
+    else :
+        raise ValueError(f"Approche not supportable. (only ml and dl)")
     
-    with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
-        pickle.dump(preprocessor, f)
-
-    # Save target scaler separately
-    with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
-        pickle.dump(target_scaler, f)
-
     # If X is sparse (because of OneHotEncoder), convert to dense
     if hasattr(X, "toarray"):
         X = X.toarray()
 
     return X , Y
 
-
 #-----------------------------------------------------------------------------------------------------------------
-
-
-
-# def load_and_preprocess_data(target_table, feature_x, feature_y):
-#         """Load and preprocess data from a CSV file."""
-#         df = pd.read_csv(target_table)
-
-#         if df[feature_y].dtype in ['int64', 'float64'] :
-#             # Convert string values to numeric, coercing strings to NaN
-#             df[feature_x] = pd.to_numeric(df[feature_x], errors='coerce')
-#             df[feature_y] = pd.to_numeric(df[feature_y], errors='coerce')
-
-#             # Keep only required features and drop missing values
-#             df = df[[feature_x, feature_y]].dropna()
-
-#             # Convert to NumPy arrays
-#             X = df[feature_x].values.reshape(-1, 1)
-#             Y = df[feature_y].values.reshape(-1, 1)
-
-#             return X, Y
-#         else :
-#             raise ValueError(f"the target feature {feature_y} is not numerical.")
-
-
 
 def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
      # Split data into train and test sets
         X_train, X_test, Y_train, Y_test = train_test_split(
-            X, Y, test_size=0.2, random_state=42
+            X, Y, test_size=test_size, random_state=random_state
         )
 
         # Ensure X and Y are float64 before fitting
@@ -382,10 +370,10 @@ def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
         Y_test = np.asarray(Y_test, dtype=np.float64)
 
 
-        X_train = torch.tensor(X, dtype=torch.float32)
-        Y_train = torch.tensor(Y, dtype=torch.float32)        
-        X_test = torch.tensor(X, dtype=torch.float32)
-        Y_test = torch.tensor(Y, dtype=torch.float32)
+        X_train = torch.tensor(X_train, dtype=torch.float32)
+        Y_train = torch.tensor(Y_train, dtype=torch.float32)        
+        X_test = torch.tensor(X_test, dtype=torch.float32)
+        Y_test = torch.tensor(Y_test, dtype=torch.float32)
 
         X_train = insure_none(X_train)
         Y_train = insure_none(Y_train)
@@ -393,7 +381,6 @@ def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
         Y_test = insure_none(Y_test)
 
         return X_train, X_test, Y_train, Y_test
-
 
 
 class SimpleRegressor(nn.Module):
@@ -417,5 +404,12 @@ def insure_none(x):
         x = torch.nan_to_num(x, nan=0.0)
     return x 
 
+class LinearRegressionModel(nn.Module):
+    def __init__(self, input_dim):
+        super().__init__()
+        self.linear = nn.Linear(input_dim, 1)
+
+    def forward(self, x):
+        return self.linear(x)
 
 

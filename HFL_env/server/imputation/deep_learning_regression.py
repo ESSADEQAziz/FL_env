@@ -12,24 +12,26 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger("central_server")
+logger.info("Starting central server ...")
 
 class CustomFedAvg(fl.server.strategy.FedAvg):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics_history = []
-        self.total_rounds=5
 
     def aggregate_fit(self, server_round,results,failures):
         for client, fit_res in results:
             parameters = fit_res.parameters  
             num_samples = fit_res.num_examples  
+            input_dim = fit_res.metrics.get("input_dim")
 
-        logger.info(f"(aggregate_fit) the received parameters are : {parameters.__sizeof__} with num_exemples {num_samples} ")
+        logger.info(f"(aggregate_fit) the received parameters are : {parameters.__sizeof__} //// {input_dim}  /// with num_exemples {num_samples} ")
 
         # Call aggregate_fit from base class
         aggregated_parameters, metrics = super().aggregate_fit(server_round, results, failures)
+        logger.warning(f"the aggregated parameters are : {aggregated_parameters.__sizeof__} /// {aggregated_parameters}")
 
-        if functions.save_dl_model(aggregated_parameters,server_round,10,f"../results/dl_results/agg_model/model_round{server_round}.pt"):
+        if server_round == 10 :
+            functions.save_model(aggregated_parameters,server_round,input_dim,"dl")
             logger.info("The model saved successfully.")
                 
         return aggregated_parameters, metrics
@@ -58,5 +60,5 @@ def start_server():
     return history
     
 if __name__ == "__main__":
-    functions.evaluate_dl_values_2(start_server()) 
+    functions.save_metrics(start_server(),"dl") 
 

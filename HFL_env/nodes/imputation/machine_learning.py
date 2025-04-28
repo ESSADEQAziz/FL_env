@@ -1,11 +1,12 @@
 import logging
 import os
 import flwr as fl
-import numpy as np
+import torch.optim as optim
+import torch.nn as nn
+import torch
 from pathlib import Path
 import functions
-from sklearn.linear_model import SGDRegressor
-from sklearn.metrics import mean_squared_error
+
 
 # Configure logging
 logging.basicConfig(
@@ -17,7 +18,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("node")
 NODE_ID = os.environ.get("NODE_ID", "0")
-logger.info(f"Starting node {NODE_ID}")
+logger.info(f"Starting node {NODE_ID} ...")
 
 # Define a Flower client
 class NodeClient(fl.client.NumPyClient):
@@ -25,77 +26,62 @@ class NodeClient(fl.client.NumPyClient):
         self.epochs = 100
         self.iterations=100
         self.server_round=0
-        
-        # Load and preprocess data
-        X, Y = functions.load_and_preprocess_data(target_table, feature_x, feature_y)
-        logger.info(f"Loaded {len(X)} samples from {target_table} using features '{feature_x}' and '{feature_y}'")
-        logger.info(f"The size of the features is: '{X.size}' and '{Y.size}'")
-        
+        self.learning_rate=0.01
+
+        X, Y = functions.preprocess_node_data(target_table, feature_x, feature_y,'ml')
+        logger.info(f"the features ({feature_x}) {X.shape} and the target  ({feature_y}) {Y.shape} laoded from table {target_table}")
         # Split data into train and test sets
         self.X_train, self.X_test, self.Y_train, self.Y_test = functions.split_reshape_normalize(X, Y, test_size=missing_rate, random_state=42)
+        logger.info(f"X_train {self.X_train.shape},Y_train {self.Y_train.shape},X_test {self.X_test.shape} Y_test {self.Y_test.shape}")
 
-        # Initialize model with warm start for partial_fit
-        # By default SGDRegressor work with mini-batch 'small sample of data'
-        self.model = SGDRegressor(
-            warm_start=True, 
-            max_iter=self.iterations, 
-            tol=1e-3, 
-            learning_rate="adaptive", 
-            eta0=0.001
-        )
+        self.input_dim = X.shape[1]
+        self.model = functions.LinearRegressionModel(input_dim=self.input_dim)
+        self.loss_fn = nn.MSELoss()
+        self.optimizer = optim.SGD(self.model.parameters(), lr=self.learning_rate)
+
         
     def fit(self, parameters, config):
+        logger.info(f"(fit function) node {NODE_ID}, the received parameters are : {parameters}")
+        self.set_parameters(parameters)
+        self.model.train()
+        for epoch in range(self.epochs):  # local epochs
+            preds = self.model(self.X_train)
+            loss = self.loss_fn(preds, self.Y_train)
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
 
-        # Update model parameters
-        self.model.coef_ = np.array(parameters[0]).reshape(1, -1)
-        self.model.intercept_ = np.array(parameters[1])
+        logger.info(f"(fit function) the sent parameters, node {NODE_ID} are : {self.get_parameters(config={})} ")
+        return self.get_parameters(config={}), len(self.X_train), {"input_dim": self.input_dim}
 
-        # Reshape coefficients for partial_fit
-        self.model.coef_ = self.model.coef_.reshape(-1)
-        self.model.intercept_ = self.model.intercept_.reshape(-1)
-
-        # Train the model with the partial_fit method does not apply epochs automatically, we need to do it manually.
-        for _ in range(self.epochs):
-            self.model.partial_fit(self.X_train, self.Y_train.ravel()) 
-
-
-        self.server_round = config.get("server_round", -1)
-
-        logger.info(f"the sent parameters from node {NODE_ID} are (round = {self.server_round }) : a= {self.model.coef_}  b= {self.model.intercept_}")
-        logger.warning(f" (fit function) the server round = {self.server_round } ")
-
-        return [self.model.coef_, self.model.intercept_], len(self.X_train), {}
-    
 
     def get_parameters(self, config):
-        """Return the model parameters."""
-        logger.info(f"Node {NODE_ID} get_parameters: coef={0.0}, intercept={0.0}")
-        return np.array([0.0, 0.0])
+        weight = self.model.linear.weight.data.numpy()
+        bias = self.model.linear.bias.data.numpy()
+        logger.info(f"(get function) node {NODE_ID} , the sent parameteres are {[weight, bias]}")
+        return [weight, bias]
+    
+    def set_parameters(self, parameters):
+        weight, bias = parameters
+        self.model.linear.weight.data = torch.tensor(weight, dtype=torch.float32)
+        self.model.linear.bias.data = torch.tensor(bias, dtype=torch.float32)
+        logger.info(f"(set function) node {NODE_ID}, parameters updated successfully.")
 
     def evaluate(self, parameters, config):
-        """Evaluate model performance."""
+        self.set_parameters(parameters)
+        self.model.eval()
+        preds = self.model(self.X_test)
+        loss = self.loss_fn(preds, self.Y_test)
 
-        self.model.coef_ = parameters[0]
-        self.model.intercept_ = parameters[1]
-
-            # Make predictions
-        y_pred=self.model.predict(self.X_test)
-        mse = mean_squared_error(self.Y_test , y_pred)
-        
-        logger.info(f" (evaluation function ) Node {NODE_ID} make predictions with parameters: coef={parameters[0]}, intercept={parameters[1]}")
-        logger.info(f"The Calculated MSE for node  {NODE_ID}: MSE={mse:.4f}")
-
-
-        logger.error(f" node {NODE_ID} parameters {parameters} mse {mse} server_rd {self.server_round}")
-        functions.evaluate_ml_values(NODE_ID,parameters,mse,self.server_round)
-        
-        return mse, len(self.X_test),{}
+        logger.info(f"(evaluate function) node {NODE_ID}, the sent loss is {float(loss.item())}")
+        return float(loss.item()), len(self.X_train), {}
+  
     
 if __name__ == "__main__":
     target_table = "../data/labevents.csv"
-    missing_rate = 0.1
-    feature_x = "value"
-    feature_y = "valuenum"
+    missing_rate = 0.2
+    feature_x = ['valuenum','ref_range_lower','priority']
+    feature_y = "ref_range_upper"
 
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")

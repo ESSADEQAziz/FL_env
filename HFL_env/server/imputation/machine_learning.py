@@ -1,9 +1,7 @@
 import logging
-import numpy as np
 import flwr as fl
 import functions
 from pathlib import Path
-from flwr.server.strategy import FedAvg
 
 # Configure logging
 logging.basicConfig(
@@ -14,70 +12,58 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger("central_server")
+logger.info("Starting central server ...")
 
 class CustomFedAvg(fl.server.strategy.FedAvg):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
-        self.param_log = []  # [(round, parameters)]
         
     def aggregate_fit(self, server_round, results, failures):
         """Custom aggregation of (a, b) parameters."""
 
         if failures:
             logger.warning(f"Failures: {len(failures)} clients failed to send updates")
+            raise ValueError(f"Failure : {failures}")
 
         # Initialize lists
-        a_values = []
-        b_values = []
+        weights_list = []
+        biases_list = []
         total_samples = 0
 
         for client, fit_res in results:
-            parameters = fit_res.parameters  # Extract parameters (a, b)
-            num_samples = fit_res.num_examples  # Extract number of training samples
+            params = fl.common.parameters_to_ndarrays(fit_res.parameters)
+            num_samples = fit_res.num_examples
+            input_dim = fit_res.metrics.get("input_dim")
 
-            # Convert to NumPy arrays
-            params = fl.common.parameters_to_ndarrays(parameters)
-
-            # Ensure parameters are lists or 1D arrays
-            if isinstance(params, list) and len(params) == 2:
-                a, b = params
-            elif isinstance(params, np.ndarray) and params.size == 2:
-                a, b = params.tolist()  # Convert single array to list
-            else:
+            logger.info(f"the number of sample are : {num_samples} , the input_dim {input_dim} and the comming parameters are :{params}")
+            if len(params) != 2:
                 logger.error(f"Unexpected parameter format: {params}")
                 continue
 
-            logger.info(f"the received parameters : a = {a} and b = {b}")
-
-            a_values.append((a, num_samples))
-            b_values.append((b, num_samples))
+            weight, bias = params
+            weights_list.append((weight, num_samples))
+            biases_list.append((bias, num_samples))
             total_samples += num_samples
-        
-
+        logger.info(f"the length of the weights list is : {len(weights_list)} / biases length {len(biases_list)} / num_samples {total_samples}")
         # Compute weighted averages
         if total_samples == 0:
-            logger.error("No valid data received from clients.")
+            logger.error("No valid data received from nodes.")
             return None, {}
         
-        # Compute Weighted Averages (Each node's a (or b) is multiplied by the number of samples (w) it trained on)
-        avg_a = sum(a * w for a, w in a_values) / total_samples
-        avg_b = sum(b * w for b, w in b_values) / total_samples
+        aggregated_parameters,metrics = super().aggregate_fit(server_round,results,failures)
+        logger.info(f"the aggregated parameters are {aggregated_parameters} /// metrics {metrics}")
 
-        # Convert back to Flower parameters format
-        aggregated_parameters = fl.common.ndarrays_to_parameters([np.array(avg_a), np.array(avg_b)])
-
-        logger.info(f"Round {server_round}: Aggregated a={avg_a}, b={avg_b}")
-
-        self.param_log.append((server_round, [avg_a, avg_b]))
-
-       # The returned results after the evaluations within the distributed server test data
-        return aggregated_parameters, {"aggregated_MSE":None}
+        if server_round == 20 : 
+            functions.save_model(aggregated_parameters,server_round,input_dim,"ml")
+            logger.info("The model saved successfully.")
+        
+        return aggregated_parameters, metrics
     
     
     def evaluate(self, server_round, parameters):
        """Send the round number and aggregated loss to nodes."""
        # The returned results after the evaluations within the centralised server test data
-       return None, {"aggregated_MSE":None}
+       return 0.0, {}
     
 def fit_config(server_round):
     return {
@@ -94,15 +80,13 @@ def start_server():
         on_fit_config_fn=fit_config)
     
     history = fl.server.start_server(server_address="central_server:5000", strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=5),
+        config=fl.server.ServerConfig(num_rounds=20),#if you change the num_round, change it also within the save_dl_model() function
         certificates=(
         Path("../certs/ca.pem").read_bytes(),
         Path("../certs/central_server.pem").read_bytes(),
         Path("../certs/central_server.key").read_bytes()
     ))
-    return history ,strategy.param_log
+    return history 
     
 if __name__ == "__main__":
-    history,strategy_param = start_server() 
-    history.losses_distributed
-    functions.evaluate_ml_values(history,strategy_param,logger)
+    functions.save_metrics(start_server(),"ml") 

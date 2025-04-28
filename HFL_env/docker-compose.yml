@@ -5,7 +5,6 @@ services:
     image: hfl_env-central_server
     volumes:
       - ./server/imputation:/ServerApp/imputation
-      - ./server/imputation:/ServerApp/imputation
       - ./server/logs:/ServerApp/logs
       - ./server/results:/ServerApp/results
       - ./certificates/central_server:/ServerApp/certs
