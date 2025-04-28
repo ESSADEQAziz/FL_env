@@ -27,7 +27,7 @@ def get_client(target_table,target_feature,path_to_missing_data):
         from imputation.machine_learning import NodeClient
         return NodeClient()
     elif strategy == "deep_learning":
-        from imputation.deep_learning import NodeClient
+        from nodes.imputation.deep_learning_regression import NodeClient
         return NodeClient()
     else:
         raise ValueError(f"Unknown imputation strategy: {strategy}")

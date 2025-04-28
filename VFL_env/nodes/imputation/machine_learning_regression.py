@@ -25,10 +25,7 @@ class VFLClient(fl.client.NumPyClient):
         self.w = torch.randn((self.x.shape[1], 1), requires_grad=True)  # one weight per feature
         self.lr = 0.01
         logging.info(f"Initilizing node {NODE_ID} with shape: {self.x.shape}")
-
-        if torch.isnan(self.x).any():
-            logger.warning("Warning: NaN values detected in target y, replacing them with 0 to avoid loss and gradients calculus.(consider it as noise)")
-        self.x = torch.nan_to_num(self.x, nan=0.0)
+        self.x = functions.insure_none(self.x)
 
     def get_parameters(self, config):
         return [self.w.detach().numpy()]

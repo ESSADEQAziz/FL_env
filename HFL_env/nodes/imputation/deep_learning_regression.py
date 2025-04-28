@@ -8,7 +8,7 @@ from pathlib import Path
 from torch.utils.data import DataLoader, TensorDataset
 from functions import SimpleRegressor
 from functions import split_reshape_normalize
-from functions import load_and_preprocess_data  
+from functions import preprocess_node_data_NN 
 
 
 # Configure logging
@@ -31,29 +31,22 @@ class NodeClient(fl.client.NumPyClient):
         self.server_round=0   
 
         # Load and preprocess data
-        X, Y = load_and_preprocess_data(target_table, feature_x, feature_y)
-        logger.info(f"Loaded {len(X)} samples from {target_table} node {NODE_ID} using features '{feature_x}' and '{feature_y}'")
-        logger.info(f"The size of the features is: '{X.size}' and '{Y.size}'")
+        X, Y = preprocess_node_data_NN(target_table, feature_x, feature_y)
+        logger.info(f"Loaded {len(X)} samples from {target_table} node {NODE_ID} using features {feature_x} and {feature_y}")
+        logger.info(f"The size of the features is: '{X.shape}' and '{Y.shape}'")
 
         # Split data into train and test sets
         self.X_train, self.X_test, self.Y_train, self.Y_test = split_reshape_normalize(X, Y, test_size=missing_rate, random_state=42)
 
-        logger.info(f"the result of test_split_reshape() : x_train = {self.X_train.size} x_test = {self.X_test.size} y_train = {self.Y_train.size} y_test= {self.Y_test.size}")
-        self.model = SimpleRegressor()
+        logger.info(f"the result of test_split_reshape() : x_train = {self.X_train.shape} x_test = {self.X_test.shape} y_train = {self.Y_train.shape} y_test= {self.Y_test.shape}")
+        self.model = SimpleRegressor(input_dim= X.shape[1]) 
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
-        self.X_train = torch.tensor(X, dtype=torch.float32)
-        self.Y_train = torch.tensor(Y, dtype=torch.float32)        
-        self.X_test = torch.tensor(X, dtype=torch.float32)
-        self.Y_test = torch.tensor(Y, dtype=torch.float32)
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
 
-
-
-
     def get_parameters(self, config):
-        logger.info(f"( get_parameters ) from node {NODE_ID} with a size of : {[val.cpu().numpy() for val in self.model.state_dict().values()].__sizeof__}")
+        logger.info(f"( get_parameters ) from node {NODE_ID} with a size of : {[val.cpu().numpy() for val in self.model.state_dict().values()]}")
         return [val.cpu().numpy() for val in self.model.state_dict().values()]
 
     def set_parameters(self, parameters):
@@ -64,7 +57,7 @@ class NodeClient(fl.client.NumPyClient):
         self.model.load_state_dict(state_dict, strict=True)
      
     def fit(self, parameters, config):
-        logger.info(f"(fit function ) node {NODE_ID}, the parameters are : {parameters.__sizeof__}")
+        logger.info(f"(fit function ) node {NODE_ID}, the parameters are : {parameters}")
         self.set_parameters(parameters)
         self.model.train()
 
@@ -79,23 +72,24 @@ class NodeClient(fl.client.NumPyClient):
                 loss.backward()
                 self.optimizer.step()
         
-        
+        logger.info(f"(fit function ) node {NODE_ID}, the sent parameters are : {self.get_parameters(config)}")
+
         return self.get_parameters(config), len(dataset), {}
     
     def evaluate(self, parameters, config):
-        logger.info(f"(evaluation function) node {NODE_ID} the getting parameters are : {parameters.__sizeof__} ")
+        logger.info(f"(evaluation function) node {NODE_ID} the getting parameters are : {parameters} ")
         self.set_parameters(parameters)
         self.model.eval()
         with torch.no_grad():
             y_pred = self.model(self.X_test)
             loss = self.criterion(y_pred, self.Y_test)
-        logger.info(f"the sent loss: {float(loss.item())}")
+        logger.info(f"the sent loss {NODE_ID}: {float(loss.item())}")
         return float(loss.item()), len(self.X_test), {"loss": float(loss.item())}
     
 if __name__ == "__main__":
     target_table = "../data/labevents.csv"
     missing_rate = 0.2
-    feature_x = "value"
+    feature_x = ['valuenum']
     feature_y = "ref_range_lower"
 
 

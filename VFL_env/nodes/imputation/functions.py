@@ -64,7 +64,6 @@ def preprocess_node_data_NN(csv_path,target_features,approche):
         ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
         ])
     
-    
     # Save the features processor for the future tests and evaluations 
     preprocessor_path = f"../results/dl_{approche}/"  
     os.makedirs(preprocessor_path, exist_ok=True)
@@ -74,6 +73,12 @@ def preprocess_node_data_NN(csv_path,target_features,approche):
         #X = preprocessor.transform(df)
 
     return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32)
+
+def insure_none(x):
+    if torch.isnan(x).any():
+        print("Warning: NaN values detected in target y, replacing them with 0 to avoid loss and gradients calculus.(consider it as noise)")
+        x = torch.nan_to_num(x, nan=0.0)
+    return x 
 
 
 

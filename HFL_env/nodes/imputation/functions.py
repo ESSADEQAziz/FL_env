@@ -3,10 +3,9 @@ import numpy as np
 import os
 import math
 import json
-from pathlib import Path
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
-from cryptography import x509
+import pickle
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
 import torch
 import torch.nn as nn
 from sklearn.model_selection import train_test_split
@@ -223,22 +222,7 @@ def evaluate_ml_values(node_id, aggregated_parameters, local_mse, round=0):
         print(f"Successfully updated metrics for node {node_id} at round {round}")
     except Exception as e:
         print(f"Error writing metrics to file: {e}")
-    
-# def load_data(input_features=["x1", "x2"], target="y", path="data.csv"):
-#     df = pd.read_csv(path)
-#     X = df[input_features].values
-#     y = df[target].values.reshape(-1, 1)
 
-#     scaler_X = StandardScaler()
-#     scaler_y = StandardScaler()
-#     X = scaler_X.fit_transform(X)
-#     y = scaler_y.fit_transform(y)
-
-#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-#     return (torch.tensor(X_train, dtype=torch.float32),
-#             torch.tensor(y_train, dtype=torch.float32),
-#             torch.tensor(X_test, dtype=torch.float32),
-#             torch.tensor(y_test, dtype=torch.float32))
 
 def create_missing_values(csv_path: str, feature_name: str, missing_rate: float, 
                           node_id) -> str:
@@ -310,22 +294,80 @@ def calculate_statistics(file_path, feature):
 def remove_nan_values(lst):
     return [x for x in lst if not (isinstance(x, float) and math.isnan(x))]
 
-def load_and_preprocess_data(target_table, feature_x, feature_y):
-        """Load and preprocess data from a CSV file."""
-        df = pd.read_csv(target_table)
 
-        # Convert string values to numeric, coercing strings to NaN
-        df[feature_x] = pd.to_numeric(df[feature_x], errors='coerce')
-        df[feature_y] = pd.to_numeric(df[feature_y], errors='coerce')
+#-----------------------------------------------------------------------------------------------------------------
 
-        # Keep only required features and drop missing values
-        df = df[[feature_x, feature_y]].dropna()
 
-        # Convert to NumPy arrays
-        X = df[feature_x].values.reshape(-1, 1)
-        Y = df[feature_y].values.reshape(-1, 1)
+def preprocess_node_data_NN(csv_path,features,target):
+    df = pd.read_csv(csv_path)
+    column_names = df.columns
 
-        return X, Y
+    num_features=[]
+    cat_features=[]
+
+    if df[target].dtype not in ['int64', 'float64']:
+        raise ValueError(f"the target feature is not numerical.")
+
+    for item in column_names:
+        if item in features :
+            if df[item].dtype in ['int64', 'float64'] :
+                num_features.append(item)
+            elif df[item].dtype in ['object']:
+                cat_features.append(item)
+
+    preprocessor = ColumnTransformer([
+        ('num', StandardScaler(), num_features),
+        ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
+        ])
+    
+    # Preprocessor for target
+    target_scaler = StandardScaler()
+    Y = target_scaler.fit_transform(df[[target]])  # Keep as 2D array (n_samples, 1)
+
+    # Save the features processor for the future tests and evaluations 
+    preprocessor_path = "../results/dl_regression/"  
+    os.makedirs(preprocessor_path, exist_ok=True)
+    X = preprocessor.fit_transform(df[features])
+    
+    with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
+        pickle.dump(preprocessor, f)
+
+    # Save target scaler separately
+    with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
+        pickle.dump(target_scaler, f)
+
+    # If X is sparse (because of OneHotEncoder), convert to dense
+    if hasattr(X, "toarray"):
+        X = X.toarray()
+
+    return X , Y
+
+
+#-----------------------------------------------------------------------------------------------------------------
+
+
+
+# def load_and_preprocess_data(target_table, feature_x, feature_y):
+#         """Load and preprocess data from a CSV file."""
+#         df = pd.read_csv(target_table)
+
+#         if df[feature_y].dtype in ['int64', 'float64'] :
+#             # Convert string values to numeric, coercing strings to NaN
+#             df[feature_x] = pd.to_numeric(df[feature_x], errors='coerce')
+#             df[feature_y] = pd.to_numeric(df[feature_y], errors='coerce')
+
+#             # Keep only required features and drop missing values
+#             df = df[[feature_x, feature_y]].dropna()
+
+#             # Convert to NumPy arrays
+#             X = df[feature_x].values.reshape(-1, 1)
+#             Y = df[feature_y].values.reshape(-1, 1)
+
+#             return X, Y
+#         else :
+#             raise ValueError(f"the target feature {feature_y} is not numerical.")
+
+
 
 def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
      # Split data into train and test sets
@@ -339,10 +381,16 @@ def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
         X_test = np.asarray(X_test, dtype=np.float64)
         Y_test = np.asarray(Y_test, dtype=np.float64)
 
-        # Normalization
-        scaler = StandardScaler()
-        X_train = scaler.fit_transform(X_train)
-        X_test = scaler.transform(X_test)
+
+        X_train = torch.tensor(X, dtype=torch.float32)
+        Y_train = torch.tensor(Y, dtype=torch.float32)        
+        X_test = torch.tensor(X, dtype=torch.float32)
+        Y_test = torch.tensor(Y, dtype=torch.float32)
+
+        X_train = insure_none(X_train)
+        Y_train = insure_none(Y_train)
+        X_test = insure_none(X_test)
+        Y_test = insure_none(Y_test)
 
         return X_train, X_test, Y_train, Y_test
 
@@ -363,8 +411,11 @@ class SimpleRegressor(nn.Module):
         return self.model(x)
 
 
-
-
+def insure_none(x):
+    if torch.isnan(x).any():
+        print("Warning: NaN values detected in target y, replacing them with 0 to avoid loss and gradients calculus.(consider it as noise)")
+        x = torch.nan_to_num(x, nan=0.0)
+    return x 
 
 
 

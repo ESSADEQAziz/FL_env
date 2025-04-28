@@ -22,7 +22,7 @@ if __name__ == "__main__":
         from imputation.machine_learning import start_server
         start_server()
     elif strategy == "deep_learning":
-        from imputation.deep_learning import start_server
+        from server.imputation.deep_learning_regression import start_server
         start_server()
     else:
         raise ValueError(f"Unknown imputation strategy: {strategy}")

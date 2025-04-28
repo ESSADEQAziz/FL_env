@@ -89,7 +89,7 @@ def evaluate_dl_values(history):
     path="../results/dl_results/metrics.json"
     # Prepare directory
     os.makedirs(os.path.dirname(path), exist_ok=True)
-
+    
     # Convert history to dictionary
     history_dict = {
         "loss": history.losses_distributed,  # list of tuples (round, loss)
@@ -101,5 +101,29 @@ def evaluate_dl_values(history):
         json.dump(history_dict, f, indent=4)
 
     return history
+
+def evaluate_dl_values_2(history):
+    path = "../results/dl_results/metrics.json"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    distributed = history.losses_distributed
+    centralized = history.losses_centralized # Replace "loss" with the right key if needed
+
+    with open(path, "w") as f:
+        for i, (round_num, distributed_loss) in enumerate(distributed):
+            record = {"round": round_num, "distributed_loss": distributed_loss}
+            if i < len(centralized):
+                record["centralized_loss"] = centralized[i][1]  # (round, value)
+            json.dump(record, f)
+            f.write("\n")
+
+    return history
+
+def insure_none(x):
+    if torch.isnan(x).any():
+        print("Warning: NaN values detected in target y, replacing them with 0 to avoid loss and gradients calculus.(consider it as noise)")
+        x = torch.nan_to_num(x, nan=0.0)
+    return x 
+
 
 

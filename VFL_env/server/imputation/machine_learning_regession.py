@@ -21,7 +21,7 @@ class LinearVFLServer(fl.server.strategy.FedAvg):
     def __init__(self, data_path, target_col, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.y = functions.preprocess_server_target_ml_r(data_path,target_col)
-
+        self.y = functions.insure_none(self.y)
         self.loss_fn = torch.nn.MSELoss()
 
         logger.info(f"Initilizing the server with the shape: {self.y.shape}")

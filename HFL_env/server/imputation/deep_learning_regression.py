@@ -29,11 +29,14 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
         # Call aggregate_fit from base class
         aggregated_parameters, metrics = super().aggregate_fit(server_round, results, failures)
 
-        if functions.save_dl_model(aggregated_parameters,server_round,5,f"../results/dl_results/agg_model/model_round{server_round}.pt"):
+        if functions.save_dl_model(aggregated_parameters,server_round,10,f"../results/dl_results/agg_model/model_round{server_round}.pt"):
             logger.info("The model saved successfully.")
                 
         return aggregated_parameters, metrics
-
+    
+    def evaluate(self, server_round, parameters):
+        logger.info(f"(evaluation function)the received parameters are : {parameters}")
+        return 0.0,{}
 
 
 def start_server():
@@ -46,14 +49,14 @@ def start_server():
     )
     
     history = fl.server.start_server(server_address="central_server:5000", strategy=strategy, 
-        config=fl.server.ServerConfig(num_rounds=5),#if you change the num_round, change it also within the save_dl_model() function
+        config=fl.server.ServerConfig(num_rounds=10),#if you change the num_round, change it also within the save_dl_model() function
         certificates=(
         Path("../certs/ca.pem").read_bytes(),
         Path("../certs/central_server.pem").read_bytes(),
         Path("../certs/central_server.key").read_bytes())
     )
-    return history 
+    return history
     
 if __name__ == "__main__":
-    functions.evaluate_dl_values(start_server()) 
+    functions.evaluate_dl_values_2(start_server()) 
 

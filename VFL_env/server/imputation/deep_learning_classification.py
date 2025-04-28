@@ -22,6 +22,10 @@ class VFLServer(fl.server.strategy.FedAvg):
     def __init__(self, csv_path, target_feature,final_round, device="cpu", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.train_y, self.test_y = functions.preprocess_server_target(csv_path, target_feature,test_size=0.2)
+
+        self.train_y = functions.insure_none(self.train_y)
+        self.test_y = functions.insure_none(self.test_y)
+        
         self.device = device
         self.train_y = self.train_y.to(device)
         self.test_y = self.test_y.to(device)

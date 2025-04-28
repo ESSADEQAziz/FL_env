@@ -1,25 +1,10 @@
-{
-    "loss": [
-        [
-            1,
-            11693.372175513567
-        ],
-        [
-            2,
-            2666.1339755696245
-        ],
-        [
-            3,
-            1902.4877133866921
-        ],
-        [
-            4,
-            2075.0245028114173
-        ],
-        [
-            5,
-            1728.9572146798773
-        ]
-    ],
-    "metrics": {}
-}
+{"round": 1, "distributed_loss": 0.6442876026691595, "centralized_loss": 0.0}
+{"round": 2, "distributed_loss": 0.9765984255679308, "centralized_loss": 0.0}
+{"round": 3, "distributed_loss": 0.7401232285007381, "centralized_loss": 0.0}
+{"round": 4, "distributed_loss": 0.6963389699623513, "centralized_loss": 0.0}
+{"round": 5, "distributed_loss": 0.5540212306297179, "centralized_loss": 0.0}
+{"round": 6, "distributed_loss": 0.5360349707181038, "centralized_loss": 0.0}
+{"round": 7, "distributed_loss": 0.5188610284739127, "centralized_loss": 0.0}
+{"round": 8, "distributed_loss": 0.5310338617136904, "centralized_loss": 0.0}
+{"round": 9, "distributed_loss": 0.5304052137218216, "centralized_loss": 0.0}
+{"round": 10, "distributed_loss": 0.5333617672913757, "centralized_loss": 0.0}

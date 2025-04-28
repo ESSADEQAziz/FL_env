@@ -20,6 +20,7 @@ logger.info(f"Starting node {NODE_ID} ... ")
 class VFLClient(fl.client.NumPyClient):
     def __init__(self, target_table,target_features, device="cpu"):
         self.data=functions.preprocess_node_data_NN(target_table,target_features,"regression")
+        self.data = functions.insure_none(self.data)
         self.embedding_size = self.data.shape[1]
         self.encoder = functions.ClientEncoder(input_dim=self.embedding_size)
         logger.info(f"the input dimention for the node {NODE_ID} is : {self.embedding_size}")

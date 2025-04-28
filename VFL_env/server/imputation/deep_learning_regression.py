@@ -23,6 +23,9 @@ class VFLServer(fl.server.strategy.FedAvg):
         self.model = functions.SimpleRegressor(input_dim=8)  # depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ') 
         self.train_target, self.test_target, self.train_indices, self.test_indices = functions.preprocess_server_target(csv_path,target_feature,test_size=0.2)
 
+        self.train_target = functions.insure_none(self.train_target)
+        self.test_target = functions.insure_none(self.test_target)
+        
         self.device=device
         self.model = self.model.to(self.device)
         self.train_target = self.train_target.to(self.device)

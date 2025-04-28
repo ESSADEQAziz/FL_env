@@ -85,17 +85,17 @@ def preprocess_server_target(csv_path, target_feature, test_size=0.2, random_sta
             train_indices,
             test_indices
             )
-    else:
-        target_f = pd.get_dummies(df[target_feature])
-        y = pd.get_dummies(df[target_feature]).values
-        label_map = list(target_f.columns)
+    
+    target_f = pd.get_dummies(df[target_feature])
+    y = pd.get_dummies(df[target_feature]).values
+    label_map = list(target_f.columns)
         
-        label_map_path = "../results/dl_classification/"  
-        os.makedirs(label_map_path, exist_ok=True)
+    label_map_path = "../results/dl_classification/"  
+    os.makedirs(label_map_path, exist_ok=True)
 
-        # Save the label map
-        with open( "../results/dl_classification/label_map.pkl", "wb") as f:
-            pickle.dump(label_map, f)
+    # Save the label map
+    with open( "../results/dl_classification/label_map.pkl", "wb") as f:
+        pickle.dump(label_map, f)
 
     y_train, y_test = train_test_split(y, test_size=test_size, random_state=random_state)
 
@@ -126,3 +126,8 @@ def reshape_list_with_none(numbers):
     return new_list
 
 
+def insure_none(x):
+    if torch.isnan(x).any():
+        print("Warning: NaN values detected in target y, replacing them with 0 to avoid loss and gradients calculus.(consider it as noise)")
+        x = torch.nan_to_num(x, nan=0.0)
+    return x 
