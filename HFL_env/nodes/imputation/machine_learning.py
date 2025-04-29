@@ -28,7 +28,7 @@ class NodeClient(fl.client.NumPyClient):
         self.server_round=0
         self.learning_rate=0.01
 
-        X, Y = functions.preprocess_node_data(target_table, feature_x, feature_y,'ml')
+        X, Y = functions.preprocess_node_data(target_table, feature_x, feature_y,'ml_r')
         logger.info(f"the features ({feature_x}) {X.shape} and the target  ({feature_y}) {Y.shape} laoded from table {target_table}")
         # Split data into train and test sets
         self.X_train, self.X_test, self.Y_train, self.Y_test = functions.split_reshape_normalize(X, Y, test_size=missing_rate, random_state=42)

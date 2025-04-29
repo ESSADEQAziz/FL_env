@@ -303,52 +303,67 @@ def preprocess_node_data(csv_path,features,target,indx):
     num_features=[]
     cat_features=[]
 
-    if df[target].dtype not in ['int64', 'float64']:
-        raise ValueError(f"the target feature is not numerical.")
-
     for item in column_names:
-        if item in features :
-            if df[item].dtype in ['int64', 'float64'] :
-                num_features.append(item)
-            elif df[item].dtype in ['object']:
-                cat_features.append(item)
+            if item in features :
+                if df[item].dtype in ['int64', 'float64'] :
+                    num_features.append(item)
+                elif df[item].dtype in ['object']:
+                    cat_features.append(item)
 
     preprocessor = ColumnTransformer([
-        ('num', StandardScaler(), num_features),
-        ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
-        ])
-    
-    # Preprocessor for target
-    target_scaler = StandardScaler()
-    Y = target_scaler.fit_transform(df[[target]])  # Keep as 2D array (n_samples, 1)
+            ('num', StandardScaler(), num_features),
+            ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
+            ])
 
-    if indx == 'dl':
+    if df[target].dtype in ['int64', 'float64']:
+        # Preprocessor for target
+        target_scaler = StandardScaler()
+        Y = target_scaler.fit_transform(df[[target]])  # Keep as 2D array (n_samples, 1)
+
+    elif df[target].dtype in ['object']:
+        target_f = pd.get_dummies(df[target])
+        Y = pd.get_dummies(df[target]).values
+        label_map = list(target_f.columns)
+        
+    else :
+        raise ValueError("Failure processing taget feature.")
+        
+
+    if indx == 'dl_r':
         # Save the features processor for the future tests and evaluations 
         preprocessor_path = "../results/dl_regression/"  
         os.makedirs(preprocessor_path, exist_ok=True)
-        X = preprocessor.fit_transform(df[features])
-        
-        with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
-            pickle.dump(preprocessor, f)
-
         # Save target scaler separately
         with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
             pickle.dump(target_scaler, f)
-    elif indx == 'ml' :
+        
+    elif indx == 'ml_r' :
         # Save the features processor for the future tests and evaluations 
         preprocessor_path = "../results/ml_regression/"  
         os.makedirs(preprocessor_path, exist_ok=True)
-        X = preprocessor.fit_transform(df[features])
-        
-        with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
-            pickle.dump(preprocessor, f)
-
         # Save target scaler separately
         with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
             pickle.dump(target_scaler, f)
+
+    elif indx == 'dl_c':
+        preprocessor_path = "../results/dl_classification/"  
+        os.makedirs(preprocessor_path, exist_ok=True)
+
+        with open( preprocessor_path+"label_map.pkl", "wb") as f:
+            pickle.dump(label_map, f)
+
+    elif indx == 'ml_c':
+        preprocessor_path = "../results/ml_classification/"  
+        os.makedirs(preprocessor_path, exist_ok=True)
     else :
         raise ValueError(f"Approche not supportable. (only ml and dl)")
     
+
+    X = preprocessor.fit_transform(df[features])
+    with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
+            pickle.dump(preprocessor, f)
+
+
     # If X is sparse (because of OneHotEncoder), convert to dense
     if hasattr(X, "toarray"):
         X = X.toarray()
@@ -411,5 +426,17 @@ class LinearRegressionModel(nn.Module):
 
     def forward(self, x):
         return self.linear(x)
+
+class SimpleClassifier(nn.Module):
+    def __init__(self, input_dim, num_classes):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 16),
+            nn.ReLU(),
+            nn.Linear(16, num_classes)
+        )
+
+    def forward(self, x):
+        return self.model(x)
 
 
