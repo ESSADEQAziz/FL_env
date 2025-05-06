@@ -18,7 +18,7 @@ def save_model(aggregated_parameters,server_round,input_dim,indx,num_classes=0):
         elif indx == "ml_c" :
             save_path=f"../results/ml_results/classification/agg_model/model_round{server_round}.pth"
             # Load into model and save
-            # model = ---Model(input_dim=input_dim) 
+            model = LogisticRegressionModel(input_dim=input_dim,output_dim=num_classes) 
         elif indx == "dl_c" :
             save_path=f"../results/dl_results/classification/agg_model/model_round{server_round}.pth"
             # Load into model and save
@@ -37,6 +37,14 @@ def save_model(aggregated_parameters,server_round,input_dim,indx,num_classes=0):
         torch.save(model.state_dict(), save_path)
 
 
+class LogisticRegressionModel(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(LogisticRegressionModel, self).__init__()
+        self.linear = nn.Linear(input_dim, output_dim)
+
+    def forward(self, x):
+        return self.linear(x)
+    
 
 class SimpleRegressor(nn.Module):
     def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):

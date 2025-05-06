@@ -355,6 +355,9 @@ def preprocess_node_data(csv_path,features,target,indx):
     elif indx == 'ml_c':
         preprocessor_path = "../results/ml_classification/"  
         os.makedirs(preprocessor_path, exist_ok=True)
+
+        with open( preprocessor_path+"label_map.pkl", "wb") as f:
+            pickle.dump(label_map, f)
     else :
         raise ValueError(f"Approche not supportable. (only ml and dl)")
     
@@ -439,4 +442,16 @@ class SimpleClassifier(nn.Module):
     def forward(self, x):
         return self.model(x)
 
+# Define the model
+class LogisticRegressionModel(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(LogisticRegressionModel, self).__init__()
+        self.linear = nn.Linear(input_dim, output_dim)
 
+    def forward(self, x):
+        return self.linear(x)
+
+    
+
+
+    
