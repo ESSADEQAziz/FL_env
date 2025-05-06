@@ -56,7 +56,7 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
         metrics["accuracy"] = sum(accuracy)/len(accuracy)
         logger.info(f"Aggregated Parameters: {aggregated_parameters}, Metrics: {metrics}")
 
-        if server_round == 20:
+        if server_round == 5:
             functions.save_model(aggregated_parameters, server_round, input_dim, "ml_c",num_classes=output_dim)
             logger.info("The model saved successfully.")
 
@@ -78,9 +78,9 @@ def start_server():
     history = fl.server.start_server(
         server_address="central_server:5000",
         strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=20) #if you change the num_round, change it also within the save_dl_model() function
+        config=fl.server.ServerConfig(num_rounds=5) #if you change the num_round, change it also within the save_dl_model() function
     )
     return history
 
 if __name__ == "__main__":
-    functions.save_metrics(start_server(), "ml_c")
+    functions.save_history_metrics(start_server(), "ml_c")

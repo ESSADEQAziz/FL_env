@@ -1,0 +1,1311 @@
+2025-05-06 23:31:13,719 - central_server - INFO - Starting central server ...
+2025-05-06 23:31:13,729 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-06 23:31:13,731 - flwr - INFO - Starting Flower server, config: num_rounds=10, no round_timeout
+2025-05-06 23:31:13,747 - flwr - INFO - Flower ECE: gRPC server running (10 rounds), SSL is enabled
+2025-05-06 23:31:13,747 - flwr - INFO - [INIT]
+2025-05-06 23:31:13,748 - flwr - INFO - Requesting initial parameters from one random client
+2025-05-06 23:31:17,455 - flwr - INFO - Received initial parameters from one random client
+2025-05-06 23:31:17,456 - flwr - INFO - Starting evaluation of initial global parameters
+2025-05-06 23:31:17,457 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n[\x93S\xbe\x89X4=\xa0-\x0c?hv\xdc\xbe\x95.\xab\xbe\x8fX\xb9>\xf7n\x08?\x856\x94=\xe2g\xdc>\x11\x91\xe3>\xf0HY>\xbc\xe7\xe5\xbd\x92\xca\x8c\xbe\x1b'\xe3>\xa6\xf1\x0b>\xa65\xd5\xbe\x92$\x96\xbe\xe3<\xd9>\xe3\xf5\x04\xbfp\x11\xca\xbej%\xf3>\xe0\xf0\x03?\xaaO\x05\xbf\x8a4\x03\xbf", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nHQ\xfc\xberk\xc2\xbe\x1a\xb61\xbe\xb5G\xbe\xbe\x14\xbc\xae>[\xa8\xa7\xbe{]\xda>\x83\xc1U\xbe", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n\xbdcT=i\xd8\x83>\xb9\\\xb4=a\x8e\xe6\xbd\x14f\xa5\xbeb\x00\x8f>\x13\xec\xb1\xbe\xbfk\xa2>l\xd4\xa8\xbdO=\xa0\xbe\r\x9ae>\xc5\xb4\x86\xbeE5!>\x90\xb0\x97>\x16U\xd4=\xf3\xa9\xa7\xbe\xc2\xb1\x05>\xa3\x1a\x1e\xbeF\xff\xae>eb\x83=\xd0\xe4\xc2\xbde\x15\x1b=\x1dmp>56\x9b\xbd\x07\x18\x05\xbd3!\x96\xbe\x0c\xfd\x84\xbe\x02\x90$\xbc\xbf0\xa4\xbd\xd1\xc4+\xbeOV\xa8\xbe\xa3v\xa8>G\xfc#>:Y\xca\xbc3y\x97>\xe4\xa9\x9d>\x84\xd9\xad\xbej\x80%\xbe\r\x18\xb2>\x8e\xbc\xa4<O\x07\x88=\x9fu\x8a>\xfaG\xb4\xbcS\xb5\xa5\xbd\xe4\xb5F>4\xf6\x83>%\xd2J\xbb\x82\xcf\x92\xbe\xdbb\xb2=\x1f\xf4k\xbe\xe2=\xa7\xbe\x8c\x85\x95\xbc\x90\xa4\x8f>\xd8\xc6\xbf=YbC=\xa5Nt\xbe\xe43w\xbd&0U\xbe-\x80z\xbe7\xa6z\xbec'\xff\xbd\xbeW\xa8>ymV>I\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nH6\xb3=O\x17\x16\xbe\xc2\x1e\x0f>,\xfb6\xbe\xe1\x12h\xbeo'_>\x89\xacV\xbe\x9a\xea\x91>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x1b,\xf0=\x0e\xed\xac\xbe\x88\xf24>\xc1=*>F\x0fI>\xe9C\xa7\xbeMa\xe2=-\xdbK\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x15js\xbe"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:17,457 - flwr - INFO - initial parameters (loss, other metrics): 0.0, {'mse': 0.0}
+2025-05-06 23:31:17,458 - flwr - INFO - 
+2025-05-06 23:31:17,458 - flwr - INFO - [ROUND 1]
+2025-05-06 23:31:19,027 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:26,225 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:31:26,226 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db3250> //// 3  /// with num_exemples 14482 
+2025-05-06 23:31:26,228 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-05-06 23:31:26,229 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db2d50> /// Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\xe2\xf0\xa5\xbe\x10\xee\xfa\xbe(C8?\xf2\xbb\x81?\xf4\xb3\\\xbe\x94\xfc\x82?`'\xfe>h\x88|\xbe\x19\xb3l=\x88\xed\xe4\xc03\xb7\x96>n)\r>\xe2\x9b\xe2\xbf\xb0\xb5c\xbc\xfe\xf8\x87?9w?>\x9ax\xaa\xbf\xaa,\x04@\xbf$Z?\x86 4\xbf\xf2&\xf4\xbf", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nW\xc3%\xbf(\xe5\xc1\xbcR48=>7A\xbff\x1e\x86>\x91\x9c\x92>>\xe3\x9b?\x0f\xf5\xf0\xbf", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=S\x16\x93>\xa6\xb2\xeb\xbdv\x95\x8a\xbe2\x89\x0f\xbe\xfb.\xcb=\x14\x99\xf3\xbe\x96^\xec=\xf6\x97\xe9\xbe\xff\xce\xfe\xbes=\xf2\xbc\x11O\xe3\xbd\xc7\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd\x9f:\t\xbfx\x13\xae>\x9f\xeb\\\xbe<m\xac\xbf\xa2\xbf\x9a\xbf\x8c\x90W?:w\xa1\xbf\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x8f[d=\x8f\x1f\x9b\xbd|2\xd2\xbe\x07~\xe4>@\xb1\x0c\xbe\n\x05/\xc0\xaf\xfe\xcc\xbf\xd0\xac\x88?\xaa\x9c\x95\xbf\xe6\xd0\x15=B~\xe4>H\xafE\xbf\xb6\x85\xad\xbff\x1c\xb6>\xaeh'>\xe0\xa2\r?H$;\xbf\xa5\x95\x16\xbe!\x14\xad\xbe\xd2\xd8\xea\xbe\x9f$\xa3\xbe\xd1\xb3\xf4=\x82mv\xbe\xfe\x01E>\xa6Nt\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x93\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\xd1<2\xbd\x18\x00\xc2\xbe\xaa\xeb\xc1?\x88h\xe7\xbe\x9c\x99e?\xa0\xdf&?xm\xfd<\xed\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x10\xe8\x80:\xedJ\x8c\xbd68\x13?\xe40\xdb\xbd\xa6\xd15?\xc6\xa9\x02\xbf\xaf\xdf\x92\xbd\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xaa\xfc\x00?"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:26,230 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\xe2\xf0\xa5\xbe\x10\xee\xfa\xbe(C8?\xf2\xbb\x81?\xf4\xb3\\\xbe\x94\xfc\x82?`'\xfe>h\x88|\xbe\x19\xb3l=\x88\xed\xe4\xc03\xb7\x96>n)\r>\xe2\x9b\xe2\xbf\xb0\xb5c\xbc\xfe\xf8\x87?9w?>\x9ax\xaa\xbf\xaa,\x04@\xbf$Z?\x86 4\xbf\xf2&\xf4\xbf", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nW\xc3%\xbf(\xe5\xc1\xbcR48=>7A\xbff\x1e\x86>\x91\x9c\x92>>\xe3\x9b?\x0f\xf5\xf0\xbf", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=S\x16\x93>\xa6\xb2\xeb\xbdv\x95\x8a\xbe2\x89\x0f\xbe\xfb.\xcb=\x14\x99\xf3\xbe\x96^\xec=\xf6\x97\xe9\xbe\xff\xce\xfe\xbes=\xf2\xbc\x11O\xe3\xbd\xc7\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd\x9f:\t\xbfx\x13\xae>\x9f\xeb\\\xbe<m\xac\xbf\xa2\xbf\x9a\xbf\x8c\x90W?:w\xa1\xbf\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x8f[d=\x8f\x1f\x9b\xbd|2\xd2\xbe\x07~\xe4>@\xb1\x0c\xbe\n\x05/\xc0\xaf\xfe\xcc\xbf\xd0\xac\x88?\xaa\x9c\x95\xbf\xe6\xd0\x15=B~\xe4>H\xafE\xbf\xb6\x85\xad\xbff\x1c\xb6>\xaeh'>\xe0\xa2\r?H$;\xbf\xa5\x95\x16\xbe!\x14\xad\xbe\xd2\xd8\xea\xbe\x9f$\xa3\xbe\xd1\xb3\xf4=\x82mv\xbe\xfe\x01E>\xa6Nt\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x93\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\xd1<2\xbd\x18\x00\xc2\xbe\xaa\xeb\xc1?\x88h\xe7\xbe\x9c\x99e?\xa0\xdf&?xm\xfd<\xed\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x10\xe8\x80:\xedJ\x8c\xbd68\x13?\xe40\xdb\xbd\xa6\xd15?\xc6\xa9\x02\xbf\xaf\xdf\x92\xbd\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xaa\xfc\x00?"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:26,231 - flwr - INFO - fit progress: (1, 0.0, {'mse': 0.0}, 8.775017173000379)
+2025-05-06 23:31:26,231 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:26,277 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:31:26,278 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-05-06 23:31:26,278 - flwr - INFO - 
+2025-05-06 23:31:26,279 - flwr - INFO - [ROUND 2]
+2025-05-06 23:31:26,281 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:33,714 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:31:33,714 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db2f10> //// 3  /// with num_exemples 14411 
+2025-05-06 23:31:33,716 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de0250> /// Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?uT\x00\xbe=\xc9\xea\xbe*\xd1,?\xf2`\xf0>\xd5"\x83\xbfr\xd2\x8b?P\xb3S?p\xf7\x17\xbd\xd1\xcaa\xbf~y1\xc1\xee\xca1>\x12t\xd7>\xaf@\x0e\xc0\x14,\x00\xbfdB\xf7?%\x87\x99\xbe\x91\xb9\r\xc0\xfa\xf2\x17@\xc7\x009?\xd24\x9d\xbeH\xc6J\xc0', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\xa1E\xdd\xbd\x90\x01\t\xbf\xe19\xab\xbf\xf6[\xe1>JU2?\xc6\x8cn?\xe8\xd7*\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd\x06yI\xbe\x90I\x05>\x0b\xddA\xbf\x84\x00\xc9\xbf\xfd\xb7\x8a\xbf\xd5\xea??\xd6F\xbb\xbf\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\xeaG%\xbf<&\x8f>ta\x88\xbf\xa7\x7f_\xc0!\x93!\xc0=\x1d\x8b?0g\xaf\xbf\xe6\xd0\x15=W\x10\x12\xbe*@\xb6\xbe\xca,\x95\xbf`\x86\xd9>\xc14\x9f\xbe\xbaS\xfb>\x8c\x06#\xbf\xa5\x95\x16\xbe#\x81|\xbf\t\xd3\xeb\xbe\xc6u\xa2\xbf\x16\xb9P?\x17\xc47\xbf\xc6\x18\xd8\xbe\xb9\xf0\x1a\xbfA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\xcc\x1f\xda?\x88h\xe7\xbeR\xb0]?\xc5\x87;?\xd9e\xaf>\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb3\x9a\xa7<\xeeJ\x8c\xbd\xd2\n\x04?\xe40\xdb\xbd\xdb\xfbe?\x14\xe9Q\xbeC\xb8\xdd\xbe\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x0c&b>"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:33,716 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?uT\x00\xbe=\xc9\xea\xbe*\xd1,?\xf2`\xf0>\xd5"\x83\xbfr\xd2\x8b?P\xb3S?p\xf7\x17\xbd\xd1\xcaa\xbf~y1\xc1\xee\xca1>\x12t\xd7>\xaf@\x0e\xc0\x14,\x00\xbfdB\xf7?%\x87\x99\xbe\x91\xb9\r\xc0\xfa\xf2\x17@\xc7\x009?\xd24\x9d\xbeH\xc6J\xc0', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\xa1E\xdd\xbd\x90\x01\t\xbf\xe19\xab\xbf\xf6[\xe1>JU2?\xc6\x8cn?\xe8\xd7*\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd\x06yI\xbe\x90I\x05>\x0b\xddA\xbf\x84\x00\xc9\xbf\xfd\xb7\x8a\xbf\xd5\xea??\xd6F\xbb\xbf\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\xeaG%\xbf<&\x8f>ta\x88\xbf\xa7\x7f_\xc0!\x93!\xc0=\x1d\x8b?0g\xaf\xbf\xe6\xd0\x15=W\x10\x12\xbe*@\xb6\xbe\xca,\x95\xbf`\x86\xd9>\xc14\x9f\xbe\xbaS\xfb>\x8c\x06#\xbf\xa5\x95\x16\xbe#\x81|\xbf\t\xd3\xeb\xbe\xc6u\xa2\xbf\x16\xb9P?\x17\xc47\xbf\xc6\x18\xd8\xbe\xb9\xf0\x1a\xbfA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\xcc\x1f\xda?\x88h\xe7\xbeR\xb0]?\xc5\x87;?\xd9e\xaf>\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb3\x9a\xa7<\xeeJ\x8c\xbd\xd2\n\x04?\xe40\xdb\xbd\xdb\xfbe?\x14\xe9Q\xbeC\xb8\xdd\xbe\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x0c&b>"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:33,717 - flwr - INFO - fit progress: (2, 0.0, {'mse': 0.0}, 16.26121874599994)
+2025-05-06 23:31:33,717 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:33,749 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:31:33,749 - flwr - INFO - 
+2025-05-06 23:31:33,751 - flwr - INFO - [ROUND 3]
+2025-05-06 23:31:33,752 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:41,053 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:31:41,054 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de09d0> //// 3  /// with num_exemples 14482 
+2025-05-06 23:31:41,056 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db2b10> /// Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x87\xf3\x0c?D>\x9b\xbf~\xfbG?_\x13#?\x94\x1eS\xbe?\xe5\x90\xbfl\x8cc\xc1\x87\xd4l>\xf3h)?\xdd\xc9G\xc0.\xc0\r\xbf\x82\x0f\x17@d\x99\xea\xbe\xb6L;\xc0\xe4\xc5\x16@\xa6..?\xc0\xbf\xb6=^Fw\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xc2\xb3p\xbfmF\xe2\xbf)j'?\xea\x13\x83?\x0c\x8d)?\xaa\xc3B\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>\x90E\x86>\x13\x83y\xbf\x81\x19\x1a\xc0\xd5\xfc:\xbf\x92Lt?\xe2\xe2\xef\xbf\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\xbd\xa6q>dwb\xbfB\xc9a\xc0E2T\xc0\xf8\x0e@?\x0f\x03\xed\xbf\xe6\xd0\x15=\t\x06Q\xbeLzL\xbe\xc3\xb3\xac\xbf\x97\x86\xa7?%\xc30\xbf\xe0\x8c\xac>\x16s,\xbf\xa5\x95\x16\xbe\xac@\x7f\xbfbJ\x07\xbfJ\x1a\xde\xbf\xd4\xf9\xcb\xbe\xe6\x15&\xbf\x14_'\xbf\xd0\xac\xbc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\xbeo\xa5?\x88h\xe7\xbe~$\r?\xb1nK?(\xac0?\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbdHn8?\xe40\xdb\xbdNWT?\xb47m\xbe*\x89\xaa>\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xed\xf8\x0f>"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:41,056 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x87\xf3\x0c?D>\x9b\xbf~\xfbG?_\x13#?\x94\x1eS\xbe?\xe5\x90\xbfl\x8cc\xc1\x87\xd4l>\xf3h)?\xdd\xc9G\xc0.\xc0\r\xbf\x82\x0f\x17@d\x99\xea\xbe\xb6L;\xc0\xe4\xc5\x16@\xa6..?\xc0\xbf\xb6=^Fw\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xc2\xb3p\xbfmF\xe2\xbf)j'?\xea\x13\x83?\x0c\x8d)?\xaa\xc3B\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>\x90E\x86>\x13\x83y\xbf\x81\x19\x1a\xc0\xd5\xfc:\xbf\x92Lt?\xe2\xe2\xef\xbf\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\xbd\xa6q>dwb\xbfB\xc9a\xc0E2T\xc0\xf8\x0e@?\x0f\x03\xed\xbf\xe6\xd0\x15=\t\x06Q\xbeLzL\xbe\xc3\xb3\xac\xbf\x97\x86\xa7?%\xc30\xbf\xe0\x8c\xac>\x16s,\xbf\xa5\x95\x16\xbe\xac@\x7f\xbfbJ\x07\xbfJ\x1a\xde\xbf\xd4\xf9\xcb\xbe\xe6\x15&\xbf\x14_'\xbf\xd0\xac\xbc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\xbeo\xa5?\x88h\xe7\xbe~$\r?\xb1nK?(\xac0?\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbdHn8?\xe40\xdb\xbdNWT?\xb47m\xbe*\x89\xaa>\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xed\xf8\x0f>"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:41,057 - flwr - INFO - fit progress: (3, 0.0, {'mse': 0.0}, 23.60119412000131)
+2025-05-06 23:31:41,058 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:41,086 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:31:41,086 - flwr - INFO - 
+2025-05-06 23:31:41,087 - flwr - INFO - [ROUND 4]
+2025-05-06 23:31:41,088 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:48,219 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:31:48,219 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de0850> //// 3  /// with num_exemples 14482 
+2025-05-06 23:31:48,221 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db2f50> /// Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x04\'\xe3>\x87L\xc3\xbf\x88\x16\xc8>\xec\x83 ?\xee\x9c\xfa=\x84\x9a\xfb\xbf\xfa\xa9\x81\xc1\xbac\x13>|\x17=?\x10\x1fy\xc0)m\xcb>\x8c"\x13@\x18g\x80\xbe*\x1a_\xc0m\xee\x0f@\x0e\x1d\x1f?\xac\xfd\xa7>\xed\x8f\x8e\xc0', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xb6N\xb4\xbf\x97\x02\x10\xc0c\xad&?\xd1\xdd\xa8?\xc0\x05\xde>~$S\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>k\x9c\xa6>m\xf6\xac\xbf\xf7\xfa\xeb\xbf\x87\xa0\x1b\xbf\x1f\x9fH?\xba'\t\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf><\xb9>P\xfa0\xbfB\xc9a\xc0-\x1aa\xc0\x8de#>>\xa2\xfd\xbf\xe6\xd0\x15=\n\x06Q\xbe\xdb\x16\xc9\xbeo`m\xbf\xe5k\xb1?\xb1\xc8)\xbf\x10\x0e\xfa<\xddS\x83\xbf\xa5\x95\x16\xbe\xac@\x7f\xbfsb\x07\xbf\xba\x11\x08\xc0\x0eoT\xbf\xcbUb\xbe\xa4~1\xbf\xd0\xac\xbc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\x93u\xb7?\x88h\xe7\xbe\x01G\xc1>y\x1a\x90?\xcbH\xf8>\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbd\xb7\x9e=?\xe40\xdb\xbd\xbc\xb1<?\xd7a\x1c\xbe$e\xa5>\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x9a\xe4a\xbd"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:48,223 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x04\'\xe3>\x87L\xc3\xbf\x88\x16\xc8>\xec\x83 ?\xee\x9c\xfa=\x84\x9a\xfb\xbf\xfa\xa9\x81\xc1\xbac\x13>|\x17=?\x10\x1fy\xc0)m\xcb>\x8c"\x13@\x18g\x80\xbe*\x1a_\xc0m\xee\x0f@\x0e\x1d\x1f?\xac\xfd\xa7>\xed\x8f\x8e\xc0', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xb6N\xb4\xbf\x97\x02\x10\xc0c\xad&?\xd1\xdd\xa8?\xc0\x05\xde>~$S\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>k\x9c\xa6>m\xf6\xac\xbf\xf7\xfa\xeb\xbf\x87\xa0\x1b\xbf\x1f\x9fH?\xba'\t\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf><\xb9>P\xfa0\xbfB\xc9a\xc0-\x1aa\xc0\x8de#>>\xa2\xfd\xbf\xe6\xd0\x15=\n\x06Q\xbe\xdb\x16\xc9\xbeo`m\xbf\xe5k\xb1?\xb1\xc8)\xbf\x10\x0e\xfa<\xddS\x83\xbf\xa5\x95\x16\xbe\xac@\x7f\xbfsb\x07\xbf\xba\x11\x08\xc0\x0eoT\xbf\xcbUb\xbe\xa4~1\xbf\xd0\xac\xbc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\x93u\xb7?\x88h\xe7\xbe\x01G\xc1>y\x1a\x90?\xcbH\xf8>\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbd\xb7\x9e=?\xe40\xdb\xbd\xbc\xb1<?\xd7a\x1c\xbe$e\xa5>\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x9a\xe4a\xbd"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:48,224 - flwr - INFO - fit progress: (4, 0.0, {'mse': 0.0}, 30.76809622499968)
+2025-05-06 23:31:48,224 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:48,252 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:31:48,252 - flwr - INFO - 
+2025-05-06 23:31:48,254 - flwr - INFO - [ROUND 5]
+2025-05-06 23:31:48,255 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:55,565 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:31:55,566 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de1410> //// 3  /// with num_exemples 14482 
+2025-05-06 23:31:55,568 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db3a10> /// Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x1a[+?\\\x7f\xc7\xbf\xd5\x0e\x89>R\xee|?X\x96\xf7>c\xd1\x1c\xc0\xba\xde\x8d\xc1j{\x86>\xfe\xf7D?\x1e\xa3\x8e\xc0*\xf0\xaf>\x18\xe7\x1e@\x81\xe7\x85\xbeh\xd1\x87\xc0\x06q\x06@tH2?\x18\xdf-?\x14t\xa0\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\x98H\xc2\xbfB\xae\x15\xc0\x15\x9e:?$\x16\xc8?\xec\xfd\xfe=\x18\xd6U\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>\xbe\x18\x03?T5\x05\xc0\x0fk\xcf\xbf\xc6\xd7\x0f\xbf\xd2\xdaJ?\xb3\xd5\x1e\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf9\xa1\x05?\xe0\x99w\xbfB\xc9a\xc0\xce}\x83\xc0\x10\xaa\x05\xbd\x84X\x12\xc0\xe6\xd0\x15=\n\x06Q\xbex\x90\x05\xbe\nQ\x9a\xbf\xb2\x06\xb0?\xc8\xbe\xf7\xbe\xce?\x97>l\xd9\x90\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x7f\xad=\xbf\x81\xab\x01\xc0:S\xfc\xbf\xde\x08\xe4\xbeT\x01\\\xbf\x89\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\x82\x1e\xe1?\x88h\xe7\xbe\x7f<x>L\x8d7?-f\xb0=\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbd\x9b\x8aX?\xe40\xdb\xbd\x93O\xf6>l\x03U\xbe\xde\xeb\xaa=\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xf6\x91\x16>"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:55,568 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x1a[+?\\\x7f\xc7\xbf\xd5\x0e\x89>R\xee|?X\x96\xf7>c\xd1\x1c\xc0\xba\xde\x8d\xc1j{\x86>\xfe\xf7D?\x1e\xa3\x8e\xc0*\xf0\xaf>\x18\xe7\x1e@\x81\xe7\x85\xbeh\xd1\x87\xc0\x06q\x06@tH2?\x18\xdf-?\x14t\xa0\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\x98H\xc2\xbfB\xae\x15\xc0\x15\x9e:?$\x16\xc8?\xec\xfd\xfe=\x18\xd6U\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>\xbe\x18\x03?T5\x05\xc0\x0fk\xcf\xbf\xc6\xd7\x0f\xbf\xd2\xdaJ?\xb3\xd5\x1e\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf9\xa1\x05?\xe0\x99w\xbfB\xc9a\xc0\xce}\x83\xc0\x10\xaa\x05\xbd\x84X\x12\xc0\xe6\xd0\x15=\n\x06Q\xbex\x90\x05\xbe\nQ\x9a\xbf\xb2\x06\xb0?\xc8\xbe\xf7\xbe\xce?\x97>l\xd9\x90\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x7f\xad=\xbf\x81\xab\x01\xc0:S\xfc\xbf\xde\x08\xe4\xbeT\x01\\\xbf\x89\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\x82\x1e\xe1?\x88h\xe7\xbe\x7f<x>L\x8d7?-f\xb0=\xee\r~\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbd\x9b\x8aX?\xe40\xdb\xbd\x93O\xf6>l\x03U\xbe\xde\xeb\xaa=\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xf6\x91\x16>"], tensor_type='numpy.ndarray')
+2025-05-06 23:31:55,568 - flwr - INFO - fit progress: (5, 0.0, {'mse': 0.0}, 38.11498119499993)
+2025-05-06 23:31:55,569 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:31:55,597 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:31:55,598 - flwr - INFO - 
+2025-05-06 23:31:55,598 - flwr - INFO - [ROUND 6]
+2025-05-06 23:31:55,599 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:03,083 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:32:03,084 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de1890> //// 3  /// with num_exemples 14482 
+2025-05-06 23:32:03,086 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db3b50> /// Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>I\x83~?\xb7~\xbc\xbf\xef\xa5C>\x825r?z\x9c\xaf>j\xb8B\xc0P\x98\x98\xc1\xd3\x1b\xc2>~\x16M?E%\xa4\xc0V\x8ev?\x9c\xbe\x01@\x84\xc7\x99\xbe\xd9I\x93\xc0k\xf7\xf7?\xe2\xc1,?r\xd2W?X\xbf\xae\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbfhz\xbc\xbf"P5\xc0\x98\xa1J?\xe7\xac\xce?\xd9\xcci\xbe$Ab\xc0', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>\xf6\xcaJ?s\x841\xc0V$\xb8\xbf\x8a\xac\t\xbf~\x1fC?\x95@\x1e\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\xac\xf71?/J\x88\xbfB\xc9a\xc0>7\x8c\xc0\xb1\xeaM\xbej\xcb\x1c\xc0\xe6\xd0\x15=\n\x06Q\xbe\xc7\xf3\x89\xbeo\xcdp\xbf0D\xb6?\x90\n\x07\xbf\xb4J\xf3<\xfa\xfb\xaf\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf9z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\xd2p\xf5?\x88h\xe7\xbe\x1f\x18\x1d?,\xf4r?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbd`\x8ai?\xe40\xdb\xbd\x93\xb9\x04?\x1e\xa64\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nT\x88\n>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:03,086 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>I\x83~?\xb7~\xbc\xbf\xef\xa5C>\x825r?z\x9c\xaf>j\xb8B\xc0P\x98\x98\xc1\xd3\x1b\xc2>~\x16M?E%\xa4\xc0V\x8ev?\x9c\xbe\x01@\x84\xc7\x99\xbe\xd9I\x93\xc0k\xf7\xf7?\xe2\xc1,?r\xd2W?X\xbf\xae\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbfhz\xbc\xbf"P5\xc0\x98\xa1J?\xe7\xac\xce?\xd9\xcci\xbe$Ab\xc0', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbej\xd2\x90=\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>\xf6\xcaJ?s\x841\xc0V$\xb8\xbf\x8a\xac\t\xbf~\x1fC?\x95@\x1e\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\xac\xf71?/J\x88\xbfB\xc9a\xc0>7\x8c\xc0\xb1\xeaM\xbej\xcb\x1c\xc0\xe6\xd0\x15=\n\x06Q\xbe\xc7\xf3\x89\xbeo\xcdp\xbf0D\xb6?\x90\n\x07\xbf\xb4J\xf3<\xfa\xfb\xaf\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf9z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\x1eA\x9b\xbe\x18\x00\xc2\xbe\xd2p\xf5?\x88h\xe7\xbe\x1f\x18\x1d?,\xf4r?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\xb4\x9a\xa7<\xeeJ\x8c\xbd`\x8ai?\xe40\xdb\xbd\x93\xb9\x04?\x1e\xa64\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nT\x88\n>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:03,087 - flwr - INFO - fit progress: (6, 0.0, {'mse': 0.0}, 45.63388893000047)
+2025-05-06 23:32:03,088 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:03,102 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:32:03,103 - flwr - INFO - 
+2025-05-06 23:32:03,104 - flwr - INFO - [ROUND 7]
+2025-05-06 23:32:03,105 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:10,030 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:32:10,031 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de1950> //// 3  /// with num_exemples 14411 
+2025-05-06 23:32:10,034 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7db3a10> /// Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\xe3<\\?^\x83\x0f\xc0\x1bk\x99>\x80kC?.r\xbb>\x804c\xc0\xc0q\xa1\xc1-\x18:>\xf4\x8fr?\xb6\x0f\xa6\xc0b\xbd\xb1?\x87\xaf\xdb?\x89\xd5\xde\xbe\xcc\x04\x98\xc0\xe2\xdd\xe5?\x01\xda\x10?\xa5U\x02?G\x8f\xb8\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\x1e\xc1\x03\xc00\tJ\xc0\x8f\xfcN?\xa6\x82\xd6?\xbc]\xb7\xbe\x1ew~\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>N\xd9d?\x9c\xaf/\xc0(\xa4\xa8\xbf2\x12\xe9\xbe\xecG:?\x98>-\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\xbc0!?\x88D\x8b\xbfB\xc9a\xc0hp\x90\xc0\r\xd4\x0b\xbfI)9\xc0\xe6\xd0\x15=\n\x06Q\xbe\xfbr\xea\xbe\xaf\x1fM\xbf\x18\x9c\xb0?\x8f\xdc\xeb\xbe\xae9H\xbf\xca\x03\x9a\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf7\xc6\xb5\xbe\x18\x00\xc2\xbe<\xeb\xfb?\x88h\xe7\xbe\xfb\xc4\xdc>\xf2\x12\x96?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbdP)r?\xe40\xdb\xbdX7\x11?\xabk.\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nH\xa3\xf4="], tensor_type='numpy.ndarray')
+2025-05-06 23:32:10,034 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\xe3<\\?^\x83\x0f\xc0\x1bk\x99>\x80kC?.r\xbb>\x804c\xc0\xc0q\xa1\xc1-\x18:>\xf4\x8fr?\xb6\x0f\xa6\xc0b\xbd\xb1?\x87\xaf\xdb?\x89\xd5\xde\xbe\xcc\x04\x98\xc0\xe2\xdd\xe5?\x01\xda\x10?\xa5U\x02?G\x8f\xb8\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\x1e\xc1\x03\xc00\tJ\xc0\x8f\xfcN?\xa6\x82\xd6?\xbc]\xb7\xbe\x1ew~\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>N\xd9d?\x9c\xaf/\xc0(\xa4\xa8\xbf2\x12\xe9\xbe\xecG:?\x98>-\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\xbc0!?\x88D\x8b\xbfB\xc9a\xc0hp\x90\xc0\r\xd4\x0b\xbfI)9\xc0\xe6\xd0\x15=\n\x06Q\xbe\xfbr\xea\xbe\xaf\x1fM\xbf\x18\x9c\xb0?\x8f\xdc\xeb\xbe\xae9H\xbf\xca\x03\x9a\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf7\xc6\xb5\xbe\x18\x00\xc2\xbe<\xeb\xfb?\x88h\xe7\xbe\xfb\xc4\xdc>\xf2\x12\x96?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbdP)r?\xe40\xdb\xbdX7\x11?\xabk.\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nH\xa3\xf4="], tensor_type='numpy.ndarray')
+2025-05-06 23:32:10,035 - flwr - INFO - fit progress: (7, 0.0, {'mse': 0.0}, 52.58196042199961)
+2025-05-06 23:32:10,036 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:10,065 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:32:10,066 - flwr - INFO - 
+2025-05-06 23:32:10,066 - flwr - INFO - [ROUND 8]
+2025-05-06 23:32:10,067 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:17,208 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:32:17,208 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de11d0> //// 3  /// with num_exemples 14411 
+2025-05-06 23:32:17,210 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de1510> /// Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x86@\x91?:\x85\x14\xc0Za\xb6>\x01\x1af?lm$?(Mw\xc0 \xbe\xa9\xc1\xf3\x7f\x14>\xe0\xf3\x81?\xb4/\x9e\xc0\x10N\xed?\xd6A\xa7?\x06\xec\x18\xbf\xcc\x04\x98\xc0\x88\xcb\xda?\xe1^\x1b?\xbeG\x1c?\x8c\x9d\xbd\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xb4Q\x01\xc0.\xadM\xc0n>Y?\xa2N\xe5?\xb0\xa3\xe3\xbe\xde\xae\x83\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>}\xa5\x8c?rL@\xc0[\xb9\xa2\xbf\x9a\x9e\xf3\xbeu\xee\xd4>\x8e#/\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbfX\x89<?\xc6\xd6\x81\xbfB\xc9a\xc0\xf7\x11\x96\xc0\x06v6\xbf\x8e\xacO\xc0\xe6\xd0\x15=\n\x06Q\xbe\x00{\xb5\xbe\xd2(\xa4\xbfu\xb6\x9e?4\x93\xb9\xbe\xf2\xdc\x8b\xbf\xa87\xd8\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf8\xc6\xb5\xbe\x18\x00\xc2\xbe<\x1d\x10@\x88h\xe7\xbe\x1f\xb9\xc8>\xb6&\x8a?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbd\xe7\x83\x81?\xe40\xdb\xbd\x06\xd1\xec>\xa6\xb2S\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x8cp7>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:17,211 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\x86@\x91?:\x85\x14\xc0Za\xb6>\x01\x1af?lm$?(Mw\xc0 \xbe\xa9\xc1\xf3\x7f\x14>\xe0\xf3\x81?\xb4/\x9e\xc0\x10N\xed?\xd6A\xa7?\x06\xec\x18\xbf\xcc\x04\x98\xc0\x88\xcb\xda?\xe1^\x1b?\xbeG\x1c?\x8c\x9d\xbd\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xb4Q\x01\xc0.\xadM\xc0n>Y?\xa2N\xe5?\xb0\xa3\xe3\xbe\xde\xae\x83\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>}\xa5\x8c?rL@\xc0[\xb9\xa2\xbf\x9a\x9e\xf3\xbeu\xee\xd4>\x8e#/\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbfX\x89<?\xc6\xd6\x81\xbfB\xc9a\xc0\xf7\x11\x96\xc0\x06v6\xbf\x8e\xacO\xc0\xe6\xd0\x15=\n\x06Q\xbe\x00{\xb5\xbe\xd2(\xa4\xbfu\xb6\x9e?4\x93\xb9\xbe\xf2\xdc\x8b\xbf\xa87\xd8\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf8\xc6\xb5\xbe\x18\x00\xc2\xbe<\x1d\x10@\x88h\xe7\xbe\x1f\xb9\xc8>\xb6&\x8a?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbd\xe7\x83\x81?\xe40\xdb\xbd\x06\xd1\xec>\xa6\xb2S\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x8cp7>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:17,211 - flwr - INFO - fit progress: (8, 0.0, {'mse': 0.0}, 59.75767246000032)
+2025-05-06 23:32:17,212 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:17,229 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:32:17,229 - flwr - INFO - 
+2025-05-06 23:32:17,230 - flwr - INFO - [ROUND 9]
+2025-05-06 23:32:17,230 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:24,474 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:32:24,474 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de0bd0> //// 3  /// with num_exemples 14411 
+2025-05-06 23:32:24,476 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de1a10> /// Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\xe2\xa6\x8c?\xc4\xe0\x16\xc0 \xf0H>\xa4\x1f\xa0?\xb1="?|\x0c\x7f\xc0\x8a}\xb2\xc1\x89-\x85>\xf6\x10y?\xceH\x93\xc0Li\xf9?\x17\xe2\x9c?\x14\xa4;\xbf\xcc\x04\x98\xc0\x18:\xcc?\x8a\xbc\x14?\xee\x88\x04?f\xaf\xc2\xc0', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbfr3\n\xc0t\xf4L\xc0\x15\xf5Z?D\xf1\xdb?\xab\xf4\x0e\xbf\x04P\x89\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>=\xbf\x81?`\xbfE\xc0\x0cz\x96\xbfu\x0f\x02\xbf\x83\x87\xbd><\xa34\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf@n\x16?\xf9\xba\x80\xbfB\xc9a\xc0v\'\x90\xc0\xf4\xeb\x92\xbf9\x04V\xc0\xe6\xd0\x15=\n\x06Q\xbe\x11\xbc\x93\xbd\xc6*\xda\xbfX\x9c\x95?\xeem\x8a\xbe\xd0\x96\x96\xbf\xa2]\xc8\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf8\xc6\xb5\xbe\x18\x00\xc2\xbe\xd6O\x18@\x88h\xe7\xbeE\xd7\xe5>\xc1\xea\x90?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbd\xa4X\x82?\xe40\xdb\xbd\xbbn\x98>lgR\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xf4\xfa5>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:24,477 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>\xe2\xa6\x8c?\xc4\xe0\x16\xc0 \xf0H>\xa4\x1f\xa0?\xb1="?|\x0c\x7f\xc0\x8a}\xb2\xc1\x89-\x85>\xf6\x10y?\xceH\x93\xc0Li\xf9?\x17\xe2\x9c?\x14\xa4;\xbf\xcc\x04\x98\xc0\x18:\xcc?\x8a\xbc\x14?\xee\x88\x04?f\xaf\xc2\xc0', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbfr3\n\xc0t\xf4L\xc0\x15\xf5Z?D\xf1\xdb?\xab\xf4\x0e\xbf\x04P\x89\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>=\xbf\x81?`\xbfE\xc0\x0cz\x96\xbfu\x0f\x02\xbf\x83\x87\xbd><\xa34\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf@n\x16?\xf9\xba\x80\xbfB\xc9a\xc0v\'\x90\xc0\xf4\xeb\x92\xbf9\x04V\xc0\xe6\xd0\x15=\n\x06Q\xbe\x11\xbc\x93\xbd\xc6*\xda\xbfX\x9c\x95?\xeem\x8a\xbe\xd0\x96\x96\xbf\xa2]\xc8\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf8\xc6\xb5\xbe\x18\x00\xc2\xbe\xd6O\x18@\x88h\xe7\xbeE\xd7\xe5>\xc1\xea\x90?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbd\xa4X\x82?\xe40\xdb\xbd\xbbn\x98>lgR\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xf4\xfa5>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:24,477 - flwr - INFO - fit progress: (9, 0.0, {'mse': 0.0}, 67.02626727700044)
+2025-05-06 23:32:24,478 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:24,502 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:32:24,503 - flwr - INFO - 
+2025-05-06 23:32:24,503 - flwr - INFO - [ROUND 10]
+2025-05-06 23:32:24,504 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:32,114 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:32:32,115 - central_server - INFO - (aggregate_fit) the received parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de10d0> //// 3  /// with num_exemples 14411 
+2025-05-06 23:32:32,117 - central_server - WARNING - the aggregated parameters are : <built-in method __sizeof__ of Parameters object at 0x7fdfc7de1c10> /// Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>4A\xa0?\xaa]\x16\xc0\x8c\xd2'>\xb0\x0e\xb2?n\x84H?t\xba\x93\xc0\xb2\x0c\xb6\xc1\x10\xcf\x83>f\x7f\x8a?\xf4\x12\x8e\xc0\x94P\xfb?\x12\xe8\x8d?\x1e\xf9\x14\xbf\xcc\x04\x98\xc0\x9eb\xd3?D,H?K\xb3W?A\\\xcc\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xbd\xdd\x08\xc02\x8dR\xc0\xe8\x81n?(W\xca?p\xa3\x00\xbf\x9e\x90\x85\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>dh\x82?h\xbeN\xc0\xb8l\x9c\xbf)>\xf5\xbe\xfe@\xd7>f\xf4B\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\x1e\xfa)?\x93\xd02\xbfB\xc9a\xc0`E\x94\xc0h\xd4\xa8\xbf\xa7\x99s\xc0\xe6\xd0\x15=\n\x06Q\xbe|\xb2\xc9\xbe+?\x10\xc0\x93\xa4p?\x03\xf8q\xbe\xac\xb8s\xbf\x1c{\xbb\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf8\xc6\xb5\xbe\x18\x00\xc2\xbe\xe6E\x17@\x88h\xe7\xbe\x0ev\xa3>FC\xaf?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbd\x0c\xc2c?\xe40\xdb\xbd\xb6\xd8p>\x98&f\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xb6S\x9c>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:32,132 - central_server - INFO - The model saved successfully.
+2025-05-06 23:32:32,133 - central_server - INFO - (evaluation function)the received parameters are : Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8, 3), }                                                          \n\x828\xc5\xbd@!\xb9\xbe\x96\xec\x19?\x84\xccG\xbe\xa8@[\xbf\xdcw\xd4>4A\xa0?\xaa]\x16\xc0\x8c\xd2'>\xb0\x0e\xb2?n\x84H?t\xba\x93\xc0\xb2\x0c\xb6\xc1\x10\xcf\x83>f\x7f\x8a?\xf4\x12\x8e\xc0\x94P\xfb?\x12\xe8\x8d?\x1e\xf9\x14\xbf\xcc\x04\x98\xc0\x9eb\xd3?D,H?K\xb3W?A\\\xcc\xc0", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (8,), }                                                            \nX\xc3%\xbf\x94\xaf\x03\xbf\xbd\xdd\x08\xc02\x8dR\xc0\xe8\x81n?(W\xca?p\xa3\x00\xbf\x9e\x90\x85\xc0", b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8, 8), }                                                          \n`,4=^\x87\x08>L\xc6\x83\xbe\xbe9\xc4\xbe\xf8+\xc1\xbe0-\xb0<\xa8\xec\xf3\xbe4x\xa3=\xf6\x97\xe9\xbe\x00\xcf\xfe\xbet=\xf2\xbc\x12O\xe3\xbd\xc8\x1b\x18\xbeL\x9c\xf2\xbd\\N\x85\xbe\x94\x9aN\xbeZz\xab\xbd`$A>dh\x82?h\xbeN\xc0\xb8l\x9c\xbf)>\xf5\xbe\xfe@\xd7>f\xf4B\xc0\x07\x18\x05\xbd4!\x96\xbe\x19t\x08\xbf\xac\x0f\x91\xbe\xbf0\xa4\xbd\xd2\xc4+\xber\x7f\xeb\xbe\x90[d=\x8f\x1f\x9b\xbd\x185|\xbf\x1e\xfa)?\x93\xd02\xbfB\xc9a\xc0`E\x94\xc0h\xd4\xa8\xbf\xa7\x99s\xc0\xe6\xd0\x15=\n\x06Q\xbe|\xb2\xc9\xbe+?\x10\xc0\x93\xa4p?\x03\xf8q\xbe\xac\xb8s\xbf\x1c{\xbb\xbf\xa5\x95\x16\xbe\xac@\x7f\xbf\x80\xad=\xbf\xde\xcc\x05\xc0"K\xff\xbf:z\xc3\xbeT\x01\\\xbf\x8a\xfe\xcc\xbeA\xd1\x8a\xbe\xae\xeb\xb2\xbe\xc4\xf2\xd5\xbe\x08\xd1\xd1\xbe\x10\x80\x9c\xbe\x94\r\x1f\xbeFo\x00\xbeJ\xe1\xc9=', b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (8,), }                                                            \n\xf8\xc6\xb5\xbe\x18\x00\xc2\xbe\xe6E\x17@\x88h\xe7\xbe\x0ev\xa3>FC\xaf?"^\xa8\xbc\xee\r~\xbd', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 8), }                                                          \n\x94\x96\x86\xbd\xeeJ\x8c\xbd\x0c\xc2c?\xe40\xdb\xbd\xb6\xd8p>\x98&f\xbe\xd0\x13\x1d<\xcc5\x0c\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xb6S\x9c>"], tensor_type='numpy.ndarray')
+2025-05-06 23:32:32,133 - flwr - INFO - fit progress: (10, 0.0, {'mse': 0.0}, 74.68205557300098)
+2025-05-06 23:32:32,133 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:32:32,174 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:32:32,174 - flwr - INFO - 
+2025-05-06 23:32:32,175 - flwr - INFO - [SUMMARY]
+2025-05-06 23:32:32,176 - flwr - INFO - Run finished 10 round(s) in 74.72s
+2025-05-06 23:32:32,177 - flwr - INFO - 	History (loss, distributed):
+2025-05-06 23:32:32,178 - flwr - INFO - 		round 1: 1.254843684823014
+2025-05-06 23:32:32,178 - flwr - INFO - 		round 2: 0.3748913932826828
+2025-05-06 23:32:32,178 - flwr - INFO - 		round 3: 0.38426070015543323
+2025-05-06 23:32:32,179 - flwr - INFO - 		round 4: 0.37027384276405917
+2025-05-06 23:32:32,179 - flwr - INFO - 		round 5: 0.37678589009713886
+2025-05-06 23:32:32,180 - flwr - INFO - 		round 6: 0.3681365035697075
+2025-05-06 23:32:32,180 - flwr - INFO - 		round 7: 0.3605568389658912
+2025-05-06 23:32:32,180 - flwr - INFO - 		round 8: 0.3925285504827666
+2025-05-06 23:32:32,181 - flwr - INFO - 		round 9: 0.3769345385365906
+2025-05-06 23:32:32,181 - flwr - INFO - 		round 10: 0.3657229679738762
+2025-05-06 23:32:32,182 - flwr - INFO - 	History (loss, centralized):
+2025-05-06 23:32:32,182 - flwr - INFO - 		round 0: 0.0
+2025-05-06 23:32:32,183 - flwr - INFO - 		round 1: 0.0
+2025-05-06 23:32:32,183 - flwr - INFO - 		round 2: 0.0
+2025-05-06 23:32:32,183 - flwr - INFO - 		round 3: 0.0
+2025-05-06 23:32:32,184 - flwr - INFO - 		round 4: 0.0
+2025-05-06 23:32:32,184 - flwr - INFO - 		round 5: 0.0
+2025-05-06 23:32:32,184 - flwr - INFO - 		round 6: 0.0
+2025-05-06 23:32:32,185 - flwr - INFO - 		round 7: 0.0
+2025-05-06 23:32:32,185 - flwr - INFO - 		round 8: 0.0
+2025-05-06 23:32:32,185 - flwr - INFO - 		round 9: 0.0
+2025-05-06 23:32:32,186 - flwr - INFO - 		round 10: 0.0
+2025-05-06 23:32:32,186 - flwr - INFO - 	History (metrics, centralized):
+2025-05-06 23:32:32,187 - flwr - INFO - 	{'mse': [(0, 0.0),
+2025-05-06 23:32:32,187 - flwr - INFO - 	         (1, 0.0),
+2025-05-06 23:32:32,188 - flwr - INFO - 	         (2, 0.0),
+2025-05-06 23:32:32,189 - flwr - INFO - 	         (3, 0.0),
+2025-05-06 23:32:32,189 - flwr - INFO - 	         (4, 0.0),
+2025-05-06 23:32:32,190 - flwr - INFO - 	         (5, 0.0),
+2025-05-06 23:32:32,190 - flwr - INFO - 	         (6, 0.0),
+2025-05-06 23:32:32,190 - flwr - INFO - 	         (7, 0.0),
+2025-05-06 23:32:32,191 - flwr - INFO - 	         (8, 0.0),
+2025-05-06 23:32:32,192 - flwr - INFO - 	         (9, 0.0),
+2025-05-06 23:32:32,193 - flwr - INFO - 	         (10, 0.0)]}
+2025-05-06 23:32:32,193 - flwr - INFO - 
+2025-05-06 23:36:35,400 - central_server - INFO - Starting central server ...
+2025-05-06 23:36:35,412 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-06 23:36:35,413 - flwr - INFO - Starting Flower server, config: num_rounds=20, no round_timeout
+2025-05-06 23:36:35,429 - flwr - INFO - Flower ECE: gRPC server running (20 rounds), SSL is enabled
+2025-05-06 23:36:35,429 - flwr - INFO - [INIT]
+2025-05-06 23:36:35,430 - flwr - INFO - Requesting initial parameters from one random client
+2025-05-06 23:36:44,076 - flwr - INFO - Received initial parameters from one random client
+2025-05-06 23:36:44,077 - flwr - INFO - Starting evaluation of initial global parameters
+2025-05-06 23:36:44,077 - flwr - INFO - initial parameters (loss, other metrics): 0.0, {}
+2025-05-06 23:36:44,078 - flwr - INFO - 
+2025-05-06 23:36:44,078 - flwr - INFO - [ROUND 1]
+2025-05-06 23:36:55,677 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:55,869 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:55,872 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.01761374,  0.20376223, -0.11337783, -0.14584725,  0.24064091]],
+      dtype=float32), array([0.10932463], dtype=float32)]
+2025-05-06 23:36:55,873 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[-0.00235115,  0.09011648, -0.11297089, -0.15383387,  0.24518609]],
+      dtype=float32), array([0.10629027], dtype=float32)]
+2025-05-06 23:36:55,874 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:55,876 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-05-06 23:36:55,877 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n2B\xf9;\xabR\x16>\xb3\xc7\xe7\xbd`r\x19\xbe\xc8\xbfx>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n2\xc8\xdc="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:55,877 - flwr - INFO - fit progress: (1, 0.0, {}, 11.801302612000654)
+2025-05-06 23:36:55,878 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:55,888 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:55,889 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-05-06 23:36:55,889 - flwr - INFO - 
+2025-05-06 23:36:55,890 - flwr - INFO - [ROUND 2]
+2025-05-06 23:36:55,892 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,049 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,051 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00179315,  0.09077318, -0.10634489, -0.1301851 ,  0.21265478]],
+      dtype=float32), array([0.10403354], dtype=float32)]
+2025-05-06 23:36:56,053 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02316289,  0.20245841, -0.10232551, -0.12696554,  0.20811768]],
+      dtype=float32), array([0.10673564], dtype=float32)]
+2025-05-06 23:36:56,053 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,055 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n|\x02L<{\xfe\x15>H\xb0\xd5\xbdI\xaa\x03\xbe\xf4pW>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n$\xd2\xd7="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,055 - flwr - INFO - fit progress: (2, 0.0, {}, 11.979664000000412)
+2025-05-06 23:36:56,056 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,068 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,069 - flwr - INFO - 
+2025-05-06 23:36:56,069 - flwr - INFO - [ROUND 3]
+2025-05-06 23:36:56,070 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,205 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,207 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02390158,  0.20216015, -0.09430455, -0.11469456,  0.17928782]],
+      dtype=float32), array([0.09819758], dtype=float32)]
+2025-05-06 23:36:56,208 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00232167,  0.09078486, -0.09840337, -0.1174032 ,  0.18337415]],
+      dtype=float32), array([0.09547644], dtype=float32)]
+2025-05-06 23:36:56,208 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,210 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xf2bV<\x04\xd9\x15>\xdeW\xc5\xbd\xc8\xac\xed\xbd&\xb09>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xbbP\xc6="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,210 - flwr - INFO - fit progress: (3, 0.0, {}, 12.134552723000525)
+2025-05-06 23:36:56,211 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,219 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,220 - flwr - INFO - 
+2025-05-06 23:36:56,220 - flwr - INFO - [ROUND 4]
+2025-05-06 23:36:56,221 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,304 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,306 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00237434,  0.09081353, -0.09025466, -0.107493  ,  0.15738074]],
+      dtype=float32), array([0.08754188], dtype=float32)]
+2025-05-06 23:36:56,307 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02397926,  0.20211789, -0.08620229, -0.10501208,  0.15370646]],
+      dtype=float32), array([0.09040086], dtype=float32)]
+2025-05-06 23:36:56,308 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,309 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n+tW<B\xd7\x15>\xbe\xb3\xb4\xbd\x88\x9c\xd9\xbd\x02H\x1f>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xc84\xb6="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,310 - flwr - INFO - fit progress: (4, 0.0, {}, 12.234065540000302)
+2025-05-06 23:36:56,310 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,319 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,320 - flwr - INFO - 
+2025-05-06 23:36:56,320 - flwr - INFO - [ROUND 5]
+2025-05-06 23:36:56,321 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,410 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,412 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00236187,  0.09085059, -0.08258204, -0.09916246,  0.13431783]],
+      dtype=float32), array([0.0804821], dtype=float32)]
+2025-05-06 23:36:56,413 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02396127,  0.20212942, -0.07854601, -0.09685837,  0.13100585]],
+      dtype=float32), array([0.08351029], dtype=float32)]
+2025-05-06 23:36:56,414 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,415 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nQ4W<\xa3\xdd\x15>Z\x01\xa5\xbd,\xbb\xc8\xbd\x93\xd9\x07>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xac\xeb\xa7="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,415 - flwr - INFO - fit progress: (5, 0.0, {}, 12.33967177500017)
+2025-05-06 23:36:56,416 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,425 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,426 - flwr - INFO - 
+2025-05-06 23:36:56,427 - flwr - INFO - [ROUND 6]
+2025-05-06 23:36:56,427 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,517 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,519 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02393067,  0.20214976, -0.07156745, -0.08979052,  0.11086153]],
+      dtype=float32), array([0.07741235], dtype=float32)]
+2025-05-06 23:36:56,520 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00234134,  0.09088382, -0.07560209, -0.09194449,  0.11385369]],
+      dtype=float32), array([0.0742159], dtype=float32)]
+2025-05-06 23:36:56,520 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,522 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (1, 5), }                                                          \n\'\xc9V<\xaa\xe4\x15>6\xb6\x96\xbd"\x1a\xba\xbd\xae\x1d\xe6=', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \naB\x9b="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,522 - flwr - INFO - fit progress: (6, 0.0, {}, 12.446424900001148)
+2025-05-06 23:36:56,523 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,532 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,532 - flwr - INFO - 
+2025-05-06 23:36:56,533 - flwr - INFO - [ROUND 7]
+2025-05-06 23:36:56,533 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,678 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,680 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00232135,  0.09091209, -0.06934191, -0.08560646,  0.09569459]],
+      dtype=float32), array([0.06865506], dtype=float32)]
+2025-05-06 23:36:56,682 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02390067,  0.20216964, -0.06530334, -0.08358315,  0.09298551]],
+      dtype=float32), array([0.07200781], dtype=float32)]
+2025-05-06 23:36:56,683 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,684 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nY`V<\xfa\xea\x15>\x0c\xe3\x89\xbdYA\xad\xbd\x1a7\xc1=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xc5\x07\x90="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,685 - flwr - INFO - fit progress: (7, 0.0, {}, 12.60915128600027)
+2025-05-06 23:36:56,685 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,696 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,696 - flwr - INFO - 
+2025-05-06 23:36:56,697 - flwr - INFO - [ROUND 8]
+2025-05-06 23:36:56,697 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,779 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,780 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00230318,  0.09093633, -0.06376106, -0.08000797,  0.07958052]],
+      dtype=float32), array([0.06372032], dtype=float32)]
+2025-05-06 23:36:56,781 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02387339,  0.20218769, -0.05971704, -0.07809972,  0.07712234]],
+      dtype=float32), array([0.06721446], dtype=float32)]
+2025-05-06 23:36:56,782 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,783 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x1a\x01V<\x85\xf0\x15>M\xe7|\xbd6\xe8\xa1\xbdLx\xa0=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x84\x11\x86="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,783 - flwr - INFO - fit progress: (8, 0.0, {}, 12.707726325001204)
+2025-05-06 23:36:56,784 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,795 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,796 - flwr - INFO - 
+2025-05-06 23:36:56,796 - flwr - INFO - [ROUND 9]
+2025-05-06 23:36:56,797 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,880 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:56,882 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.023849  ,  0.20220372, -0.05474912, -0.07324333,  0.06304544]],
+      dtype=float32), array([0.06296186], dtype=float32)]
+2025-05-06 23:36:56,883 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00228695,  0.09095744, -0.05879873, -0.07504996,  0.065281  ]],
+      dtype=float32), array([0.05934121], dtype=float32)]
+2025-05-06 23:36:56,884 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:56,885 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xf0\xabU<d\xf5\x15>\xfe\x90h\xbd\\\xdb\x97\xbdri\x83=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n^uz="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:56,886 - flwr - INFO - fit progress: (9, 0.0, {}, 12.809926763000476)
+2025-05-06 23:36:56,886 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:56,896 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:56,897 - flwr - INFO - 
+2025-05-06 23:36:56,897 - flwr - INFO - [ROUND 10]
+2025-05-06 23:36:56,898 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,054 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:57,056 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.0022725 ,  0.09097603, -0.05439137, -0.07065402,  0.05259174]],
+      dtype=float32), array([0.05545517], dtype=float32)]
+2025-05-06 23:36:57,057 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02382731,  0.2022179 , -0.0503365 , -0.06893754,  0.05055363]],
+      dtype=float32), array([0.05918851], dtype=float32)]
+2025-05-06 23:36:57,058 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:57,059 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n.`U<\xb0\xf9\x15>\xca\x80V\xbd2\xf2\x8e\xbd\x82@S=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x80\xc5j="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:57,060 - flwr - INFO - fit progress: (10, 0.0, {}, 12.9839178000002)
+2025-05-06 23:36:57,060 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,069 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:57,069 - flwr - INFO - 
+2025-05-06 23:36:57,070 - flwr - INFO - [ROUND 11]
+2025-05-06 23:36:57,070 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,158 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:57,159 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00225967,  0.09099241, -0.05047883, -0.06675463,  0.04133131]],
+      dtype=float32), array([0.05200671], dtype=float32)]
+2025-05-06 23:36:57,161 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02380803,  0.20223051, -0.04641915, -0.06511795,  0.03946844]],
+      dtype=float32), array([0.05584018], dtype=float32)]
+2025-05-06 23:36:57,161 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:57,163 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xe3\x1cU<}\xfd\x15>\xaewF\xbd\xa9\n\x87\xbd\xbe|%=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xe6\xd9\\="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:57,163 - flwr - INFO - fit progress: (11, 0.0, {}, 13.087140940000609)
+2025-05-06 23:36:57,163 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,171 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:57,172 - flwr - INFO - 
+2025-05-06 23:36:57,173 - flwr - INFO - [ROUND 12]
+2025-05-06 23:36:57,173 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,265 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:57,267 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02379092,  0.20224175, -0.0429423 , -0.06172904,  0.02963148]],
+      dtype=float32), array([0.05286894], dtype=float32)]
+2025-05-06 23:36:57,268 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00224828,  0.09100695, -0.04700629, -0.06329487,  0.03133887]],
+      dtype=float32), array([0.04894656], dtype=float32)]
+2025-05-06 23:36:57,268 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:57,269 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (1, 5), }                                                          \n"\xe1T<\xde\x00\x16>4<8\xbdH\x07\x80\xbds\xc0\xf9<', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x98\x7fP="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:57,270 - flwr - INFO - fit progress: (12, 0.0, {}, 13.193933062000724)
+2025-05-06 23:36:57,270 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,280 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:57,281 - flwr - INFO - 
+2025-05-06 23:36:57,281 - flwr - INFO - [ROUND 13]
+2025-05-06 23:36:57,282 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,376 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:57,377 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02377573,  0.20225169, -0.03985672, -0.05872198,  0.0209022 ]],
+      dtype=float32), array([0.05023231], dtype=float32)]
+2025-05-06 23:36:57,378 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00223816,  0.09101984, -0.04392453, -0.06022492,  0.02247157]],
+      dtype=float32), array([0.04623099], dtype=float32)]
+2025-05-06 23:36:57,379 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:57,380 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x18\xacT<\xdc\x03\x16>\xc0\x9a+\xbd`\x9cs\xbd\xbf\xac\xb1<", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nf\x89E="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:57,381 - flwr - INFO - fit progress: (13, 0.0, {}, 13.304868157001692)
+2025-05-06 23:36:57,381 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,396 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:57,397 - flwr - INFO - 
+2025-05-06 23:36:57,397 - flwr - INFO - [ROUND 14]
+2025-05-06 23:36:57,399 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,682 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:57,684 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00222919,  0.09103128, -0.0411897 , -0.05750075,  0.01460279]],
+      dtype=float32), array([0.04382119], dtype=float32)]
+2025-05-06 23:36:57,686 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02376226,  0.20226048, -0.03711852, -0.0560536 ,  0.01315586]],
+      dtype=float32), array([0.0478926], dtype=float32)]
+2025-05-06 23:36:57,686 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:57,688 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x0c}T<\x83\x06\x16>Ne \xbd\x0c\x91h\xbd\x92mc<", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n2\xcf;="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:57,688 - flwr - INFO - fit progress: (14, 0.0, {}, 13.61255193100078)
+2025-05-06 23:36:57,689 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,700 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:57,700 - flwr - INFO - 
+2025-05-06 23:36:57,701 - flwr - INFO - [ROUND 15]
+2025-05-06 23:36:57,701 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,923 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:57,925 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00222123,  0.09104139, -0.03876279, -0.05508335,  0.00762005]],
+      dtype=float32), array([0.04168276], dtype=float32)]
+2025-05-06 23:36:57,926 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.0237503 ,  0.20226829, -0.03468859, -0.05368571,  0.00628177]],
+      dtype=float32), array([0.04581633], dtype=float32)]
+2025-05-06 23:36:57,926 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:57,929 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nIST<\xdd\x08\x16>\xeer\x16\xbd\x1e\xc4^\xbdB\xd2\xe3;", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nf-3="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:57,929 - flwr - INFO - fit progress: (15, 0.0, {}, 13.853336851001586)
+2025-05-06 23:36:57,929 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:57,938 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:57,939 - flwr - INFO - 
+2025-05-06 23:36:57,940 - flwr - INFO - [ROUND 16]
+2025-05-06 23:36:57,940 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,027 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:58,029 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00221416,  0.0910504 , -0.03660914, -0.05293815,  0.00142358]],
+      dtype=float32), array([0.03978511], dtype=float32)]
+2025-05-06 23:36:58,030 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 2.3739683e-02,  2.0227522e-01, -3.2532267e-02, -5.1584475e-02,
+         1.8173181e-04]], dtype=float32), array([0.04397386], dtype=float32)]
+2025-05-06 23:36:58,030 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:58,032 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n:.T<\xf4\n\x16>D\x9f\r\xbd\xb4\x11V\xbd\xa5\xcfR:", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nl\x84+="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:58,032 - flwr - INFO - fit progress: (16, 0.0, {}, 13.956250126000668)
+2025-05-06 23:36:58,032 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,041 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:58,042 - flwr - INFO - 
+2025-05-06 23:36:58,043 - flwr - INFO - [ROUND 17]
+2025-05-06 23:36:58,044 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,291 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:58,292 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00220789,  0.09105841, -0.03469801, -0.05103455, -0.00407515]],
+      dtype=float32), array([0.03810114], dtype=float32)]
+2025-05-06 23:36:58,294 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02373026,  0.20228139, -0.03061875, -0.04971985, -0.00523143]],
+      dtype=float32), array([0.04233886], dtype=float32)]
+2025-05-06 23:36:58,295 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:58,296 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nV\rT<\xd0\x0c\x16>\r\xca\x05\xbd\x04ZN\xbd\xb4n\x98\xbb", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nD\xb8$="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:58,296 - flwr - INFO - fit progress: (17, 0.0, {}, 14.220766412001467)
+2025-05-06 23:36:58,297 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,308 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:58,309 - flwr - INFO - 
+2025-05-06 23:36:58,310 - flwr - INFO - [ROUND 18]
+2025-05-06 23:36:58,311 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,485 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:58,486 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00220233,  0.0910655 , -0.03300208, -0.04934527, -0.0089547 ]],
+      dtype=float32), array([0.0366068], dtype=float32)]
+2025-05-06 23:36:58,488 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.0237219 ,  0.20228685, -0.02892069, -0.04806517, -0.01003505]],
+      dtype=float32), array([0.04088795], dtype=float32)]
+2025-05-06 23:36:58,488 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:58,490 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n'\xf0S<u\x0e\x16>B\xad\xfd\xbc\xc8\x80G\xbd\xd6\x8a\x1b\xbc", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x0e\xb0\x1e="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:58,490 - flwr - INFO - fit progress: (18, 0.0, {}, 14.414478018001319)
+2025-05-06 23:36:58,491 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,499 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:58,500 - flwr - INFO - 
+2025-05-06 23:36:58,500 - flwr - INFO - [ROUND 19]
+2025-05-06 23:36:58,500 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,590 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:58,591 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02371449,  0.20229167, -0.02741385, -0.04659681, -0.01429777]],
+      dtype=float32), array([0.03960042], dtype=float32)]
+2025-05-06 23:36:58,593 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00219739,  0.09107176, -0.0314971 , -0.04784624, -0.01328481]],
+      dtype=float32), array([0.03528073], dtype=float32)]
+2025-05-06 23:36:58,593 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:58,594 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (1, 5), }                                                          \nD\xd6S<\xe9\x0f\x16>"W\xf1\xbc\xf8lA\xbd\xa6\xefa\xbc', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xbaU\x19="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:58,595 - flwr - INFO - fit progress: (19, 0.0, {}, 14.519361122000191)
+2025-05-06 23:36:58,596 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,605 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:58,606 - flwr - INFO - 
+2025-05-06 23:36:58,607 - flwr - INFO - [ROUND 20]
+2025-05-06 23:36:58,608 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,672 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:36:58,674 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02370791,  0.20229596, -0.02607668, -0.0452938 , -0.0180805 ]],
+      dtype=float32), array([0.03845789], dtype=float32)]
+2025-05-06 23:36:58,675 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.002193  ,  0.09107735, -0.0301616 , -0.04651598, -0.01712734]],
+      dtype=float32), array([0.03410397], dtype=float32)]
+2025-05-06 23:36:58,676 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:36:58,677 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nG\xbfS<4\x11\x16>\xa4d\xe6\xbcX\x08<\xbd\xa23\x90\xbc", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xb4\x95\x14="], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:36:58,692 - central_server - INFO - The model saved successfully.
+2025-05-06 23:36:58,692 - flwr - INFO - fit progress: (20, 0.0, {}, 14.616179364000345)
+2025-05-06 23:36:58,692 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:36:58,701 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:36:58,702 - flwr - INFO - 
+2025-05-06 23:36:58,702 - flwr - INFO - [SUMMARY]
+2025-05-06 23:36:58,703 - flwr - INFO - Run finished 20 round(s) in 14.63s
+2025-05-06 23:36:58,703 - flwr - INFO - 	History (loss, distributed):
+2025-05-06 23:36:58,704 - flwr - INFO - 		round 1: 1.0016280233788006
+2025-05-06 23:36:58,705 - flwr - INFO - 		round 2: 0.9994896332498769
+2025-05-06 23:36:58,705 - flwr - INFO - 		round 3: 0.998193307623687
+2025-05-06 23:36:58,706 - flwr - INFO - 		round 4: 0.9972309533337599
+2025-05-06 23:36:58,707 - flwr - INFO - 		round 5: 0.9964894845733967
+2025-05-06 23:36:58,707 - flwr - INFO - 		round 6: 0.9959108319369598
+2025-05-06 23:36:58,708 - flwr - INFO - 		round 7: 0.9954559967201174
+2025-05-06 23:36:58,709 - flwr - INFO - 		round 8: 0.9950986280182337
+2025-05-06 23:36:58,709 - flwr - INFO - 		round 9: 0.9948168643537187
+2025-05-06 23:36:58,709 - flwr - INFO - 		round 10: 0.9945946144435295
+2025-05-06 23:36:58,710 - flwr - INFO - 		round 11: 0.994419282618471
+2025-05-06 23:36:58,710 - flwr - INFO - 		round 12: 0.9942809683285903
+2025-05-06 23:36:58,711 - flwr - INFO - 		round 13: 0.9941715311604381
+2025-05-06 23:36:58,711 - flwr - INFO - 		round 14: 0.9940851625779749
+2025-05-06 23:36:58,712 - flwr - INFO - 		round 15: 0.9940168091175408
+2025-05-06 23:36:58,712 - flwr - INFO - 		round 16: 0.9939630248790663
+2025-05-06 23:36:58,712 - flwr - INFO - 		round 17: 0.9939203553479982
+2025-05-06 23:36:58,713 - flwr - INFO - 		round 18: 0.9938864281335088
+2025-05-06 23:36:58,713 - flwr - INFO - 		round 19: 0.9938595199068361
+2025-05-06 23:36:58,713 - flwr - INFO - 		round 20: 0.9938384927624541
+2025-05-06 23:36:58,714 - flwr - INFO - 	History (loss, centralized):
+2025-05-06 23:36:58,714 - flwr - INFO - 		round 0: 0.0
+2025-05-06 23:36:58,715 - flwr - INFO - 		round 1: 0.0
+2025-05-06 23:36:58,715 - flwr - INFO - 		round 2: 0.0
+2025-05-06 23:36:58,715 - flwr - INFO - 		round 3: 0.0
+2025-05-06 23:36:58,716 - flwr - INFO - 		round 4: 0.0
+2025-05-06 23:36:58,716 - flwr - INFO - 		round 5: 0.0
+2025-05-06 23:36:58,717 - flwr - INFO - 		round 6: 0.0
+2025-05-06 23:36:58,717 - flwr - INFO - 		round 7: 0.0
+2025-05-06 23:36:58,717 - flwr - INFO - 		round 8: 0.0
+2025-05-06 23:36:58,718 - flwr - INFO - 		round 9: 0.0
+2025-05-06 23:36:58,718 - flwr - INFO - 		round 10: 0.0
+2025-05-06 23:36:58,718 - flwr - INFO - 		round 11: 0.0
+2025-05-06 23:36:58,719 - flwr - INFO - 		round 12: 0.0
+2025-05-06 23:36:58,719 - flwr - INFO - 		round 13: 0.0
+2025-05-06 23:36:58,719 - flwr - INFO - 		round 14: 0.0
+2025-05-06 23:36:58,720 - flwr - INFO - 		round 15: 0.0
+2025-05-06 23:36:58,721 - flwr - INFO - 		round 16: 0.0
+2025-05-06 23:36:58,722 - flwr - INFO - 		round 17: 0.0
+2025-05-06 23:36:58,723 - flwr - INFO - 		round 18: 0.0
+2025-05-06 23:36:58,723 - flwr - INFO - 		round 19: 0.0
+2025-05-06 23:36:58,724 - flwr - INFO - 		round 20: 0.0
+2025-05-06 23:36:58,725 - flwr - INFO - 
+2025-05-06 23:38:14,810 - central_server - INFO - Starting central server ...
+2025-05-06 23:38:14,827 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-06 23:38:14,831 - flwr - INFO - Starting Flower server, config: num_rounds=20, no round_timeout
+2025-05-06 23:38:14,854 - flwr - INFO - Flower ECE: gRPC server running (20 rounds), SSL is enabled
+2025-05-06 23:38:14,855 - flwr - INFO - [INIT]
+2025-05-06 23:38:14,856 - flwr - INFO - Requesting initial parameters from one random client
+2025-05-06 23:38:18,243 - flwr - INFO - Received initial parameters from one random client
+2025-05-06 23:38:18,244 - flwr - INFO - Starting evaluation of initial global parameters
+2025-05-06 23:38:18,245 - flwr - INFO - initial parameters (loss, other metrics): 0.0, {}
+2025-05-06 23:38:18,245 - flwr - INFO - 
+2025-05-06 23:38:18,246 - flwr - INFO - [ROUND 1]
+2025-05-06 23:38:19,566 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:19,701 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:19,703 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[-0.00654504,  0.02894576,  0.32617494,  0.32913247,  0.33035755]],
+      dtype=float32), array([-0.32356817], dtype=float32)]
+2025-05-06 23:38:19,704 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02546855, 0.15222149, 0.3300369 , 0.3294949 , 0.3292056 ]],
+      dtype=float32), array([-0.32049558], dtype=float32)]
+2025-05-06 23:38:19,706 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:19,707 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-05-06 23:38:19,708 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n|`\x1a<\x7f4\xb9=\xe1\xfc\xa7>\xbf\x9b\xa8>R\xd9\xa8>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xdc\xe1\xa4\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:19,709 - flwr - INFO - fit progress: (1, 0.0, {}, 1.4632028390005871)
+2025-05-06 23:38:19,709 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:19,718 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:19,719 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-05-06 23:38:19,719 - flwr - INFO - 
+2025-05-06 23:38:19,720 - flwr - INFO - [ROUND 2]
+2025-05-06 23:38:19,720 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:19,811 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:19,812 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00222162, 0.0802599 , 0.33091784, 0.32110065, 0.328029  ]],
+      dtype=float32), array([-0.32918587], dtype=float32)]
+2025-05-06 23:38:19,814 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02611162, 0.19287796, 0.33444363, 0.32236552, 0.32729495]],
+      dtype=float32), array([-0.32512882], dtype=float32)]
+2025-05-06 23:38:19,814 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:19,816 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xff\x9fg<t\xb4\x0b>\x90T\xaa>\x00\xba\xa4>n\xc3\xa7>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xd2\x81\xa7\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:19,816 - flwr - INFO - fit progress: (2, 0.0, {}, 1.570629308000207)
+2025-05-06 23:38:19,816 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:19,827 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:19,828 - flwr - INFO - 
+2025-05-06 23:38:19,828 - flwr - INFO - [ROUND 3]
+2025-05-06 23:38:19,829 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:19,961 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:19,962 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02441068, 0.20050922, 0.3373407 , 0.32068786, 0.32551926]],
+      dtype=float32), array([-0.32568547], dtype=float32)]
+2025-05-06 23:38:19,963 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00239655, 0.08915348, 0.33342516, 0.31955832, 0.32621464]],
+      dtype=float32), array([-0.33003506], dtype=float32)]
+2025-05-06 23:38:19,964 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:19,965 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nd)[<\xce*\x14>\xaf\xb6\xab>\xfe\xe6\xa3>&\xd8\xa6>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x00\xde\xa7\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:19,966 - flwr - INFO - fit progress: (3, 0.0, {}, 1.720452112998828)
+2025-05-06 23:38:19,966 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:19,978 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:19,979 - flwr - INFO - 
+2025-05-06 23:38:19,980 - flwr - INFO - [ROUND 4]
+2025-05-06 23:38:19,980 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,270 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:20,272 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00224331, 0.09074973, 0.33474028, 0.31933457, 0.324607  ]],
+      dtype=float32), array([-0.3305515], dtype=float32)]
+2025-05-06 23:38:20,273 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02385345, 0.2019673 , 0.33877912, 0.3204275 , 0.32393146]],
+      dtype=float32), array([-0.32609487], dtype=float32)]
+2025-05-06 23:38:20,274 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:20,275 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x85YU<0\xbb\x15>\x1ek\xac>F\xc7\xa3>\xba\x06\xa6>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xb2\x1a\xa8\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:20,276 - flwr - INFO - fit progress: (4, 0.0, {}, 2.030382720000489)
+2025-05-06 23:38:20,276 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,286 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:20,287 - flwr - INFO - 
+2025-05-06 23:38:20,287 - flwr - INFO - [ROUND 5]
+2025-05-06 23:38:20,288 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,551 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:20,553 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02371449, 0.2022498 , 0.33960924, 0.32061315, 0.32252023]],
+      dtype=float32), array([-0.32649058], dtype=float32)]
+2025-05-06 23:38:20,554 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.0021889 , 0.09104208, 0.33553365, 0.31952995, 0.32317615]],
+      dtype=float32), array([-0.33099332], dtype=float32)]
+2025-05-06 23:38:20,555 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:20,556 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nm\xc4S<\x89\x06\x16>\x82\xd5\xac>>\xe0\xa3>wL\xa5>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x98Q\xa8\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:20,556 - flwr - INFO - fit progress: (5, 0.0, {}, 2.3108962579990475)
+2025-05-06 23:38:20,557 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,566 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:20,566 - flwr - INFO - 
+2025-05-06 23:38:20,567 - flwr - INFO - [ROUND 6]
+2025-05-06 23:38:20,567 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,735 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:20,738 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02368174, 0.20230563, 0.34017813, 0.32093048, 0.32126758]],
+      dtype=float32), array([-0.32685706], dtype=float32)]
+2025-05-06 23:38:20,739 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00217401, 0.09109639, 0.33609065, 0.3198542 , 0.32190472]],
+      dtype=float32), array([-0.33138365], dtype=float32)]
+2025-05-06 23:38:20,740 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:20,741 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x97`S<\xf9\x14\x16>L\x1f\xad>K\n\xa4>\x0b\xa7\xa4>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n2\x83\xa8\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:20,741 - flwr - INFO - fit progress: (6, 0.0, {}, 2.4954966109999077)
+2025-05-06 23:38:20,741 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,752 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:20,752 - flwr - INFO - 
+2025-05-06 23:38:20,753 - flwr - INFO - [ROUND 7]
+2025-05-06 23:38:20,753 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,829 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:20,832 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02367317, 0.20231742, 0.3406194 , 0.32126972, 0.32015583]],
+      dtype=float32), array([-0.32718825], dtype=float32)]
+2025-05-06 23:38:20,834 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216958, 0.09110706, 0.3365276 , 0.32020023, 0.32077596]],
+      dtype=float32), array([-0.33172968], dtype=float32)]
+2025-05-06 23:38:20,834 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:20,835 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n[ES<\xea\x17\x16>\xd9X\xad>47\xa4>5\x14\xa4>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x94\xaf\xa8\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:20,836 - flwr - INFO - fit progress: (7, 0.0, {}, 2.5901600119996147)
+2025-05-06 23:38:20,836 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:20,847 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:20,847 - flwr - INFO - 
+2025-05-06 23:38:20,848 - flwr - INFO - [ROUND 8]
+2025-05-06 23:38:20,848 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,009 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,011 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216771, 0.09110985, 0.336893  , 0.32052967, 0.31977394]],
+      dtype=float32), array([-0.33203658], dtype=float32)]
+2025-05-06 23:38:21,013 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02367   , 0.20232058, 0.3409868 , 0.3215928 , 0.31916913]],
+      dtype=float32), array([-0.3274845], dtype=float32)]
+2025-05-06 23:38:21,031 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,032 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xd0:S<\xb2\x18\x16>\xdf\x88\xad>\xf8a\xa4>\xdf\x91\xa3>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x1c\xd7\xa8\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,032 - flwr - INFO - fit progress: (8, 0.0, {}, 2.786821149999014)
+2025-05-06 23:38:21,033 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,044 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,044 - flwr - INFO - 
+2025-05-06 23:38:21,045 - flwr - INFO - [ROUND 9]
+2025-05-06 23:38:21,045 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,175 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,176 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366815, 0.20232196, 0.34130335, 0.3218879 , 0.3182938 ]],
+      dtype=float32), array([-0.32774824], dtype=float32)]
+2025-05-06 23:38:21,177 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216653, 0.09111125, 0.3372087 , 0.3208308 , 0.3188848 ]],
+      dtype=float32), array([-0.33230892], dtype=float32)]
+2025-05-06 23:38:21,178 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,180 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nq4S<\x0f\x19\x16>N\xb2\xad>\x0b\x89\xa4><\x1e\xa3>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n>\xfa\xa8\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,181 - flwr - INFO - fit progress: (9, 0.0, {}, 2.9350887950004108)
+2025-05-06 23:38:21,181 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,195 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,196 - flwr - INFO - 
+2025-05-06 23:38:21,196 - flwr - INFO - [ROUND 10]
+2025-05-06 23:38:21,197 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,374 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,376 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216558, 0.09111233, 0.3374856 , 0.3211015 , 0.3180956 ]],
+      dtype=float32), array([-0.3325507], dtype=float32)]
+2025-05-06 23:38:21,377 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366672, 0.20232293, 0.34158078, 0.32215294, 0.31751683]],
+      dtype=float32), array([-0.32798257], dtype=float32)]
+2025-05-06 23:38:21,378 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,379 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \ns/S<T\x19\x16>\xa3\xd6\xad>(\xac\xa4>\x97\xb7\xa2>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nr\x19\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,379 - flwr - INFO - fit progress: (10, 0.0, {}, 3.1338703250003164)
+2025-05-06 23:38:21,380 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,390 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,391 - flwr - INFO - 
+2025-05-06 23:38:21,392 - flwr - INFO - [ROUND 11]
+2025-05-06 23:38:21,392 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,465 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,466 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.0236655 , 0.20232373, 0.34182566, 0.32238963, 0.31682727]],
+      dtype=float32), array([-0.32819092], dtype=float32)]
+2025-05-06 23:38:21,467 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216477, 0.09111332, 0.33772996, 0.32134306, 0.31739536]],
+      dtype=float32), array([-0.33276522], dtype=float32)]
+2025-05-06 23:38:21,468 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,469 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n4+S<\x90\x19\x16>\xb3\xf6\xad>\x80\xcb\xa4>\x82\\\xa2>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n(5\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,469 - flwr - INFO - fit progress: (11, 0.0, {}, 3.223788522000177)
+2025-05-06 23:38:21,470 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,480 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,480 - flwr - INFO - 
+2025-05-06 23:38:21,481 - flwr - INFO - [ROUND 12]
+2025-05-06 23:38:21,481 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,564 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,565 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216406, 0.09111422, 0.33794647, 0.32155782, 0.31677386]],
+      dtype=float32), array([-0.3329556], dtype=float32)]
+2025-05-06 23:38:21,566 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366443, 0.20232439, 0.3420422 , 0.32259998, 0.31621566]],
+      dtype=float32), array([-0.3283756], dtype=float32)]
+2025-05-06 23:38:21,567 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,568 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nw'S<\xc4\x19\x16>\x14\x13\xae>\\\xe7\xa4>\xb2\x0b\xa2>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xbeM\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,568 - flwr - INFO - fit progress: (12, 0.0, {}, 3.323035806999542)
+2025-05-06 23:38:21,569 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,579 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,580 - flwr - INFO - 
+2025-05-06 23:38:21,580 - flwr - INFO - [ROUND 13]
+2025-05-06 23:38:21,580 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,676 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,677 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216343, 0.09111501, 0.33813828, 0.32174858, 0.31622243]],
+      dtype=float32), array([-0.33312443], dtype=float32)]
+2025-05-06 23:38:21,679 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366348, 0.20232505, 0.34223434, 0.3227868 , 0.31567273]],
+      dtype=float32), array([-0.32853964], dtype=float32)]
+2025-05-06 23:38:21,679 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,681 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n($S<\xf5\x19\x16>>,\xae>\x1b\x00\xa5>\xf8\xc3\xa1>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x8ec\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,681 - flwr - INFO - fit progress: (13, 0.0, {}, 3.435515105999002)
+2025-05-06 23:38:21,681 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,691 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,692 - flwr - INFO - 
+2025-05-06 23:38:21,692 - flwr - INFO - [ROUND 14]
+2025-05-06 23:38:21,693 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,798 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,800 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216287, 0.09111573, 0.33830845, 0.32191798, 0.3157329 ]],
+      dtype=float32), array([-0.33327442], dtype=float32)]
+2025-05-06 23:38:21,801 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366264, 0.2023256 , 0.34240493, 0.32295287, 0.31519112]],
+      dtype=float32), array([-0.32868525], dtype=float32)]
+2025-05-06 23:38:21,801 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,803 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n6!S< \x1a\x16>\x93B\xae>\x17\x16\xa5>S\x84\xa1>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xeev\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,803 - flwr - INFO - fit progress: (14, 0.0, {}, 3.557729341000595)
+2025-05-06 23:38:21,804 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,815 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,816 - flwr - INFO - 
+2025-05-06 23:38:21,816 - flwr - INFO - [ROUND 15]
+2025-05-06 23:38:21,817 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,983 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:21,985 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216237, 0.09111637, 0.33845943, 0.32206836, 0.3152988 ]],
+      dtype=float32), array([-0.3334075], dtype=float32)]
+2025-05-06 23:38:21,986 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366189, 0.2023261 , 0.34255603, 0.32310015, 0.3147634 ]],
+      dtype=float32), array([-0.32881442], dtype=float32)]
+2025-05-06 23:38:21,986 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:21,988 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x9e\x1eS<F\x1a\x16>_V\xae>\x99)\xa5>\xd8K\xa1>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x1e\x88\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:21,988 - flwr - INFO - fit progress: (15, 0.0, {}, 3.7429861279997567)
+2025-05-06 23:38:21,989 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:21,998 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:21,998 - flwr - INFO - 
+2025-05-06 23:38:21,998 - flwr - INFO - [ROUND 16]
+2025-05-06 23:38:21,999 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,075 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:22,077 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366124, 0.20232652, 0.34269014, 0.32323083, 0.31438413]],
+      dtype=float32), array([-0.32892898], dtype=float32)]
+2025-05-06 23:38:22,078 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216193, 0.09111692, 0.3385934 , 0.32220185, 0.31491336]],
+      dtype=float32), array([-0.33352545], dtype=float32)]
+2025-05-06 23:38:22,079 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:22,080 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nR\x1cS<g\x1a\x16>\xf0g\xae>\xe9:\xa5>\xba\x19\xa1>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nZ\x97\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:22,080 - flwr - INFO - fit progress: (16, 0.0, {}, 3.8348531689989613)
+2025-05-06 23:38:22,081 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,091 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:22,092 - flwr - INFO - 
+2025-05-06 23:38:22,092 - flwr - INFO - [ROUND 17]
+2025-05-06 23:38:22,093 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,163 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:22,165 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216154, 0.09111743, 0.33871222, 0.32232016, 0.31457138]],
+      dtype=float32), array([-0.33363008], dtype=float32)]
+2025-05-06 23:38:22,167 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366065, 0.2023269 , 0.3428091 , 0.32334673, 0.3140475 ]],
+      dtype=float32), array([-0.32903063], dtype=float32)]
+2025-05-06 23:38:22,167 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:22,168 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nF\x1aS<\x84\x1a\x16>\x86w\xae>CJ\xa5>@\xed\xa0>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xe0\xa4\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:22,168 - flwr - INFO - fit progress: (17, 0.0, {}, 3.9227951569992)
+2025-05-06 23:38:22,169 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,179 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:22,179 - flwr - INFO - 
+2025-05-06 23:38:22,180 - flwr - INFO - [ROUND 18]
+2025-05-06 23:38:22,180 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,280 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:22,282 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02366013, 0.20232725, 0.34291473, 0.32344967, 0.31374878]],
+      dtype=float32), array([-0.3291209], dtype=float32)]
+2025-05-06 23:38:22,283 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.0021612 , 0.09111786, 0.3388178 , 0.32242525, 0.314268  ]],
+      dtype=float32), array([-0.33372322], dtype=float32)]
+2025-05-06 23:38:22,284 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:22,285 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nr\x18S<\x9f\x1a\x16>^\x85\xae>\xe5W\xa5>\xca\xc5\xa0>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xe5\xb0\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:22,285 - flwr - INFO - fit progress: (18, 0.0, {}, 4.040046538999377)
+2025-05-06 23:38:22,286 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,295 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:22,296 - flwr - INFO - 
+2025-05-06 23:38:22,296 - flwr - INFO - [ROUND 19]
+2025-05-06 23:38:22,296 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,380 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:22,382 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216089, 0.09111826, 0.33891144, 0.32251838, 0.31399876]],
+      dtype=float32), array([-0.33380568], dtype=float32)]
+2025-05-06 23:38:22,383 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02365967, 0.20232753, 0.34300858, 0.32354102, 0.31348372]],
+      dtype=float32), array([-0.32920104], dtype=float32)]
+2025-05-06 23:38:22,383 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:22,385 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xd6\x16S<\xb6\x1a\x16>\xa7\x91\xae>\xfcc\xa5>\xc6\xa2\xa0>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x8d\xbb\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:22,404 - flwr - INFO - fit progress: (19, 0.0, {}, 4.158704069999658)
+2025-05-06 23:38:22,405 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,417 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:22,417 - flwr - INFO - 
+2025-05-06 23:38:22,417 - flwr - INFO - [ROUND 20]
+2025-05-06 23:38:22,418 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,520 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:38:22,521 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02365925, 0.2023278 , 0.3430917 , 0.32362196, 0.31324837]],
+      dtype=float32), array([-0.32927197], dtype=float32)]
+2025-05-06 23:38:22,522 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00216061, 0.0911186 , 0.33899453, 0.3226012 , 0.31375965]],
+      dtype=float32), array([-0.33387887], dtype=float32)]
+2025-05-06 23:38:22,523 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:38:22,524 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nf\x15S<\xca\x1a\x16>\x8c\x9c\xae>\xb8n\xa5>\xae\x83\xa0>", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xff\xc4\xa9\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:38:22,540 - central_server - INFO - The model saved successfully.
+2025-05-06 23:38:22,540 - flwr - INFO - fit progress: (20, 0.0, {}, 4.294590141998924)
+2025-05-06 23:38:22,540 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:38:22,552 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:38:22,553 - flwr - INFO - 
+2025-05-06 23:38:22,554 - flwr - INFO - [SUMMARY]
+2025-05-06 23:38:22,554 - flwr - INFO - Run finished 20 round(s) in 4.31s
+2025-05-06 23:38:22,555 - flwr - INFO - 	History (loss, distributed):
+2025-05-06 23:38:22,556 - flwr - INFO - 		round 1: 0.9919128826841215
+2025-05-06 23:38:22,557 - flwr - INFO - 		round 2: 0.9930752752574189
+2025-05-06 23:38:22,558 - flwr - INFO - 		round 3: 0.9936088579597898
+2025-05-06 23:38:22,558 - flwr - INFO - 		round 4: 0.9937305361399078
+2025-05-06 23:38:22,559 - flwr - INFO - 		round 5: 0.9937572466014905
+2025-05-06 23:38:22,559 - flwr - INFO - 		round 6: 0.9937625964416128
+2025-05-06 23:38:22,560 - flwr - INFO - 		round 7: 0.9937627073105159
+2025-05-06 23:38:22,561 - flwr - INFO - 		round 8: 0.9937619085023985
+2025-05-06 23:38:22,561 - flwr - INFO - 		round 9: 0.9937609861829795
+2025-05-06 23:38:22,562 - flwr - INFO - 		round 10: 0.9937600284389094
+2025-05-06 23:38:22,562 - flwr - INFO - 		round 11: 0.9937590878212887
+2025-05-06 23:38:22,563 - flwr - INFO - 		round 12: 0.9937583335963435
+2025-05-06 23:38:22,563 - flwr - INFO - 		round 13: 0.9937579320109389
+2025-05-06 23:38:22,564 - flwr - INFO - 		round 14: 0.9937574520330611
+2025-05-06 23:38:22,564 - flwr - INFO - 		round 15: 0.9937569441234838
+2025-05-06 23:38:22,565 - flwr - INFO - 		round 16: 0.9937566412479414
+2025-05-06 23:38:22,565 - flwr - INFO - 		round 17: 0.9937563569530788
+2025-05-06 23:38:22,566 - flwr - INFO - 		round 18: 0.9937562060959538
+2025-05-06 23:38:22,566 - flwr - INFO - 		round 19: 0.9937558873661538
+2025-05-06 23:38:22,567 - flwr - INFO - 		round 20: 0.9937556960353705
+2025-05-06 23:38:22,567 - flwr - INFO - 	History (loss, centralized):
+2025-05-06 23:38:22,567 - flwr - INFO - 		round 0: 0.0
+2025-05-06 23:38:22,568 - flwr - INFO - 		round 1: 0.0
+2025-05-06 23:38:22,568 - flwr - INFO - 		round 2: 0.0
+2025-05-06 23:38:22,569 - flwr - INFO - 		round 3: 0.0
+2025-05-06 23:38:22,570 - flwr - INFO - 		round 4: 0.0
+2025-05-06 23:38:22,570 - flwr - INFO - 		round 5: 0.0
+2025-05-06 23:38:22,571 - flwr - INFO - 		round 6: 0.0
+2025-05-06 23:38:22,572 - flwr - INFO - 		round 7: 0.0
+2025-05-06 23:38:22,572 - flwr - INFO - 		round 8: 0.0
+2025-05-06 23:38:22,573 - flwr - INFO - 		round 9: 0.0
+2025-05-06 23:38:22,573 - flwr - INFO - 		round 10: 0.0
+2025-05-06 23:38:22,574 - flwr - INFO - 		round 11: 0.0
+2025-05-06 23:38:22,574 - flwr - INFO - 		round 12: 0.0
+2025-05-06 23:38:22,574 - flwr - INFO - 		round 13: 0.0
+2025-05-06 23:38:22,575 - flwr - INFO - 		round 14: 0.0
+2025-05-06 23:38:22,575 - flwr - INFO - 		round 15: 0.0
+2025-05-06 23:38:22,575 - flwr - INFO - 		round 16: 0.0
+2025-05-06 23:38:22,576 - flwr - INFO - 		round 17: 0.0
+2025-05-06 23:38:22,577 - flwr - INFO - 		round 18: 0.0
+2025-05-06 23:38:22,577 - flwr - INFO - 		round 19: 0.0
+2025-05-06 23:38:22,578 - flwr - INFO - 		round 20: 0.0
+2025-05-06 23:38:22,578 - flwr - INFO - 
+2025-05-06 23:39:55,635 - central_server - INFO - Starting central server ...
+2025-05-06 23:39:55,642 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-06 23:39:55,644 - flwr - INFO - Starting Flower server, config: num_rounds=30, no round_timeout
+2025-05-06 23:39:55,659 - flwr - INFO - Flower ECE: gRPC server running (30 rounds), SSL is enabled
+2025-05-06 23:39:55,659 - flwr - INFO - [INIT]
+2025-05-06 23:39:55,660 - flwr - INFO - Requesting initial parameters from one random client
+2025-05-06 23:39:59,000 - flwr - INFO - Received initial parameters from one random client
+2025-05-06 23:39:59,000 - flwr - INFO - Starting evaluation of initial global parameters
+2025-05-06 23:39:59,001 - flwr - INFO - initial parameters (loss, other metrics): 0.0, {}
+2025-05-06 23:39:59,001 - flwr - INFO - 
+2025-05-06 23:39:59,002 - flwr - INFO - [ROUND 1]
+2025-05-06 23:40:00,778 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:00,966 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:00,967 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[-0.01417408,  0.1533856 ,  0.00101626,  0.25917625, -0.11238364]],
+      dtype=float32), array([-0.14781114], dtype=float32)]
+2025-05-06 23:40:00,969 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[-0.03840453,  0.02036612,  0.01401262,  0.25847763, -0.11619241]],
+      dtype=float32), array([-0.13932198], dtype=float32)]
+2025-05-06 23:40:00,970 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:00,971 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-05-06 23:40:00,972 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x1c\x9b\xd7\xbcH\x96\xb1=\xa7\xc1\xf6;\xda\x84\x84>L\x12\xea\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nb\x00\x13\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:00,973 - flwr - INFO - fit progress: (1, 0.0, {}, 1.9711927120006294)
+2025-05-06 23:40:00,973 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:00,984 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:00,984 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-05-06 23:40:00,984 - flwr - INFO - 
+2025-05-06 23:40:00,985 - flwr - INFO - [ROUND 2]
+2025-05-06 23:40:00,986 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,163 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:01,166 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02115905,  0.1939476 ,  0.08819462,  0.17290148, -0.0931095 ]],
+      dtype=float32), array([-0.12763332], dtype=float32)]
+2025-05-06 23:40:01,168 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[-0.00163474,  0.08170424,  0.08865041,  0.1743619 , -0.09553551]],
+      dtype=float32), array([-0.12814304], dtype=float32)]
+2025-05-06 23:40:01,169 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:01,170 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xfa{\x1f<\x16\xfe\x0c>(\x17\xb5=\xfa\xcc1>\xb9-\xc1\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nH\xf5\x02\xbe"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:01,170 - flwr - INFO - fit progress: (2, 0.0, {}, 2.1689516220012592)
+2025-05-06 23:40:01,171 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,183 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:01,184 - flwr - INFO - 
+2025-05-06 23:40:01,184 - flwr - INFO - [ROUND 3]
+2025-05-06 23:40:01,185 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,367 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:01,369 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.0018605 ,  0.09026335,  0.11390497,  0.13692182, -0.07791037]],
+      dtype=float32), array([-0.12270345], dtype=float32)]
+2025-05-06 23:40:01,370 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02367143,  0.20096065,  0.11645336,  0.13628131, -0.07607339]],
+      dtype=float32), array([-0.11895856], dtype=float32)]
+2025-05-06 23:40:01,371 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:01,373 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xef\xb7P<\xa9\xf7\x14>j\xe1\xeb=}\xe1\x0b>\x1b\xaf\x9d\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xa9x\xf7\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:01,374 - flwr - INFO - fit progress: (3, 0.0, {}, 2.3720678280005814)
+2025-05-06 23:40:01,374 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,384 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:01,384 - flwr - INFO - 
+2025-05-06 23:40:01,385 - flwr - INFO - [ROUND 4]
+2025-05-06 23:40:01,385 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,491 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:01,493 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.0020818 ,  0.09131528,  0.12064805,  0.11938346, -0.06244785]],
+      dtype=float32), array([-0.11803614], dtype=float32)]
+2025-05-06 23:40:01,494 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02360948,  0.20219645,  0.12419853,  0.11925265, -0.06097171]],
+      dtype=float32), array([-0.1131404], dtype=float32)]
+2025-05-06 23:40:01,495 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:01,496 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x92\x07R<u#\x16>\xc7\xb6\xfa=\x1d]\xf4=L\xc5|\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xb2\xbc\xec\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:01,497 - flwr - INFO - fit progress: (4, 0.0, {}, 2.495323436000035)
+2025-05-06 23:40:01,497 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,507 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:01,508 - flwr - INFO - 
+2025-05-06 23:40:01,509 - flwr - INFO - [ROUND 5]
+2025-05-06 23:40:01,509 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,641 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:01,643 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00206715,  0.09135637,  0.12058201,  0.10994606, -0.04879126]],
+      dtype=float32), array([-0.11388306], dtype=float32)]
+2025-05-06 23:40:01,644 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02352868,  0.20240515,  0.12449812,  0.11008176, -0.04757448]],
+      dtype=float32), array([-0.10861444], dtype=float32)]
+2025-05-06 23:40:01,644 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:01,646 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xbe?Q<%D\x16>\xc4\xf3\xfa=\xe3N\xe1=\xf8\\E\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xc8\xd9\xe3\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:01,646 - flwr - INFO - fit progress: (5, 0.0, {}, 2.6446598040001845)
+2025-05-06 23:40:01,647 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,655 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:01,656 - flwr - INFO - 
+2025-05-06 23:40:01,657 - flwr - INFO - [ROUND 6]
+2025-05-06 23:40:01,658 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,738 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:01,740 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.0235115 ,  0.20243034,  0.12223773,  0.10422985, -0.03568694]],
+      dtype=float32), array([-0.10483918], dtype=float32)]
+2025-05-06 23:40:01,741 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00206151,  0.09130295,  0.11818614,  0.10394058, -0.03669738]],
+      dtype=float32), array([-0.11019055], dtype=float32)]
+2025-05-06 23:40:01,742 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:01,743 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xf2\x0fQ<k@\x16>\x11/\xf6=r*\xd5=\x89?\x14\xbd", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n34\xdc\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:01,743 - flwr - INFO - fit progress: (6, 0.0, {}, 2.741890508999859)
+2025-05-06 23:40:01,744 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,752 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:01,753 - flwr - INFO - 
+2025-05-06 23:40:01,753 - flwr - INFO - [ROUND 7]
+2025-05-06 23:40:01,754 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,850 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:01,852 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00206633,  0.09126306,  0.11515729,  0.09952634, -0.0259749 ]],
+      dtype=float32), array([-0.10691112], dtype=float32)]
+2025-05-06 23:40:01,854 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02351762,  0.20242427,  0.11925817,  0.09991825, -0.02513834]],
+      dtype=float32), array([-0.1015818], dtype=float32)]
+2025-05-06 23:40:01,854 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:01,856 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xe3&Q<b:\x16>\xf8\x07\xf0=\xf3:\xcc=H^\xd1\xbc", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x9a\x82\xd5\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:01,856 - flwr - INFO - fit progress: (7, 0.0, {}, 2.854971488000956)
+2025-05-06 23:40:01,857 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:01,868 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:01,869 - flwr - INFO - 
+2025-05-06 23:40:01,870 - flwr - INFO - [ROUND 8]
+2025-05-06 23:40:01,872 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,031 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:02,032 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00207453,  0.09123797,  0.11212097,  0.09596249, -0.01646353]],
+      dtype=float32), array([-0.10399994], dtype=float32)]
+2025-05-06 23:40:02,033 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02352987,  0.20241417,  0.11623842,  0.09643213, -0.01577766]],
+      dtype=float32), array([-0.09872697], dtype=float32)]
+2025-05-06 23:40:02,034 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:02,035 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xc3QQ<\xc45\x16>e\xd4\xe9=\xcb\x02\xc5=\x1c\x11\x84\xbc", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\n\x9b\xcf\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:02,035 - flwr - INFO - fit progress: (8, 0.0, {}, 3.033960869001021)
+2025-05-06 23:40:02,036 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,045 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:02,046 - flwr - INFO - 
+2025-05-06 23:40:02,046 - flwr - INFO - [ROUND 9]
+2025-05-06 23:40:02,047 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,130 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:02,132 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 0.02354294,  0.2024046 ,  0.11341377,  0.09346984, -0.00747109]],
+      dtype=float32), array([-0.09620743], dtype=float32)]
+2025-05-06 23:40:02,134 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.0020832 ,  0.091221  ,  0.10929193,  0.09293633, -0.00802457]],
+      dtype=float32), array([-0.10141616], dtype=float32)]
+2025-05-06 23:40:02,134 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:02,136 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nR\x7fQ<I2\x16>N\n\xe4=\xea\xe0\xbe=3\xe7\xfd\xbb", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n2a\xca\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:02,136 - flwr - INFO - fit progress: (9, 0.0, {}, 3.134520278999844)
+2025-05-06 23:40:02,137 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,147 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:02,147 - flwr - INFO - 
+2025-05-06 23:40:02,147 - flwr - INFO - [ROUND 10]
+2025-05-06 23:40:02,148 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,221 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:02,223 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[ 2.3555256e-02,  2.0239606e-01,  1.1085116e-01,  9.0891726e-02,
+        -9.9872515e-05]], dtype=float32), array([-0.09397689], dtype=float32)]
+2025-05-06 23:40:02,224 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[ 0.00209138,  0.09120825,  0.10672951,  0.09030358, -0.00053642]],
+      dtype=float32), array([-0.09912322], dtype=float32)]
+2025-05-06 23:40:02,225 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:02,226 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nJ\xaaQ<~/\x16>\xd1\xca\xde=\xe2\x8a\xb9=\xe2\x14\xa7\xb9", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nZ\xbf\xc5\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:02,226 - flwr - INFO - fit progress: (10, 0.0, {}, 3.2246599700010847)
+2025-05-06 23:40:02,227 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,234 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:02,235 - flwr - INFO - 
+2025-05-06 23:40:02,235 - flwr - INFO - [ROUND 11]
+2025-05-06 23:40:02,236 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,374 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:02,376 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00209883, 0.09119785, 0.1044356 , 0.08798763, 0.00610833]],
+      dtype=float32), array([-0.09708838], dtype=float32)]
+2025-05-06 23:40:02,377 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02356645, 0.2023886 , 0.1085555 , 0.08862347, 0.00644132]],
+      dtype=float32), array([-0.09199958], dtype=float32)]
+2025-05-06 23:40:02,377 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:02,379 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (1, 5), }                                                          \n]\xd1Q<\'-\x16>\xb0\x17\xda="\xd9\xb4=\x9a\x99\xcd;', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x8e\xa3\xc1\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:02,379 - flwr - INFO - fit progress: (11, 0.0, {}, 3.377525998999772)
+2025-05-06 23:40:02,379 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,390 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:02,391 - flwr - INFO - 
+2025-05-06 23:40:02,391 - flwr - INFO - [ROUND 12]
+2025-05-06 23:40:02,392 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,474 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:02,476 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02357648, 0.20238197, 0.10651004, 0.08661819, 0.01224596]],
+      dtype=float32), array([-0.09024575], dtype=float32)]
+2025-05-06 23:40:02,477 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.0021055 , 0.091189  , 0.10239219, 0.08594027, 0.01200477]],
+      dtype=float32), array([-0.09528263], dtype=float32)]
+2025-05-06 23:40:02,478 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:02,479 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n`\xf4Q<\x1f+\x16>\xd0\xe7\xd5=\xba\xb2\xb0=8\xa8F<", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nf\xfe\xbd\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:02,480 - flwr - INFO - fit progress: (12, 0.0, {}, 3.4781320210004196)
+2025-05-06 23:40:02,480 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,489 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:02,490 - flwr - INFO - 
+2025-05-06 23:40:02,491 - flwr - INFO - [ROUND 13]
+2025-05-06 23:40:02,491 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,580 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:02,581 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02358542, 0.2023761 , 0.10469165, 0.08484156, 0.01739697]],
+      dtype=float32), array([-0.08868966], dtype=float32)]
+2025-05-06 23:40:02,582 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00211145, 0.09118126, 0.10057589, 0.08412655, 0.01723723]],
+      dtype=float32), array([-0.09368025], dtype=float32)]
+2025-05-06 23:40:02,583 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:02,584 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x95\x13R<V)\x16>\x01/\xd2=\x84\x05\xad=.\xdc\x8d<", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nd\xc2\xba\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:02,584 - flwr - INFO - fit progress: (13, 0.0, {}, 3.5829207670012693)
+2025-05-06 23:40:02,585 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,594 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:02,595 - flwr - INFO - 
+2025-05-06 23:40:02,595 - flwr - INFO - [ROUND 14]
+2025-05-06 23:40:02,596 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,682 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:02,684 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00211674, 0.09117451, 0.09896298, 0.08251818, 0.02188049]],
+      dtype=float32), array([-0.09225827], dtype=float32)]
+2025-05-06 23:40:02,685 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02359337, 0.20237084, 0.1030768 , 0.08326617, 0.02196796]],
+      dtype=float32), array([-0.08730894], dtype=float32)]
+2025-05-06 23:40:02,686 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:02,687 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nS/R<\xc3'\x16>\xde\xe0\xce=\xe4\xc2\xa9=5\x9a\xb3<", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xa8\xe3\xb7\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:02,688 - flwr - INFO - fit progress: (14, 0.0, {}, 3.686551034999866)
+2025-05-06 23:40:02,689 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:02,702 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:02,704 - flwr - INFO - 
+2025-05-06 23:40:02,705 - flwr - INFO - [ROUND 15]
+2025-05-06 23:40:02,706 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,084 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,086 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00212144, 0.09116849, 0.09753121, 0.08109139, 0.02600088]],
+      dtype=float32), array([-0.09099641], dtype=float32)]
+2025-05-06 23:40:03,088 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02360042, 0.20236628, 0.10164329, 0.08186864, 0.02602425]],
+      dtype=float32), array([-0.08608375], dtype=float32)]
+2025-05-06 23:40:03,089 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,091 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xf2GR<`&\x16>\xc0\xf1\xcb=~\xde\xa6=@\x18\xd5<", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xabW\xb5\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,091 - flwr - INFO - fit progress: (15, 0.0, {}, 4.089503272000002)
+2025-05-06 23:40:03,091 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,101 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,102 - flwr - INFO - 
+2025-05-06 23:40:03,102 - flwr - INFO - [ROUND 16]
+2025-05-06 23:40:03,104 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,277 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,278 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02360668, 0.20236218, 0.10037103, 0.08062858, 0.02962377]],
+      dtype=float32), array([-0.08499651], dtype=float32)]
+2025-05-06 23:40:03,280 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.0021256 , 0.09116317, 0.09626051, 0.07982539, 0.02965733]],
+      dtype=float32), array([-0.08987663], dtype=float32)]
+2025-05-06 23:40:03,280 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,281 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (1, 5), }                                                          \n\xcf]R<$%\x16>"W\xc9=\x88M\xa4=\xd5\xd0\xf2<', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x17\x15\xb3\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,281 - flwr - INFO - fit progress: (16, 0.0, {}, 4.279920785000286)
+2025-05-06 23:40:03,282 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,292 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,293 - flwr - INFO - 
+2025-05-06 23:40:03,293 - flwr - INFO - [ROUND 17]
+2025-05-06 23:40:03,294 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,365 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,367 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.0021293 , 0.09115846, 0.09513281, 0.07870208, 0.03290204]],
+      dtype=float32), array([-0.08888295], dtype=float32)]
+2025-05-06 23:40:03,368 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02361223, 0.20235854, 0.09924196, 0.07952824, 0.032818  ]],
+      dtype=float32), array([-0.08403173], dtype=float32)]
+2025-05-06 23:40:03,368 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,370 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n5qR<\x0c$\x16>\x88\x07\xc7=\x99\x06\xa2=V\x98\x06=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xac\x13\xb1\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,370 - flwr - INFO - fit progress: (17, 0.0, {}, 4.369032620001235)
+2025-05-06 23:40:03,371 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,380 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,380 - flwr - INFO - 
+2025-05-06 23:40:03,380 - flwr - INFO - [ROUND 18]
+2025-05-06 23:40:03,381 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,491 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,492 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02361717, 0.20235531, 0.09823997, 0.07855184, 0.03565254]],
+      dtype=float32), array([-0.08317558], dtype=float32)]
+2025-05-06 23:40:03,493 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00213259, 0.09115431, 0.0941321 , 0.07770523, 0.03578138]],
+      dtype=float32), array([-0.08800118], dtype=float32)]
+2025-05-06 23:40:03,494 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,495 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \np\x82R<\x14#\x16>\x8a\xfa\xc4=O\x01\xa0=\x1cL\x12=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x12L\xaf\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,496 - flwr - INFO - fit progress: (18, 0.0, {}, 4.494146910999916)
+2025-05-06 23:40:03,496 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,506 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,507 - flwr - INFO - 
+2025-05-06 23:40:03,507 - flwr - INFO - [ROUND 19]
+2025-05-06 23:40:03,508 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,601 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,604 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.0021355 , 0.09115059, 0.09324408, 0.07682065, 0.03833652]],
+      dtype=float32), array([-0.08721868], dtype=float32)]
+2025-05-06 23:40:03,606 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02362154, 0.20235246, 0.09735083, 0.07768538, 0.03816788]],
+      dtype=float32), array([-0.08241581], dtype=float32)]
+2025-05-06 23:40:03,606 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,607 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b'\x93NUMPY\x01\x00v\x00{\'descr\': \'<f4\', \'fortran_order\': False, \'shape\': (1, 5), }                                                          \n\xb4\x91R<7"\x16>\xaa(\xc3=F6\x9e=\x8e\xae\x1c=', b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xc2\xb7\xad\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,608 - flwr - INFO - fit progress: (19, 0.0, {}, 4.606091773999651)
+2025-05-06 23:40:03,608 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,616 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,616 - flwr - INFO - 
+2025-05-06 23:40:03,617 - flwr - INFO - [ROUND 20]
+2025-05-06 23:40:03,617 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,700 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,701 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00213809, 0.09114727, 0.09245601, 0.07603572, 0.0406039 ]],
+      dtype=float32), array([-0.0865243], dtype=float32)]
+2025-05-06 23:40:03,703 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02362543, 0.20234989, 0.09656176, 0.07691652, 0.04040002]],
+      dtype=float32), array([-0.08174164], dtype=float32)]
+2025-05-06 23:40:03,704 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,705 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nH\x9fR<r!\x16>:\x8b\xc1=\xf2\x9e\x9c=\xa6\xe5%=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xfdP\xac\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,706 - flwr - INFO - fit progress: (20, 0.0, {}, 4.7041990859997895)
+2025-05-06 23:40:03,706 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,715 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,715 - flwr - INFO - 
+2025-05-06 23:40:03,715 - flwr - INFO - [ROUND 21]
+2025-05-06 23:40:03,716 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,796 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,797 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00214038, 0.09114435, 0.09175668, 0.07533917, 0.042616  ]],
+      dtype=float32), array([-0.08590811], dtype=float32)]
+2025-05-06 23:40:03,798 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02362888, 0.20234767, 0.09586157, 0.0762342 , 0.04238078]],
+      dtype=float32), array([-0.08114335], dtype=float32)]
+2025-05-06 23:40:03,799 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,800 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nP\xabR<\xc5 \x16>[\x1c\xc0=z5\x9b=\x19\x13.=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x9c\x12\xab\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,800 - flwr - INFO - fit progress: (21, 0.0, {}, 4.798962011000185)
+2025-05-06 23:40:03,801 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,813 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,813 - flwr - INFO - 
+2025-05-06 23:40:03,814 - flwr - INFO - [ROUND 22]
+2025-05-06 23:40:03,815 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,902 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:03,904 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02363193, 0.2023457 , 0.09524021, 0.07562874, 0.04413852]],
+      dtype=float32), array([-0.08061246], dtype=float32)]
+2025-05-06 23:40:03,905 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00214242, 0.09114176, 0.09113611, 0.07472103, 0.04440153]],
+      dtype=float32), array([-0.08536129], dtype=float32)]
+2025-05-06 23:40:03,906 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:03,907 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xfd\xb5R<, \x16>\xcb\xd6\xbe=\xb4\xf4\x99=\xd4T5=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\x16\xf8\xa9\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:03,908 - flwr - INFO - fit progress: (22, 0.0, {}, 4.906143981001151)
+2025-05-06 23:40:03,908 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:03,916 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:03,917 - flwr - INFO - 
+2025-05-06 23:40:03,917 - flwr - INFO - [ROUND 23]
+2025-05-06 23:40:03,918 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,013 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,014 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02363465, 0.20234387, 0.09468884, 0.07509146, 0.04569834]],
+      dtype=float32), array([-0.08014134], dtype=float32)]
+2025-05-06 23:40:04,015 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00214423, 0.09113947, 0.09058543, 0.07417247, 0.04598601]],
+      dtype=float32), array([-0.08487606], dtype=float32)]
+2025-05-06 23:40:04,016 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,017 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n|\xbfR<\xa2\x1f\x16>\xe6\xb5\xbd=\x0e\xd8\x98=a\xc5;=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n_\xfd\xa8\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,018 - flwr - INFO - fit progress: (23, 0.0, {}, 5.016224528000748)
+2025-05-06 23:40:04,018 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,028 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,028 - flwr - INFO - 
+2025-05-06 23:40:04,029 - flwr - INFO - [ROUND 24]
+2025-05-06 23:40:04,029 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,129 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,130 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02363705, 0.20234229, 0.09419951, 0.07461465, 0.04708252]],
+      dtype=float32), array([-0.07972324], dtype=float32)]
+2025-05-06 23:40:04,131 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00214583, 0.09113743, 0.09009673, 0.07368574, 0.04739206]],
+      dtype=float32), array([-0.08444547], dtype=float32)]
+2025-05-06 23:40:04,131 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,132 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xe0\xc7R<(\x1f\x16>\x83\xb5\xbc=v\xdb\x97=I|A=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xe2\x1e\xa8\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,132 - flwr - INFO - fit progress: (24, 0.0, {}, 5.130716023000787)
+2025-05-06 23:40:04,133 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,144 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,144 - flwr - INFO - 
+2025-05-06 23:40:04,145 - flwr - INFO - [ROUND 25]
+2025-05-06 23:40:04,145 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,245 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,247 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00214725, 0.09113563, 0.08966305, 0.07325376, 0.04863976]],
+      dtype=float32), array([-0.08406334], dtype=float32)]
+2025-05-06 23:40:04,248 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02363919, 0.20234095, 0.09376535, 0.07419153, 0.04831085]],
+      dtype=float32), array([-0.07935223], dtype=float32)]
+2025-05-06 23:40:04,248 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,250 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \nV\xcfR<\xbe\x1e\x16>\x04\xd2\xbb=K\xfb\x96=x\x8eF=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nrY\xa7\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,250 - flwr - INFO - fit progress: (25, 0.0, {}, 5.248842111999693)
+2025-05-06 23:40:04,251 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,262 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,263 - flwr - INFO - 
+2025-05-06 23:40:04,263 - flwr - INFO - [ROUND 26]
+2025-05-06 23:40:04,264 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,447 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,449 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00214851, 0.09113405, 0.08927821, 0.07287043, 0.04974702]],
+      dtype=float32), array([-0.08372425], dtype=float32)]
+2025-05-06 23:40:04,450 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02364109, 0.2023397 , 0.09338006, 0.07381605, 0.04940084]],
+      dtype=float32), array([-0.07902301], dtype=float32)]
+2025-05-06 23:40:04,450 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,452 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xf4\xd5R<`\x1e\x16> \x08\xbb=`4\x96={\x0eK=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n?\xaa\xa6\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,452 - flwr - INFO - fit progress: (26, 0.0, {}, 5.450776810001116)
+2025-05-06 23:40:04,453 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,461 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,462 - flwr - INFO - 
+2025-05-06 23:40:04,462 - flwr - INFO - [ROUND 27]
+2025-05-06 23:40:04,463 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,560 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,562 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02364276, 0.20233862, 0.09303809, 0.07348287, 0.0503681 ]],
+      dtype=float32), array([-0.07873084], dtype=float32)]
+2025-05-06 23:40:04,563 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00214963, 0.09113259, 0.08893675, 0.07253031, 0.05072958]],
+      dtype=float32), array([-0.08342337], dtype=float32)]
+2025-05-06 23:40:04,563 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,565 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xd1\xdbR<\x0b\x1e\x16>\xf8T\xba=\xde\x83\x95=\xc4\x0cO=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xc7\x0e\xa6\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,565 - flwr - INFO - fit progress: (27, 0.0, {}, 5.5637014280000585)
+2025-05-06 23:40:04,566 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,576 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,577 - flwr - INFO - 
+2025-05-06 23:40:04,577 - flwr - INFO - [ROUND 28]
+2025-05-06 23:40:04,578 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,660 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,663 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02364427, 0.2023376 , 0.09273468, 0.07318721, 0.05122647]],
+      dtype=float32), array([-0.07847159], dtype=float32)]
+2025-05-06 23:40:04,681 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00215063, 0.09113134, 0.08863366, 0.07222845, 0.05160148]],
+      dtype=float32), array([-0.08315632], dtype=float32)]
+2025-05-06 23:40:04,681 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,682 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\x0e\xe1R<\xbe\x1d\x16>\xfc\xb5\xb9=:\xe7\x94=\xf3\x97R=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xce\x84\xa5\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,682 - flwr - INFO - fit progress: (28, 0.0, {}, 5.6806922539999505)
+2025-05-06 23:40:04,683 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,695 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,695 - flwr - INFO - 
+2025-05-06 23:40:04,696 - flwr - INFO - [ROUND 29]
+2025-05-06 23:40:04,696 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,784 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,786 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.00215151, 0.09113018, 0.08836475, 0.07196058, 0.05237524]],
+      dtype=float32), array([-0.08291938], dtype=float32)]
+2025-05-06 23:40:04,787 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02364559, 0.20233673, 0.09246542, 0.07292485, 0.05198816]],
+      dtype=float32), array([-0.07824153], dtype=float32)]
+2025-05-06 23:40:04,788 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,789 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xad\xe5R<z\x1d\x16>\xe8(\xb9=:\\\x94=\xfa\xbcU=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \nb\n\xa5\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,790 - flwr - INFO - fit progress: (29, 0.0, {}, 5.788173832001121)
+2025-05-06 23:40:04,790 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,799 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,800 - flwr - INFO - 
+2025-05-06 23:40:04,800 - flwr - INFO - [ROUND 30]
+2025-05-06 23:40:04,801 - flwr - INFO - configure_fit: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,892 - flwr - INFO - aggregate_fit: received 2 results and 0 failures
+2025-05-06 23:40:04,894 - central_server - INFO - the number of sample are : 14411 , the input_dim 5 and the comming parameters are :[array([[0.02364678, 0.20233594, 0.09222649, 0.072692  , 0.0526641 ]],
+      dtype=float32), array([-0.07803737], dtype=float32)]
+2025-05-06 23:40:04,895 - central_server - INFO - the number of sample are : 14482 , the input_dim 5 and the comming parameters are :[array([[0.0021523 , 0.09112918, 0.08812609, 0.07172289, 0.05306187]],
+      dtype=float32), array([-0.08270911], dtype=float32)]
+2025-05-06 23:40:04,896 - central_server - INFO - the length of the weights list is : 2 / biases length 2 / num_samples 28893
+2025-05-06 23:40:04,897 - central_server - INFO - the aggregated parameters are Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1, 5), }                                                          \n\xd0\xe9R<>\x1d\x16>\xb5\xab\xb8=\xe0\xe0\x93=^\x87X=", b"\x93NUMPY\x01\x00v\x00{'descr': '<f4', 'fortran_order': False, 'shape': (1,), }                                                            \n\xbc\x9d\xa4\xbd"], tensor_type='numpy.ndarray') /// metrics {}
+2025-05-06 23:40:04,915 - central_server - INFO - The model saved successfully.
+2025-05-06 23:40:04,915 - flwr - INFO - fit progress: (30, 0.0, {}, 5.913632637000774)
+2025-05-06 23:40:04,916 - flwr - INFO - configure_evaluate: strategy sampled 2 clients (out of 2)
+2025-05-06 23:40:04,927 - flwr - INFO - aggregate_evaluate: received 2 results and 0 failures
+2025-05-06 23:40:04,928 - flwr - INFO - 
+2025-05-06 23:40:04,928 - flwr - INFO - [SUMMARY]
+2025-05-06 23:40:04,929 - flwr - INFO - Run finished 30 round(s) in 5.93s
+2025-05-06 23:40:04,929 - flwr - INFO - 	History (loss, distributed):
+2025-05-06 23:40:04,930 - flwr - INFO - 		round 1: 1.008586728858344
+2025-05-06 23:40:04,930 - flwr - INFO - 		round 2: 0.9957973377849266
+2025-05-06 23:40:04,930 - flwr - INFO - 		round 3: 0.9947665413040667
+2025-05-06 23:40:04,931 - flwr - INFO - 		round 4: 0.9946561528387706
+2025-05-06 23:40:04,931 - flwr - INFO - 		round 5: 0.9945480291963189
+2025-05-06 23:40:04,932 - flwr - INFO - 		round 6: 0.9944162836033033
+2025-05-06 23:40:04,932 - flwr - INFO - 		round 7: 0.9942890123072015
+2025-05-06 23:40:04,933 - flwr - INFO - 		round 8: 0.994179242316714
+2025-05-06 23:40:04,933 - flwr - INFO - 		round 9: 0.9940891789534454
+2025-05-06 23:40:04,933 - flwr - INFO - 		round 10: 0.9940168799211678
+2025-05-06 23:40:04,934 - flwr - INFO - 		round 11: 0.9939596831127259
+2025-05-06 23:40:04,935 - flwr - INFO - 		round 12: 0.9939148635186709
+2025-05-06 23:40:04,936 - flwr - INFO - 		round 13: 0.9938795116347068
+2025-05-06 23:40:04,937 - flwr - INFO - 		round 14: 0.9938516213521191
+2025-05-06 23:40:04,938 - flwr - INFO - 		round 15: 0.9938298575172366
+2025-05-06 23:40:04,939 - flwr - INFO - 		round 16: 0.9938129705584152
+2025-05-06 23:40:04,939 - flwr - INFO - 		round 17: 0.9937996919090337
+2025-05-06 23:40:04,940 - flwr - INFO - 		round 18: 0.9937894805783682
+2025-05-06 23:40:04,940 - flwr - INFO - 		round 19: 0.9937815383337179
+2025-05-06 23:40:04,941 - flwr - INFO - 		round 20: 0.9937752061259021
+2025-05-06 23:40:04,941 - flwr - INFO - 		round 21: 0.993770546735855
+2025-05-06 23:40:04,942 - flwr - INFO - 		round 22: 0.9937664766965192
+2025-05-06 23:40:04,942 - flwr - INFO - 		round 23: 0.9937637447904549
+2025-05-06 23:40:04,943 - flwr - INFO - 		round 24: 0.9937613974437853
+2025-05-06 23:40:04,943 - flwr - INFO - 		round 25: 0.9937598216200895
+2025-05-06 23:40:04,944 - flwr - INFO - 		round 26: 0.9937582859666542
+2025-05-06 23:40:04,944 - flwr - INFO - 		round 27: 0.9937573913069161
+2025-05-06 23:40:04,945 - flwr - INFO - 		round 28: 0.9937565538936681
+2025-05-06 23:40:04,945 - flwr - INFO - 		round 29: 0.9937560957690087
+2025-05-06 23:40:04,945 - flwr - INFO - 		round 30: 0.993755690306349
+2025-05-06 23:40:04,946 - flwr - INFO - 	History (loss, centralized):
+2025-05-06 23:40:04,946 - flwr - INFO - 		round 0: 0.0
+2025-05-06 23:40:04,947 - flwr - INFO - 		round 1: 0.0
+2025-05-06 23:40:04,947 - flwr - INFO - 		round 2: 0.0
+2025-05-06 23:40:04,948 - flwr - INFO - 		round 3: 0.0
+2025-05-06 23:40:04,948 - flwr - INFO - 		round 4: 0.0
+2025-05-06 23:40:04,949 - flwr - INFO - 		round 5: 0.0
+2025-05-06 23:40:04,949 - flwr - INFO - 		round 6: 0.0
+2025-05-06 23:40:04,950 - flwr - INFO - 		round 7: 0.0
+2025-05-06 23:40:04,950 - flwr - INFO - 		round 8: 0.0
+2025-05-06 23:40:04,950 - flwr - INFO - 		round 9: 0.0
+2025-05-06 23:40:04,951 - flwr - INFO - 		round 10: 0.0
+2025-05-06 23:40:04,952 - flwr - INFO - 		round 11: 0.0
+2025-05-06 23:40:04,953 - flwr - INFO - 		round 12: 0.0
+2025-05-06 23:40:04,953 - flwr - INFO - 		round 13: 0.0
+2025-05-06 23:40:04,954 - flwr - INFO - 		round 14: 0.0
+2025-05-06 23:40:04,954 - flwr - INFO - 		round 15: 0.0
+2025-05-06 23:40:04,955 - flwr - INFO - 		round 16: 0.0
+2025-05-06 23:40:04,956 - flwr - INFO - 		round 17: 0.0
+2025-05-06 23:40:04,956 - flwr - INFO - 		round 18: 0.0
+2025-05-06 23:40:04,956 - flwr - INFO - 		round 19: 0.0
+2025-05-06 23:40:04,957 - flwr - INFO - 		round 20: 0.0
+2025-05-06 23:40:04,957 - flwr - INFO - 		round 21: 0.0
+2025-05-06 23:40:04,958 - flwr - INFO - 		round 22: 0.0
+2025-05-06 23:40:04,959 - flwr - INFO - 		round 23: 0.0
+2025-05-06 23:40:04,959 - flwr - INFO - 		round 24: 0.0
+2025-05-06 23:40:04,960 - flwr - INFO - 		round 25: 0.0
+2025-05-06 23:40:04,960 - flwr - INFO - 		round 26: 0.0
+2025-05-06 23:40:04,961 - flwr - INFO - 		round 27: 0.0
+2025-05-06 23:40:04,961 - flwr - INFO - 		round 28: 0.0
+2025-05-06 23:40:04,962 - flwr - INFO - 		round 29: 0.0
+2025-05-06 23:40:04,962 - flwr - INFO - 		round 30: 0.0
+2025-05-06 23:40:04,963 - flwr - INFO - 

@@ -80,55 +80,101 @@ class LinearRegressionModel(nn.Module):
     def forward(self, x):
         return self.linear(x)  
 
-def save_metrics(history, indx):
+
+def save_history_metrics(history, indx):
+
+    isClassification = True
     # Determine path and classification flag
     if indx == "dl_r":
         path = "../results/dl_results/regression/metrics.json"
-        is_classification = False
+        isClassification = False
     elif indx == "ml_r":
         path = "../results/ml_results/regression/metrics.json"
-        is_classification = False
+        isClassification = False
     elif indx == "ml_c":
         path = "../results/ml_results/classification/metrics.json"
-        is_classification = True
     elif indx == "dl_c":
         path = "../results/dl_results/classification/metrics.json"
-        is_classification = True
+
     else:
         raise ValueError("Failure during saving metrics: invalid `indx` value.")
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
-    # Prepare loss and accuracy data as dictionaries for easy access
-    dist_loss_dict = dict(history.losses_distributed)
-    cent_loss_dict = dict(history.losses_centralized)
-
-    dist_acc_dict = {}
-    cent_acc_dict = {}
-
-    if is_classification:
-        dist_acc_dict = dict(history.metrics_distributed.get("accuracy", []))
-        cent_acc_dict = dict(history.metrics_centralized.get("accuracy", []))
-
-    # Get all rounds from distributed loss keys
-    rounds = sorted(dist_loss_dict.keys())
-
-    with open(path, "w") as f:
-        for round_num in rounds:
-            record = {
-                "round": round_num,
-                "distributed_loss": float(dist_loss_dict.get(round_num, 0.0)),
-                "centralized_loss": float(cent_loss_dict.get(round_num, 0.0))
-            }
-
-            if is_classification:
-                record["distributed_accuracy"] = float(dist_acc_dict.get(round_num, 0.0))
-                record["centralized_accuracy"] = float(cent_acc_dict.get(round_num, 0.0))
-
-            json.dump(record, f)
-            f.write("\n")
-
-    return True
+    # Collect all rounds
+    rounds = set()
+    
+    # Add rounds from distributed losses
+    for round_num, _ in history.losses_distributed:
+        rounds.add(round_num)
+    
+    # Add rounds from centralized losses
+    for round_num, _ in history.losses_centralized:
+        rounds.add(round_num)
+    
+    # Add rounds from metrics
+    for metric, values in history.metrics_distributed_fit.items():
+        for round_num, _ in values:
+            rounds.add(round_num)
+    
+    for metric, values in history.metrics_distributed.items():
+        for round_num, _ in values:
+            rounds.add(round_num)
+    
+    for metric, values in history.metrics_centralized.items():
+        for round_num, _ in values:
+            rounds.add(round_num)
+    
+    # Sort rounds
+    sorted_rounds = sorted(rounds)
+    
+    # Create metrics entries for each round
+    metrics_entries = []
+    
+    for round_num in sorted_rounds:
+        entry = {"round": round_num}
+        
+        # Find distributed loss for this round
+        distributed_loss = 0.0
+        for r, loss in history.losses_distributed:
+            if r == round_num:
+                distributed_loss = loss
+                break
+        entry["distributed_loss"] = distributed_loss
+        
+        # Find centralized loss for this round
+        centralized_loss = 0.0
+        for r, loss in history.losses_centralized:
+            if r == round_num:
+                centralized_loss = loss
+                break
+        entry["centralized_loss"] = centralized_loss
+        
+        if isClassification : 
+            # Find distributed accuracy for this round
+            distributed_accuracy = 0.0
+            if "accuracy" in history.metrics_distributed_fit:
+                for r, acc in history.metrics_distributed_fit["accuracy"]:
+                    if r == round_num:
+                        distributed_accuracy = acc
+                        break
+            entry["distributed_accuracy"] = distributed_accuracy
+            
+            # Find centralized accuracy for this round
+            centralized_accuracy = 0.0
+            if "accuracy" in history.metrics_centralized:
+                for r, acc in history.metrics_centralized["accuracy"]:
+                    if r == round_num:
+                        centralized_accuracy = acc
+                        break
+            entry["centralized_accuracy"] = centralized_accuracy
+        
+        metrics_entries.append(entry)
+    
+    # Write to file, one JSON object per line
+    with open(path, 'w') as f:
+        for entry in metrics_entries:
+            f.write(json.dumps(entry) + '\n')
 
 
 

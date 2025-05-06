@@ -19,7 +19,7 @@ if __name__ == "__main__":
         from imputation.statistical import start_server
         start_server()
     elif strategy == "machine_learning":
-        from imputation.machine_learning import start_server
+        from server.imputation.machine_learning_regression import start_server
         start_server()
     elif strategy == "deep_learning":
         from server.imputation.deep_learning_regression import start_server

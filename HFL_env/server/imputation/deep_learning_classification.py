@@ -64,4 +64,4 @@ def start_server():
     return history
     
 if __name__ == "__main__":
-    functions.save_metrics(start_server(),"dl_c") 
+    functions.save_history_metrics(start_server(),"dl_c") 
