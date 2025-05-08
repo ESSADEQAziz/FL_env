@@ -21,13 +21,14 @@ logger.info(f"Starting node {NODE_ID} ... ")
 
 class VFLClient(fl.client.NumPyClient):
     def __init__(self, data_path, feature_names):
-        self.x = functions.preprocess_features(data_path, feature_names, "ml_r")  # one or multiple features (categorical features not handled yet.)
+        self.x = functions.preprocess_features(data_path, feature_names, "ml_c")  # one or multiple features 
         self.w = torch.randn((self.x.shape[1], 1), requires_grad=True)  # one weight per feature
         self.lr = 0.01
-        logging.info(f"Initilizing node {NODE_ID} with shape: {self.x.shape}")
+        logging.info(f"Initilizing node {NODE_ID} with shape: {self.x.shape} and  weights :{self.w.shape} /// {self.x} /// {self.w}")
         self.x = functions.insure_none(self.x)
 
     def get_parameters(self, config):
+        logger.info(f"(get function) node {NODE_ID} , the sent weights are : {[self.w.detach().numpy()]}")
         return [self.w.detach().numpy()]
 
     def fit(self, parameters, config):
@@ -39,7 +40,8 @@ class VFLClient(fl.client.NumPyClient):
     def evaluate(self, parameters, config):
         dz = parameters[int(NODE_ID)]  # Gradient of loss w.r.t. z
         if np.all(dz == 0) :
-            raise ValueError(f"the node {NODE_ID} rceived a none value as gradients.")
+            raise ValueError(f"the node {NODE_ID} received a none value as gradients.")
+        
         logger.info(f"(evaluation function) node {NODE_ID} the receided parameters are : {parameters}")
         logger.info(f"(evaluation function) node {NODE_ID}, the received gradients are : {dz}")
         
@@ -48,7 +50,7 @@ class VFLClient(fl.client.NumPyClient):
         z = self.x @ self.w
         z.backward(dz)
         
-        logger.info(f"(evaluation function) the last weights for node {NODE_ID} are : {self.w.shape} {self.w}")
+        logger.info(f"(evaluation function) the last weights for node {NODE_ID} are : {self.w.shape} /// {self.w}")
 
         with torch.no_grad():
             self.w -= self.lr * self.w.grad
@@ -60,7 +62,7 @@ class VFLClient(fl.client.NumPyClient):
 
 if __name__ == "__main__":
 
-    features = ["anchor_age","valuenum"]
+    features = ["anchor_age","marital_status"]
     data_path = "../data/data.csv"
 
     fl.client.start_numpy_client(server_address="v_central_server:5000", client=VFLClient(data_path,features))

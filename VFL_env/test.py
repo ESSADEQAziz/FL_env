@@ -1,15 +1,8 @@
-def reshape_list_with_none(numbers):
-    max_index = max(numbers)
-    new_list = [None] * (max_index + 1)
-    for i, num in enumerate(numbers):
-        new_list[i + (max_index + 1 - len(numbers))] = num
-    return new_list
+import torch 
 
-ls = [6]
-ls = reshape_list_with_none(ls)
-dic = {
-    '1':"a",
-    '2':"b"
-}
-print(dic.values())
-print(type([dic.values()]))
+val = 0.12222333
+test=torch.tensor(val,dtype=torch.float64)
+
+res=test + 0.03
+
+print(res.item())

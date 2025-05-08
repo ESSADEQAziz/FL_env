@@ -50,11 +50,6 @@ def save_model(model_path,model):
     os.makedirs(model_path, exist_ok=True)
     torch.save(model.state_dict(), os.path.join(model_path, "final_model.pth"))
 
-# def save_model(self, model_dict):
-#     model_path = "../results/final_model_weights.json"
-#     with open(model_path, "w") as f:
-#         json.dump(model_dict, f, indent=2)
-#     print(f"Final model saved to {model_path}")
 
 def preprocess_server_target_ml_r(data_path, target_col):
     data = pd.read_csv(data_path)
@@ -65,6 +60,31 @@ def preprocess_server_target_ml_r(data_path, target_col):
  
     else : 
         raise ValueError(f"Target '{target_col}' is categorical.")
+    
+def preprocess_server_target_ml_c(data_path, target_col,test_size=0.2,random_state=42):
+    data = pd.read_csv(data_path)
+    if data[target_col].dtype in ['object'] :
+
+        target_f = pd.get_dummies(data[target_col])
+        y = pd.get_dummies(data[target_col]).values
+        label_map = list(target_f.columns)
+
+        label_map_path = "../results/ml_classification/"  
+        os.makedirs(label_map_path, exist_ok=True)
+
+        # Save the label map
+        with open( "../results/ml_classification/label_map.pkl", "wb") as f:
+            pickle.dump(label_map, f)
+
+        y_train, y_test = train_test_split(y, test_size=test_size, random_state=random_state)
+
+        return (
+        torch.tensor(y_train, dtype=torch.float32),
+        torch.tensor(y_test, dtype=torch.float32),
+        )
+ 
+    else : 
+        raise ValueError(f"Target '{target_col}' is numerical.")
     
     
 def preprocess_server_target(csv_path, target_feature, test_size=0.2, random_state=42):
@@ -121,8 +141,8 @@ class SimpleClassifier(nn.Module):
 def reshape_list_with_none(numbers):
     max_index = max(numbers)
     new_list = [None] * (max_index + 1)
-    for i, num in enumerate(numbers):
-        new_list[i + (max_index + 1 - len(numbers))] = num
+    for i in numbers :
+        new_list[i]=i
     return new_list
 
 
