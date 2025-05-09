@@ -4,6 +4,7 @@ import torch
 import flwr as fl
 import functions
 import logging
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
@@ -55,11 +56,18 @@ class VFLClient(fl.client.NumPyClient):
 if __name__ == "__main__":
 
     # before testing , make sure that the numbers of sum(embeddings) from nodes == the input dimention of the global model within the server (because it may be some categorical features can scale dimention due to one hot encoder)
-    target_features=["race","gender","anchor_age"]
+    target_features = ["gender","marital_status","valuenum","los"]
     target_table = "../data/data.csv"
 
+    private_key = Path(f"../auth_keys/node{NODE_ID}_key")
+    public_key = Path(f"../auth_keys/node{NODE_ID}_key.pub")
+    ca_cert = Path(f"../certs/ca.pem").read_bytes()
 
     fl.client.start_numpy_client(
         server_address="v_central_server:5000",
-        client=VFLClient(csv_path=target_table, features=target_features)
-    )
+        client=VFLClient(csv_path=target_table, features=target_features),
+        root_certificates=ca_cert,
+        insecure=False,)
+      # authentication_keys=(private_key, public_key),) authentication_keys are not supported in the default gRPC+TLS transport, This feature (authentication_keys) only works with the experimental HTTP/2-based transport layer
+    
+    

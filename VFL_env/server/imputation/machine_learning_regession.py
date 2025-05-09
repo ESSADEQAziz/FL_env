@@ -4,6 +4,7 @@ import numpy as np
 import functions
 from flwr.common import parameters_to_ndarrays, ndarrays_to_parameters
 import logging
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
@@ -63,17 +64,21 @@ class LinearVFLServer(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = LinearVFLServer(
-        data_path="./data.csv",
-        target_col="anchor_year",
+        data_path="../target_data/data_r.csv",
+        target_col="los",
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=2,
-        min_evaluate_clients=2,
-        min_available_clients=2,
+        min_fit_clients=5,
+        min_evaluate_clients=5,
+        min_available_clients=5,
     )
 
     fl.server.start_server(server_address="v_central_server:5000", strategy=strategy, 
-                           config=fl.server.ServerConfig(num_rounds=20))
+        config=fl.server.ServerConfig(num_rounds=30),
+        certificates=(
+            Path("../certs/ca.pem").read_bytes(),
+            Path("../certs/central_server.pem").read_bytes(),
+            Path("../certs/central_server.key").read_bytes()))
 
 if __name__ == "__main__":
     start_server()

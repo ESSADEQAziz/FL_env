@@ -2,6 +2,7 @@ import torch
 import os
 import numpy as np
 import json 
+from pathlib import Path
 import flwr as fl
 import functions
 import logging
@@ -31,7 +32,7 @@ class VFLServer(fl.server.strategy.FedAvg):
         self.test_y = self.test_y.to(device)
         self.num_classes = self.train_y.shape[1]
         self.final_round = final_round
-        self.model = functions.SimpleClassifier(input_dim=8, num_classes=self.num_classes).to(device)# depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ')
+        self.model = functions.SimpleClassifier(input_dim=20, num_classes=self.num_classes).to(device)# depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ')
         
       
     def aggregate_fit(self, server_round, results, failures):
@@ -88,20 +89,24 @@ class VFLServer(fl.server.strategy.FedAvg):
       
 def start_server():
     strategy = VFLServer(
-        csv_path="./data.csv",
+        csv_path="../target_data/data_c.csv",
         target_feature="insurance",
-        final_round=100,
+        final_round=30,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=2,
-        min_evaluate_clients=2,
-        min_available_clients=2
+        min_fit_clients=5,
+        min_evaluate_clients=5,
+        min_available_clients=5
     )
 
     fl.server.start_server(
         server_address="v_central_server:5000",
         strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=10) # change also the final_round attribute within the strategy.
+        config=fl.server.ServerConfig(num_rounds=30), # change also the final_round attribute within the strategy.
+        certificates=(
+            Path("../certs/ca.pem").read_bytes(),
+            Path("../certs/central_server.pem").read_bytes(),
+            Path("../certs/central_server.key").read_bytes())
     )
 
 if __name__ == "__main__":

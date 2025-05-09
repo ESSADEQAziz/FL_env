@@ -2,6 +2,7 @@ import flwr as fl
 import torch
 import numpy as np
 import os
+from pathlib import Path
 import json
 import functions
 from flwr.common import parameters_to_ndarrays, ndarrays_to_parameters
@@ -30,7 +31,7 @@ class VFLServer(fl.server.strategy.FedAvg):
 
         logger.info(f"Initilise the server with y_train {self.train_y.shape} y_test {self.test_y.shape}//// {self.train_y} ////{self.test_y}")
 
-        self.model = torch.nn.Linear(in_features=2, out_features=self.num_classes).to(device) # During training, when you use CrossEntropyLoss, PyTorch automatically applies the softmax inside the loss function.
+        self.model = torch.nn.Linear(in_features=5, out_features=self.num_classes).to(device) # During training, when you use CrossEntropyLoss, PyTorch automatically applies the softmax inside the loss function.
 
     def aggregate_fit(self, server_round, results, failures):
         embedding_map = {}
@@ -90,17 +91,21 @@ class VFLServer(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = VFLServer(
-        data_path="./data.csv",
-        target_col="gender",
-        final_round=50,
+        data_path="../target_data/data_c.csv",
+        target_col="insurance",
+        final_round=30,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=2,
-        min_evaluate_clients=2,
-        min_available_clients=2,
+        min_fit_clients=5,
+        min_evaluate_clients=5,
+        min_available_clients=5,
     )
     fl.server.start_server(server_address="v_central_server:5000", strategy=strategy, 
-                           config=fl.server.ServerConfig(num_rounds=50))
+        config=fl.server.ServerConfig(num_rounds=30),
+        certificates=(
+            Path("../certs/ca.pem").read_bytes(),
+            Path("../certs/central_server.pem").read_bytes(),
+            Path("../certs/central_server.key").read_bytes()))
 
 if __name__ == "__main__":
     start_server()

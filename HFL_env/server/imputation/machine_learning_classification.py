@@ -1,5 +1,6 @@
 import logging
 import flwr as fl
+from pathlib import Path
 import functions
 
 # Configure logging
@@ -78,7 +79,11 @@ def start_server():
     history = fl.server.start_server(
         server_address="central_server:5000",
         strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=5) #if you change the num_round, change it also within the save_dl_model() function
+        config=fl.server.ServerConfig(num_rounds=5),
+        certificates=(
+            Path("../certs/ca.pem").read_bytes(),
+            Path("../certs/central_server.pem").read_bytes(),
+            Path("../certs/central_server.key").read_bytes()) #if you change the num_round, change it also within the save_dl_model() function
     )
     return history
 
