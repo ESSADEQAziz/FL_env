@@ -15,8 +15,9 @@ logger = logging.getLogger("central_server")
 logger.info("Starting the central server ...")
 
 class CustomFedAvg(fl.server.strategy.FedAvg):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self,final_round, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+        self.final_round=final_round
 
     def aggregate_fit(self, server_round, results, failures):
         accuracy=[]
@@ -57,7 +58,7 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
         metrics["accuracy"] = sum(accuracy)/len(accuracy)
         logger.info(f"Aggregated Parameters: {aggregated_parameters}, Metrics: {metrics}")
 
-        if server_round == 5:
+        if server_round == self.final_round:
             functions.save_model(aggregated_parameters, server_round, input_dim, "ml_c",num_classes=output_dim)
             logger.info("The model saved successfully.")
 
@@ -69,11 +70,12 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = CustomFedAvg(
+        final_round=5,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=2,
-        min_evaluate_clients=2,
-        min_available_clients=2,
+        min_fit_clients=5,
+        min_evaluate_clients=5,
+        min_available_clients=5,
     )
 
     history = fl.server.start_server(

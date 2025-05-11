@@ -19,11 +19,12 @@ logger.info("Strating v_central_server ... ")
 
 
 class LinearVFLServer(fl.server.strategy.FedAvg):
-    def __init__(self, data_path, target_col, *args, **kwargs):
+    def __init__(self, data_path, target_col,final_round, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.y = functions.preprocess_server_target_ml_r(data_path,target_col)
         self.y = functions.insure_none(self.y)
         self.loss_fn = torch.nn.MSELoss()
+        self.final_round=final_round
 
         logger.info(f"Initilizing the server with the shape: {self.y.shape}")
         if torch.isnan(self.y).any():
@@ -66,6 +67,7 @@ def start_server():
     strategy = LinearVFLServer(
         data_path="../target_data/data_r.csv",
         target_col="los",
+        final_round=30,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
         min_fit_clients=5,

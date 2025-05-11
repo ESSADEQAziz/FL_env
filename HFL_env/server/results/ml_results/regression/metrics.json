@@ -1,0 +1,6 @@
+{"round": 0, "distributed_loss": 0.0, "centralized_loss": 0.0}
+{"round": 1, "distributed_loss": 0.6131217899410839, "centralized_loss": 0.0}
+{"round": 2, "distributed_loss": 0.5979532345743312, "centralized_loss": 0.0}
+{"round": 3, "distributed_loss": 0.5943444546512889, "centralized_loss": 0.0}
+{"round": 4, "distributed_loss": 0.5924848274219288, "centralized_loss": 0.0}
+{"round": 5, "distributed_loss": 0.5912415379218295, "centralized_loss": 0.0}

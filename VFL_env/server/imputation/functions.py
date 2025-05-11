@@ -49,6 +49,7 @@ def save_metrics(test_output,test_target,metrics_path, round_num):
 def save_model(model_path,model):
     os.makedirs(model_path, exist_ok=True)
     torch.save(model.state_dict(), os.path.join(model_path, "final_model.pth"))
+            
 
 
 def preprocess_server_target_ml_r(data_path, target_col):

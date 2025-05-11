@@ -15,8 +15,9 @@ logger = logging.getLogger("central_server")
 logger.info("Starting central server ...")
 
 class CustomFedAvg(fl.server.strategy.FedAvg):
-    def __init__(self, *args, **kwargs):
+    def __init__(self,final_round, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.final_round=final_round
 
     def aggregate_fit(self, server_round,results,failures):
         for client, fit_res in results:
@@ -30,7 +31,7 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
         aggregated_parameters, metrics = super().aggregate_fit(server_round, results, failures)
         logger.warning(f"the aggregated parameters are : {aggregated_parameters.__sizeof__} /// {aggregated_parameters}")
 
-        if server_round == 10 :
+        if server_round == self.final_round :
             functions.save_model(aggregated_parameters,server_round,input_dim,"dl_r")
             logger.info("The model saved successfully.")
                 
@@ -43,15 +44,16 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = CustomFedAvg(
+        final_round=30,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=2,
-        min_evaluate_clients=2,
-        min_available_clients=2,
+        min_fit_clients=5,
+        min_evaluate_clients=5,
+        min_available_clients=5,
     )
     
     history = fl.server.start_server(server_address="central_server:5000", strategy=strategy, 
-        config=fl.server.ServerConfig(num_rounds=10),#if you change the num_round, change it also within the save_dl_model() function
+        config=fl.server.ServerConfig(num_rounds=30),#if you change the num_round, change it also within the final_round param inside the strategy
         certificates=(
         Path("../certs/ca.pem").read_bytes(),
         Path("../certs/central_server.pem").read_bytes(),

@@ -1,6 +1,6 @@
-{"round": 0, "distributed_loss": 0.0, "centralized_loss": 0.1, "distributed_accuracy": 0.0, "centralized_accuracy": 0.77}
-{"round": 1, "distributed_loss": 2.7484255696837683, "centralized_loss": 0.1, "distributed_accuracy": 0.0, "centralized_accuracy": 0.77}
-{"round": 2, "distributed_loss": 2.368445200291902, "centralized_loss": 0.1, "distributed_accuracy": 0.5661347063373908, "centralized_accuracy": 0.77}
-{"round": 3, "distributed_loss": 2.1424965413020116, "centralized_loss": 0.1, "distributed_accuracy": 0.5899240797639216, "centralized_accuracy": 0.77}
-{"round": 4, "distributed_loss": 2.021071280805643, "centralized_loss": 0.1, "distributed_accuracy": 0.5899240797639216, "centralized_accuracy": 0.77}
-{"round": 5, "distributed_loss": 1.9530093648803282, "centralized_loss": 0.1, "distributed_accuracy": 0.5899240797639216, "centralized_accuracy": 0.77}
+{"round": 0, "distributed_loss": 0.0, "centralized_loss": 0.0, "distributed_accuracy": 0.0, "centralized_accuracy": 0.0}
+{"round": 1, "distributed_loss": 2.948062892029781, "centralized_loss": 0.0, "distributed_accuracy": 0.0, "centralized_accuracy": 0.0}
+{"round": 2, "distributed_loss": 2.557262460365064, "centralized_loss": 0.0, "distributed_accuracy": 0.5568730902682832, "centralized_accuracy": 0.0}
+{"round": 3, "distributed_loss": 2.3000374300221957, "centralized_loss": 0.0, "distributed_accuracy": 0.563772639577762, "centralized_accuracy": 0.0}
+{"round": 4, "distributed_loss": 2.1500173133551206, "centralized_loss": 0.0, "distributed_accuracy": 0.563772639577762, "centralized_accuracy": 0.0}
+{"round": 5, "distributed_loss": 2.063157449237794, "centralized_loss": 0.0, "distributed_accuracy": 0.563772639577762, "centralized_accuracy": 0.0}

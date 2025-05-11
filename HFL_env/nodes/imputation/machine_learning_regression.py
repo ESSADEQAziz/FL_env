@@ -78,6 +78,7 @@ class NodeClient(fl.client.NumPyClient):
   
     
 if __name__ == "__main__":
+    
     target_table = "../data/labevents.csv"
     missing_rate = 0.2
     feature_x = ['valuenum','ref_range_lower','priority']

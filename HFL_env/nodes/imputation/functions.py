@@ -451,6 +451,116 @@ class LogisticRegressionModel(nn.Module):
         return self.linear(x)
 
     
-
-
+def introduce_missing_values(data, feature_indices, missing_rate=0.2, pattern="MCAR"):
+    """
+    Artificially introduce missing values in the data.
     
+    Args:
+        data: Tensor or numpy array of shape [n_samples, n_features]
+        feature_indices: List of indices where missing values should be introduced
+        missing_rate: Proportion of values to set as missing (0.0-1.0)
+        pattern: Missing pattern - "MCAR", "MAR", or "MNAR"
+    
+    Returns:
+        data_with_missing: Same data with missing values (NaNs)
+        missing_mask: Boolean mask where True indicates missing values
+        original_values: Dictionary mapping (row, col) indices to original values
+    """
+    # Convert to numpy for processing
+    is_tensor = torch.is_tensor(data)
+    if is_tensor:
+        device = data.device
+        data_np = data.cpu().numpy()
+    else:
+        data_np = data.copy()
+    n_samples, n_features = data_np.shape
+    missing_mask = np.zeros_like(data_np, dtype=bool)
+    original_values = {}
+    
+    for feat_idx in feature_indices:
+        if feat_idx >= n_features:
+            continue
+            
+        # Determine number of missing values for this feature
+        n_missing = int(n_samples * missing_rate)
+        
+        if pattern == "MCAR":
+            # Missing Completely At Random - uniform random selection
+            missing_rows = np.random.choice(n_samples, n_missing, replace=False)
+            
+        elif pattern == "MAR":
+            # Missing At Random - dependent on other features
+            # Choose another feature as reference
+            ref_feat = (feat_idx + 1) % n_features
+            # Normalize to get probability distribution
+            probs = np.abs(data_np[:, ref_feat])
+            probs = probs / np.sum(probs)
+            missing_rows = np.random.choice(n_samples, n_missing, replace=False, p=probs)
+
+        elif pattern == "MNAR":
+            # Missing Not At Random - dependent on its own value
+            # Higher values more likely to be missing
+            probs = np.abs(data_np[:, feat_idx])
+            probs = probs / np.sum(probs)
+            missing_rows = np.random.choice(n_samples, n_missing, replace=False, p=probs)
+        
+        # Store original values and set to NaN
+        for row in missing_rows:
+            original_values[(row, feat_idx)] = float(data_np[row, feat_idx])
+            missing_mask[row, feat_idx] = True
+            data_np[row, feat_idx] = np.nan
+    
+    # Convert back to tensor if input was tensor
+    if is_tensor:
+        data_with_missing = torch.tensor(data_np, dtype=torch.float32, device=device)
+        missing_mask = torch.tensor(missing_mask, dtype=torch.bool, device=device)
+    else:
+        data_with_missing = data_np
+    
+    return data_with_missing, missing_mask, original_values
+
+
+def evaluate_imputation_metrics(original_values, imputed_values):
+    """
+    Calculate metrics to evaluate imputation quality
+    
+    Args:
+        original_values: Dict mapping (row, col) to original values
+        imputed_values: Array containing imputed values at the same positions
+    
+    Returns:
+        Dictionary of metrics
+    """
+    if not original_values:
+        return {"error": "No values to impute"}
+        
+    # Extract values for comparison
+    orig = []
+    imp = []
+    
+    for (row, col), true_val in original_values.items():
+        orig.append(true_val)
+        imp.append(imputed_values[row, col])
+    
+    orig = np.array(orig)
+    imp = np.array(imp)
+    
+    # Calculate metrics
+    mae = np.mean(np.abs(orig - imp))
+    rmse = np.sqrt(np.mean((orig - imp) ** 2))
+
+    # Mean Absolute Percentage Error (handle zeros)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        mape = np.mean(np.abs((orig - imp) / orig)) * 100
+        mape = np.nan_to_num(mape, nan=0)
+    
+    # Correlation between original and imputed values
+    correlation = np.corrcoef(orig, imp)[0, 1] if len(orig) > 1 else 0
+    
+    return {
+        "MAE": float(mae),
+        "RMSE": float(rmse),
+        "MAPE": float(mape),
+        "correlation": float(correlation)
+    }
+
