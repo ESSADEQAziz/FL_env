@@ -2,6 +2,7 @@ import os
 import json
 import torch
 import torch.nn as nn
+import numpy as np
 from flwr.common import parameters_to_ndarrays
 
 
@@ -80,6 +81,15 @@ class LinearRegressionModel(nn.Module):
     def forward(self, x):
         return self.linear(x)  
 
+def make_json_serializable(obj):
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, (list, tuple)):
+        return [make_json_serializable(i) for i in obj]
+    elif isinstance(obj, dict):
+        return {k: make_json_serializable(v) for k, v in obj.items()}
+    else:
+        return obj
 
 def save_history_metrics(history, indx):
 
@@ -88,11 +98,34 @@ def save_history_metrics(history, indx):
     if indx == "dl_r":
         path = "../results/dl_results/regression/metrics.json"
         isClassification = False
+
     elif indx == "ml_r":
+
         path = "../results/ml_results/regression/metrics.json"
         isClassification = False
     elif indx == "ml_c":
+
         path = "../results/ml_results/classification/metrics.json"
+
+    if indx == "stat":
+        path = "../results/stat_results/metrics.json"
+
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
+        entry = {"round": 1}
+
+        # Get the latest round's 'aggregated_mean_med' values
+        if "aggregated_mean_med" in history.metrics_distributed_fit:
+            # Assume it's a list of (round, array) pairs
+            last_entry = history.metrics_distributed_fit["aggregated_mean_med"][-1]
+            _, values = last_entry  # unpack (round, ndarray)
+            entry["Aggregated mean/median"] = make_json_serializable(values)
+
+        with open(path, 'w') as f:
+            json.dump(entry, f, indent=2)
+        
+        return True
+
     elif indx == "dl_c":
         path = "../results/dl_results/classification/metrics.json"
 
@@ -148,7 +181,7 @@ def save_history_metrics(history, indx):
             if r == round_num:
                 centralized_loss = loss
                 break
-        entry["centralized_loss"] = centralized_loss
+        entry["centralized_loss"] = centralized_loss            
         
         if isClassification : 
             # Find distributed accuracy for this round
@@ -175,6 +208,7 @@ def save_history_metrics(history, indx):
     with open(path, 'w') as f:
         for entry in metrics_entries:
             f.write(json.dumps(entry) + '\n')
+    return True
 
 
 

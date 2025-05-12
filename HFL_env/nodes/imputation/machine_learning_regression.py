@@ -25,7 +25,6 @@ class NodeClient(fl.client.NumPyClient):
     def __init__(self, target_table, feature_x, feature_y,missing_rate):
         self.epochs = 100
         self.iterations=100
-        self.server_round=0
         self.learning_rate=0.01
 
         X, Y = functions.preprocess_node_data(target_table, feature_x, feature_y,'ml_r')
@@ -79,10 +78,10 @@ class NodeClient(fl.client.NumPyClient):
     
 if __name__ == "__main__":
     
-    target_table = "../data/labevents.csv"
+    target_table = "../data/extracted_vital_signs.csv"
     missing_rate = 0.2
-    feature_x = ['valuenum','ref_range_lower','priority']
-    feature_y = "ref_range_upper"
+    feature_x = ['heart_rate']
+    feature_y = "respiratory_rate"
 
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")

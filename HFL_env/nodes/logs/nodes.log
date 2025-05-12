@@ -1,0 +1,94 @@
+2025-05-12 19:14:21,791 - node - INFO - Starting node 2
+2025-05-12 19:14:21,804 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-12 19:14:21,817 - flwr - DEBUG - Opened secure gRPC connection using certificates
+2025-05-12 19:14:21,836 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-05-12 19:14:21,839 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-05-12 19:14:21,844 - flwr - DEBUG - ChannelConnectivity.READY
+2025-05-12 19:14:21,848 - flwr - INFO - 
+2025-05-12 19:14:21,849 - flwr - INFO - Received: get_parameters message f0ecd965-901f-42ee-b249-deba55fb0751
+2025-05-12 19:14:21,850 - node - INFO - inside the get function for the node 2, No need to initilise with any parameters (we just sent those parameters just to run the process). 
+2025-05-12 19:14:21,851 - flwr - INFO - Sent reply
+2025-05-12 19:14:23,809 - node - INFO - Starting node 1
+2025-05-12 19:14:23,819 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-12 19:14:23,832 - flwr - DEBUG - Opened secure gRPC connection using certificates
+2025-05-12 19:14:23,833 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-05-12 19:14:23,834 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-05-12 19:14:23,840 - flwr - DEBUG - ChannelConnectivity.READY
+2025-05-12 19:14:25,702 - node - INFO - Starting node 4
+2025-05-12 19:14:25,713 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-12 19:14:25,722 - flwr - DEBUG - Opened secure gRPC connection using certificates
+2025-05-12 19:14:25,725 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-05-12 19:14:25,726 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-05-12 19:14:25,728 - flwr - DEBUG - ChannelConnectivity.READY
+2025-05-12 19:14:25,736 - flwr - INFO - 
+2025-05-12 19:14:25,737 - flwr - INFO - 
+2025-05-12 19:14:25,737 - flwr - INFO - 
+2025-05-12 19:14:25,739 - flwr - INFO - Received: train message 37a7216e-2391-4f60-9a45-a7dea8ec0f9e
+2025-05-12 19:14:25,739 - flwr - INFO - Received: train message a095fbc3-b1bb-49bd-96fc-1176b68a4b80
+2025-05-12 19:14:25,741 - flwr - INFO - Received: train message 62f49978-c6ee-423e-bab4-46fc224847e8
+2025-05-12 19:14:25,741 - node - INFO - inside the fit function for the node 4, the sent parameters are : [19.694610778443113, 20.0]
+2025-05-12 19:14:25,742 - node - INFO - inside the fit function for the node 1, the sent parameters are : [20.461224489795917, 21.0]
+2025-05-12 19:14:25,742 - node - INFO - inside the fit function for the node 2, the sent parameters are : [20.02654867256637, 20.0]
+2025-05-12 19:14:25,743 - flwr - INFO - Sent reply
+2025-05-12 19:14:25,744 - flwr - INFO - Sent reply
+2025-05-12 19:14:25,745 - flwr - INFO - Sent reply
+2025-05-12 19:14:25,763 - flwr - INFO - 
+2025-05-12 19:14:25,764 - flwr - INFO - 
+2025-05-12 19:14:25,765 - flwr - INFO - Received: evaluate message 9ab07570-ff3c-4cc2-bfb3-083c8e11a076
+2025-05-12 19:14:25,766 - flwr - INFO - 
+2025-05-12 19:14:25,766 - flwr - INFO - Received: evaluate message f18b87a3-0342-4362-b515-4bde16369411
+2025-05-12 19:14:25,768 - flwr - INFO - Received: evaluate message ceff0c7a-e819-434b-bd6b-ae76eb329515
+2025-05-12 19:14:25,769 - flwr - INFO - Sent reply
+2025-05-12 19:14:25,769 - flwr - INFO - Sent reply
+2025-05-12 19:14:25,770 - flwr - INFO - Sent reply
+2025-05-12 19:14:25,786 - flwr - INFO - 
+2025-05-12 19:14:25,787 - flwr - INFO - Received: reconnect message e907af35-ed34-46f0-8925-ba36dc2f17d8
+2025-05-12 19:14:25,787 - flwr - INFO - 
+2025-05-12 19:14:25,788 - flwr - INFO - Received: reconnect message 25a5959c-8e49-41f6-9724-154f76784bd0
+2025-05-12 19:14:25,788 - flwr - INFO - 
+2025-05-12 19:14:25,789 - flwr - INFO - Received: reconnect message bc18dea2-26fc-4758-8065-b715113ceeae
+2025-05-12 19:14:25,796 - flwr - DEBUG - gRPC channel closed
+2025-05-12 19:14:25,796 - flwr - DEBUG - gRPC channel closed
+2025-05-12 19:14:25,797 - flwr - DEBUG - gRPC channel closed
+2025-05-12 19:14:25,797 - flwr - INFO - Disconnect and shut down
+2025-05-12 19:14:25,797 - flwr - INFO - Disconnect and shut down
+2025-05-12 19:14:25,797 - flwr - INFO - Disconnect and shut down

@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.feature_selection import mutual_info_regression
-from IPython.display import display, Markdown
+from IPython.display import display
 
 def analyze_dataframe(df=None, csv_path=None):
     """
@@ -221,7 +221,7 @@ def calculate_spearman_correlation(df, target_col=None):
 def calculate_mutual_information(df, target_col):
     """
     Calculate and print mutual information between features and target,
-    with proper handling of NaN values.
+    with pairwise deletion of NaN values for each feature-target pair.
     
     Args:
         df: DataFrame containing the data
@@ -234,70 +234,98 @@ def calculate_mutual_information(df, target_col):
         print(f"Error: {target_col} is not a numeric column in the dataframe")
         return
     
-    # Get target variable
-    y = numeric_df[target_col]
+    # Check for and report NaN values
+    total_rows = len(numeric_df)
+    nan_counts = numeric_df.isna().sum()
+    columns_with_nans = nan_counts[nan_counts > 0]
     
-    # Drop rows with NaN in target variable
-    if y.isna().any():
-        print(f"Warning: Target column '{target_col}' contains {y.isna().sum()} NaN values. These rows will be dropped.")
-        valid_indices = ~y.isna()
-        y = y[valid_indices]
-    else:
-        valid_indices = pd.Series([True] * len(df), index=df.index)
-    
-    # Get feature variables, excluding target
-    X = numeric_df.drop(columns=[target_col])
-    
-    # Handle NaN values in features
-    if X.isna().any().any():
-        print("Warning: Some feature columns contain NaN values:")
-        nan_counts = X.isna().sum()
-        for col, count in nan_counts[nan_counts > 0].items():
-            print(f"  - {col}: {count} NaN values ({count/len(X):.2%})")
+    if len(columns_with_nans) > 0:
+        print("\n=== NaN Values in Numeric Columns ===")
+        for col, count in columns_with_nans.items():
+            print(f"  - {col}: {count} NaN values ({count/total_rows:.2%})")
         
-        # Use only rows where both X and y are valid
-        X = X.loc[valid_indices]
+        print("\nNote: NaN values will be excluded on a pairwise basis for each feature-target pair.")
+    
+    # Check NaNs in target column
+    target_nans = numeric_df[target_col].isna().sum()
+    if target_nans > 0:
+        print(f"\nWarning: Target column '{target_col}' has {target_nans} NaN values ({target_nans/total_rows:.2%}).")
+        print("Rows with NaN in the target will be excluded from all calculations.")
+    
+    # Get features excluding target
+    features = [col for col in numeric_df.columns if col != target_col]
+    
+    # Calculate MI for each feature with pairwise deletion of NaNs
+    mi_scores = []
+    valid_pairs = {}
+    
+    for feature in features:
+        # Create a clean subset with this feature and the target
+        pair_df = numeric_df[[feature, target_col]].dropna()
+        valid_count = len(pair_df)
+        valid_pairs[feature] = valid_count
         
-        # Fill remaining NaNs with median for each feature
-        for col in X.columns:
-            if X[col].isna().any():
-                median_value = X[col].median()
-                X[col] = X[col].fillna(median_value)
-                print(f"  - Filled NaNs in '{col}' with median value: {median_value}")
-    else:
-        # Use only rows where target is valid
-        X = X.loc[valid_indices]
-    
-    # Verify we have data to work with
-    if len(X) == 0 or len(y) == 0:
-        print("Error: After handling NaN values, no data remains for analysis.")
-        return
-    
-    print(f"Computing mutual information on {len(X)} samples after handling NaN values.")
-    
-    # Calculate mutual information
-    mi_scores = mutual_info_regression(X, y)
+        # Skip features with too few valid pairs
+        if valid_count < 5:
+            print(f"Warning: Feature '{feature}' has only {valid_count} valid pairs with target. Skipping MI calculation.")
+            mi_scores.append((feature, np.nan))
+            continue
+        
+        # Calculate MI for this pair
+        try:
+            X = pair_df[[feature]].values  # sklearn expects 2D array
+            y = pair_df[target_col].values
+            mi = mutual_info_regression(X, y)[0]  # [0] because we get a 1-element array
+            mi_scores.append((feature, mi))
+        except Exception as e:
+            print(f"Error calculating MI for feature '{feature}': {e}")
+            mi_scores.append((feature, np.nan))
     
     # Create DataFrame with scores
-    mi_df = pd.DataFrame({'Feature': X.columns, 'MI Score': mi_scores})
-    mi_df = mi_df.sort_values('MI Score', ascending=False)
+    mi_df = pd.DataFrame(mi_scores, columns=['Feature', 'MI Score'])
+    
+    # Add information about valid observations
+    valid_obs_series = pd.Series(valid_pairs)
+    # Make sure the indices match
+    mi_df['Valid Observations'] = mi_df['Feature'].map(valid_obs_series)
+    mi_df['% of Data Used'] = (mi_df['Valid Observations'] / total_rows * 100).round(2).astype(str) + '%'
+    
+    # Sort by MI Score, handling NaN values
+    mi_df = mi_df.sort_values('MI Score', ascending=False, na_position='last')
+    
+    # Handle cases where some features have NaN MI scores
+    if mi_df['MI Score'].isna().any():
+        print("\nWarning: Some features have NaN Mutual Information scores with the target.")
+        print("This typically happens when a feature has too few valid pairs with the target.")
+        print("These features will be shown at the end of the results.")
     
     print("\n=== Mutual Information with target:", target_col, "===")
     print(mi_df)
     
-    # Plot MI scores
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x='MI Score', y='Feature', data=mi_df)
-    plt.title(f'Mutual Information Scores (target: {target_col})')
-    plt.tight_layout()
-    plt.show()
+    # Plot MI scores (excluding NaN values)
+    if len(mi_df.dropna(subset=['MI Score'])) > 0:
+        plt.figure(figsize=(10, 6))
+        plot_data = mi_df.dropna(subset=['MI Score']).copy()
+        sns.barplot(x='MI Score', y='Feature', data=plot_data)
+        plt.title(f'Mutual Information Scores (target: {target_col})')
+        plt.tight_layout()
+        plt.show()
+    else:
+        print("No valid MI scores to plot.")
+    
+    # Check for any low data usage pairs
+    low_data_pairs = mi_df[mi_df['Valid Observations'] < 0.7 * total_rows]
+    if len(low_data_pairs) > 0:
+        print("\nWarning: Some feature-target pairs use a low percentage of the data:")
+        for _, row in low_data_pairs.iterrows():
+            print(f"  - {row['Feature']}: {row['% of Data Used']} of data used")
     
     return mi_df
- 
+
 def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None, seed=42):
     """
     Introduce missing values in a specific feature of a DataFrame with a given pattern and rate,
-    while saving the original values for later evaluation.
+    while saving only the original values paired with charttime.
     
     Args:
         df (pandas.DataFrame): DataFrame containing the data
@@ -310,7 +338,7 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
     Returns:
         tuple: (df_with_missing, ground_truth) where:
             - df_with_missing: DataFrame with missing values introduced
-            - ground_truth: DataFrame with original values and missingness mask
+            - ground_truth: DataFrame with only original values and charttime
     """
     
     # Set random seed for reproducibility
@@ -320,19 +348,21 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
     if feature not in df.columns:
         raise ValueError(f"Feature '{feature}' not found in DataFrame columns: {df.columns.tolist()}")
     
+    # Check if charttime exists
+    if 'charttime' not in df.columns:
+        raise ValueError("Column 'charttime' not found in DataFrame.")
+    
     # Check if we need target for MAR pattern
     if pattern == 'MAR' and (target is None or target not in df.columns):
         raise ValueError(f"Target variable is required for MAR pattern. Target '{target}' not found.")
     
     # Create a copy of the DataFrame to avoid modifying the original
     df_copy = df.copy()
-    
-    # Extract feature values
-    X = df_copy[feature].values
-    
-    # Create a ground truth DataFrame to store original values
-    ground_truth = pd.DataFrame()
+
+    # Create a ground truth DataFrame with only original values and charttime
+    ground_truth = pd.DataFrame(index=df_copy.index)
     ground_truth['original_values'] = df_copy[feature].copy()
+    ground_truth['charttime'] = df_copy['charttime'].copy()
     
     # Check for existing NaN values
     original_mask = df_copy[feature].isna()
@@ -346,7 +376,8 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
         print("Using only rows with existing values to introduce new missingness.")
     
     # Focus only on non-missing values for introducing missingness
-    valid_indices = np.where(~df_copy[feature].isna())[0]
+    valid_mask = ~df_copy[feature].isna()
+    valid_indices = df_copy.index[valid_mask].tolist()
     
     if len(valid_indices) == 0:
         raise ValueError(f"Feature '{feature}' has no valid values. Cannot introduce missingness.")
@@ -357,8 +388,6 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
     if n_to_make_missing <= 0:
         print(f"Feature already has {existing_nan_rate:.2%} missing values, "
               f"which is greater than or equal to the requested {missing_rate:.2%}.")
-        # Return original DataFrame and ground truth
-        ground_truth['is_missing'] = original_mask
         return df_copy, ground_truth
     
     if n_to_make_missing > len(valid_indices):
@@ -375,38 +404,30 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
     
     elif pattern == 'MAR':
         # Missing At Random - depends on target variable
-        target_values = df_copy[target].values
+        # Create a DataFrame with valid indices and target values
+        target_df = pd.DataFrame({
+            'index': valid_indices,
+            'target_value': df_copy.loc[valid_indices, target].values
+        })
         
-        # Create pairs of valid indices and their corresponding target values
-        valid_with_target = [(i, target_values[i]) for i in valid_indices]
-        
-        # Sort by target values and select indices with lowest/highest target values
-        sorted_pairs = sorted(valid_with_target, key=lambda x: x[1])
-        missing_indices = [pair[0] for pair in sorted_pairs[:n_to_make_missing]]
+        # Sort by target values and select indices with lowest target values
+        target_df = target_df.sort_values('target_value')
+        missing_indices = target_df['index'].head(n_to_make_missing).tolist()
     
     elif pattern == 'MNAR':
         # Missing Not At Random - depends on feature value itself
-        feature_values = df_copy[feature].values
+        # Create a DataFrame with valid indices and feature values
+        feature_df = pd.DataFrame({
+            'index': valid_indices,
+            'feature_value': df_copy.loc[valid_indices, feature].values
+        })
         
-        # Create pairs of valid indices and their corresponding feature values
-        valid_with_feature = [(i, feature_values[i]) for i in valid_indices]
-        
-        # Sort by feature values and select indices with lowest/highest feature values
-        sorted_pairs = sorted(valid_with_feature, key=lambda x: x[1])
-        missing_indices = [pair[0] for pair in sorted_pairs[:n_to_make_missing]]
+        # Sort by feature values and select indices with lowest feature values
+        feature_df = feature_df.sort_values('feature_value')
+        missing_indices = feature_df['index'].head(n_to_make_missing).tolist()
     
     else:
         raise ValueError("Pattern must be one of: 'MCAR', 'MAR', 'MNAR'")
-    
-    # Create missingness mask for ground truth
-    missingness_mask = np.zeros(n_samples, dtype=bool)
-    missingness_mask[missing_indices] = True
-    
-    # Add existing missing values to the mask
-    missingness_mask = missingness_mask | original_mask.values
-    
-    # Store missingness mask in ground truth
-    ground_truth['is_missing'] = missingness_mask
     
     # Introduce missing values in the copy
     df_copy.loc[missing_indices, feature] = np.nan
@@ -419,9 +440,6 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
     print(f"Original missing rate: {existing_nan_rate:.2%}")
     print(f"Added {n_to_make_missing} missing values")
     print(f"Final missing rate: {final_missing_rate:.2%}")
-    
-    # Add useful information to ground truth
-    ground_truth['artificially_masked'] = missingness_mask & ~original_mask.values
     
     return df_copy, ground_truth
 
@@ -532,3 +550,5 @@ def convert_features_to_float(df, feature_names):
         print("-" * 50)  # Separator between features
     
     return df_result
+
+

@@ -1,0 +1,41 @@
+2025-05-12 19:14:19,130 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-05-12 19:14:19,132 - flwr - INFO - Starting Flower server, config: num_rounds=1, no round_timeout
+2025-05-12 19:14:19,149 - flwr - INFO - Flower ECE: gRPC server running (1 rounds), SSL is enabled
+2025-05-12 19:14:19,149 - flwr - INFO - [INIT]
+2025-05-12 19:14:19,150 - flwr - INFO - Requesting initial parameters from one random client
+2025-05-12 19:14:21,852 - flwr - INFO - Received initial parameters from one random client
+2025-05-12 19:14:21,853 - flwr - INFO - Starting evaluation of initial global parameters
+2025-05-12 19:14:21,853 - flwr - INFO - Evaluation returned no results (`None`)
+2025-05-12 19:14:21,854 - flwr - INFO - 
+2025-05-12 19:14:21,854 - flwr - INFO - [ROUND 1]
+2025-05-12 19:14:25,729 - flwr - INFO - configure_fit: strategy sampled 3 clients (out of 3)
+2025-05-12 19:14:25,747 - flwr - INFO - aggregate_fit: received 3 results and 0 failures
+2025-05-12 19:14:25,748 - central_server - INFO - (aggregate_fit) The result coming from the nodes are : [(<flwr.server.superlink.fleet.grpc_bidi.grpc_client_proxy.GrpcClientProxy object at 0x7f072a75db10>, FitRes(status=Status(code=<Code.OK: 0>, message='Success'), parameters=Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f8', 'fortran_order': False, 'shape': (), }                                                              \n\xaa\xc9\xe3\xce\x12v4@", b"\x93NUMPY\x01\x00v\x00{'descr': '<f8', 'fortran_order': False, 'shape': (), }                                                              \n\x00\x00\x00\x00\x00\x005@"], tensor_type='numpy.ndarray'), num_examples=996, metrics={})), (<flwr.server.superlink.fleet.grpc_bidi.grpc_client_proxy.GrpcClientProxy object at 0x7f072a75e610>, FitRes(status=Status(code=<Code.OK: 0>, message='Success'), parameters=Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f8', 'fortran_order': False, 'shape': (), }                                                              \n\xbe\xdc\x10\x03\xd2\xb13@", b"\x93NUMPY\x01\x00v\x00{'descr': '<f8', 'fortran_order': False, 'shape': (), }                                                              \n\x00\x00\x00\x00\x00\x004@"], tensor_type='numpy.ndarray'), num_examples=1173, metrics={})), (<flwr.server.superlink.fleet.grpc_bidi.grpc_client_proxy.GrpcClientProxy object at 0x7f0788382510>, FitRes(status=Status(code=<Code.OK: 0>, message='Success'), parameters=Parameters(tensors=[b"\x93NUMPY\x01\x00v\x00{'descr': '<f8', 'fortran_order': False, 'shape': (), }                                                              \n\xbel\xd0\xe4\xcb\x064@", b"\x93NUMPY\x01\x00v\x00{'descr': '<f8', 'fortran_order': False, 'shape': (), }                                                              \n\x00\x00\x00\x00\x00\x004@"], tensor_type='numpy.ndarray'), num_examples=417, metrics={}))]
+2025-05-12 19:14:25,750 - central_server - WARNING - params are : [array(20.46122449), array(21.)] / and num_samples are : 996
+2025-05-12 19:14:25,752 - central_server - WARNING - params are : [array(19.69461078), array(20.)] / and num_samples are : 1173
+2025-05-12 19:14:25,753 - central_server - WARNING - params are : [array(20.02654867), array(20.)] / and num_samples are : 417
+2025-05-12 19:14:25,756 - flwr - WARNING - No fit_metrics_aggregation_fn provided
+2025-05-12 19:14:25,757 - flwr - INFO - configure_evaluate: strategy sampled 3 clients (out of 3)
+2025-05-12 19:14:25,774 - flwr - INFO - aggregate_evaluate: received 3 results and 0 failures
+2025-05-12 19:14:25,775 - flwr - WARNING - No evaluate_metrics_aggregation_fn provided
+2025-05-12 19:14:25,777 - flwr - INFO - 
+2025-05-12 19:14:25,778 - flwr - INFO - [SUMMARY]
+2025-05-12 19:14:25,779 - flwr - INFO - Run finished 1 round(s) in 3.92s
+2025-05-12 19:14:25,781 - flwr - INFO - 	History (loss, distributed):
+2025-05-12 19:14:25,781 - flwr - INFO - 		round 1: 0.0
+2025-05-12 19:14:25,782 - flwr - INFO - 	History (metrics, distributed, fit):
+2025-05-12 19:14:25,783 - flwr - INFO - 	{'aggregated_mean_med': [(1, [array(20.04339862), array(20.38515081)])]}
+2025-05-12 19:14:25,783 - flwr - INFO - 

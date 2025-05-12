@@ -87,10 +87,10 @@ class NodeClient(fl.client.NumPyClient):
         return float(loss.item()), len(self.X_test), {"loss": float(loss.item())}
     
 if __name__ == "__main__":
-    target_table = "../data/labevents.csv"
+    target_table = "../data/extracted_vital_signs.csv"
     missing_rate = 0.2
-    feature_x = ['valuenum','flag']
-    feature_y = "ref_range_lower"
+    feature_x = ['heart_rate']
+    feature_y = "respiratory_rate"
 
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")
