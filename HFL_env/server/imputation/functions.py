@@ -6,36 +6,75 @@ import numpy as np
 from flwr.common import parameters_to_ndarrays
 
 
-def save_model(aggregated_parameters,server_round,input_dim,indx,num_classes=0):
-        
-        if indx == "dl_r" :
-            save_path=f"../results/dl_results/regression/agg_model/model_round{server_round}.pth"
-            # Load into model and save
-            model = SimpleRegressor(input_dim=input_dim) 
-        elif indx == "ml_r" :
-            save_path=f"../results/ml_results/regression/agg_model/model_round{server_round}.pth"
-            # Load into model and save
-            model = LinearRegressionModel(input_dim=input_dim) 
-        elif indx == "ml_c" :
-            save_path=f"../results/ml_results/classification/agg_model/model_round{server_round}.pth"
-            # Load into model and save
-            model = LogisticRegressionModel(input_dim=input_dim,output_dim=num_classes) 
-        elif indx == "dl_c" :
-            save_path=f"../results/dl_results/classification/agg_model/model_round{server_round}.pth"
-            # Load into model and save
-            model = SimpleClassifier(input_dim=input_dim, num_classes=num_classes)
-        else :
-            raise ValueError(f"Failure during saving the model.")
-        
-        # Save to specified path
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        
-        # Convert parameters to PyTorch model state_dict
-        model_state_dict = parameters_to_ndarrays(aggregated_parameters)
-
-        model.load_state_dict({k: torch.tensor(v) for k, v in zip(model.state_dict().keys(), model_state_dict)})
-            
-        torch.save(model.state_dict(), save_path)
+def save_model(aggregated_parameters, server_round, input_dim, indx, num_classes=0):
+    """
+    Save the full model with weights from aggregated parameters.
+    
+    Args:
+        aggregated_parameters: Aggregated model parameters from Flower
+        server_round: Current round number
+        input_dim: Input dimension for the model
+        indx: Model type identifier ('dl_r', 'ml_r', 'dl_c', 'ml_c')
+        num_classes: Number of classes for classification models
+    """
+    # Determine save path and model type based on index
+    if indx == "dl_r":
+        save_path = f"../results/dl_results/regression/agg_model/model_round{server_round}.pth"
+        model = SimpleRegressor(input_dim=input_dim) 
+    elif indx == "ml_r":
+        save_path = f"../results/ml_results/regression/agg_model/model_round{server_round}.pth"
+        model = LinearRegressionModel(input_dim=input_dim) 
+    elif indx == "ml_c":
+        save_path = f"../results/ml_results/classification/agg_model/model_round{server_round}.pth"
+        model = LogisticRegressionModel(input_dim=input_dim, output_dim=num_classes) 
+    elif indx == "dl_c":
+        save_path = f"../results/dl_results/classification/agg_model/model_round{server_round}.pth"
+        model = SimpleClassifier(input_dim=input_dim, num_classes=num_classes)
+    else:
+        raise ValueError(f"Failure during saving the model: invalid index '{indx}'")
+    
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    
+    # Convert parameters to NumPy arrays
+    model_params = parameters_to_ndarrays(aggregated_parameters)
+    
+    # Load parameters into model
+    model.load_state_dict({k: torch.tensor(v) for k, v in zip(model.state_dict().keys(), model_params)})
+    
+    # Set model to evaluation mode before saving
+    model.eval()
+    
+    # Save the full model (not just state_dict)
+    torch.save(model, save_path)
+    
+    # Also save a separate copy of the state_dict for compatibility
+    state_dict_path = os.path.join(
+        os.path.dirname(save_path),
+        f"state_dict_round{server_round}.pth"
+    )
+    torch.save(model.state_dict(), state_dict_path)
+    
+    print(f"Model saved to {save_path}")
+    print(f"Model state_dict saved to {state_dict_path}")
+    
+    # Save model architecture information separately for easier loading later
+    model_info = {
+        "model_type": indx,
+        "input_dim": input_dim,
+        "num_classes": num_classes if indx in ["dl_c", "ml_c"] else 0,
+        "round": server_round
+    }
+    
+    info_path = os.path.join(
+        os.path.dirname(save_path),
+        f"model_info_round{server_round}.json"
+    )
+    
+    with open(info_path, 'w') as f:
+        json.dump(model_info, f, indent=2)
+    
+    return save_path
 
 
 class LogisticRegressionModel(nn.Module):
@@ -209,8 +248,6 @@ def save_history_metrics(history, indx):
         for entry in metrics_entries:
             f.write(json.dumps(entry) + '\n')
     return True
-
-
 
 def insure_none(x):
     if torch.isnan(x).any():

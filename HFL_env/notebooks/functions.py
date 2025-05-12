@@ -3,7 +3,12 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.feature_selection import mutual_info_regression
+from sklearn.compose import ColumnTransformer
 from IPython.display import display
+import torch
+import pickle
+import os
+
 
 def analyze_dataframe(df=None, csv_path=None):
     """
@@ -550,5 +555,148 @@ def convert_features_to_float(df, feature_names):
         print("-" * 50)  # Separator between features
     
     return df_result
+
+def load_model_and_preprocessors(model_path, preprocessor_dir, approach):
+    """
+    Load the saved model and all necessary preprocessors.
+    
+    Args:
+        model_path: Path to the saved model (.pth file)
+        preprocessor_dir: Directory containing preprocessors
+        approach: 'dl_r', 'ml_r', 'dl_c', or 'ml_c'
+    
+    Returns:
+        model: Loaded PyTorch model
+        feature_preprocessor: Loaded feature preprocessor
+        target_transformer: Target scaler or label map
+    """
+    # Load the model
+    model = torch.load(model_path)
+    model.eval()  # Set to evaluation mode
+    
+    # Load the feature preprocessor
+    with open(os.path.join(preprocessor_dir, "feature_preprocessor.pkl"), "rb") as f:
+        feature_preprocessor = pickle.load(f)
+    
+    # Load target transformer based on approach
+    if approach in ['dl_r', 'ml_r']:
+        # Regression - load target scaler
+        with open(os.path.join(preprocessor_dir, "target_scaler.pkl"), "rb") as f:
+            target_transformer = pickle.load(f)
+    else:
+        # Classification - load label map
+        with open(os.path.join(preprocessor_dir, "label_map.pkl"), "rb") as f:
+            target_transformer = pickle.load(f)
+    
+    return model, feature_preprocessor, target_transformer
+
+
+def predict(model, df, features, feature_preprocessor, target_transformer, approach):
+    """
+    Make predictions using a saved model with proper preprocessing.
+    
+    Args:
+        model: Loaded PyTorch model
+        df: DataFrame with input data
+        features: List of feature names
+        feature_preprocessor: Loaded feature preprocessor
+        target_transformer: Target scaler or label map
+        approach: 'dl_r', 'ml_r', 'dl_c', or 'ml_c'
+    
+    Returns:
+        predictions: Processed predictions in original scale
+    """
+    # Preprocess features using saved preprocessor
+    X = feature_preprocessor.transform(df[features])
+    
+    # Convert to dense if needed
+    if hasattr(X, "toarray"):
+        X = X.toarray()
+    
+    # Convert to torch tensor
+    X_tensor = torch.tensor(X, dtype=torch.float32)
+    
+    # Handle NaN values if any
+    if torch.isnan(X_tensor).any():
+        print("Warning: NaN values detected in input data. Handling NaNs...")
+        # Get column information from preprocessor to determine numerical vs categorical
+        num_features = []
+        cat_features = []
+        # Extract information from the ColumnTransformer
+        for name, transformer, columns in feature_preprocessor.transformers_:
+            if name == 'num':
+                num_features_count = len(columns)
+                num_idx = (0, num_features_count)
+            elif name == 'cat':
+                cat_features_count = X.shape[1] - num_features_count
+                cat_idx = (num_features_count, X.shape[1])
+        
+        # Handle NaNs by feature type
+        feature_types = {}
+        if 'num_idx' in locals():
+            feature_types[num_idx] = 'numerical'
+        if 'cat_idx' in locals():
+            feature_types[cat_idx] = 'categorical'
+        
+        # Apply NaN handling for each feature type
+        for range_or_idx, feat_type in feature_types.items():
+            if isinstance(range_or_idx, tuple):
+                # Range of columns
+                start, end = range_or_idx
+                X_subset = X_tensor[:, start:end]
+                if feat_type == 'numerical':
+                    # For numerical features, use column-wise mean imputation
+                    column_means = torch.nanmean(X_subset, dim=0, keepdim=True)
+                    nan_mask = torch.isnan(X_subset)
+                    for col_idx in range(X_subset.shape[1]):
+                        col_mask = nan_mask[:, col_idx]
+                        if col_mask.any():
+                            X_subset[col_mask, col_idx] = column_means[0, col_idx]
+                else:
+                    # For categorical features, fill with zeros
+                    X_subset = torch.nan_to_num(X_subset, nan=0.0)
+                
+                # Put back into X_tensor
+                X_tensor[:, start:end] = X_subset
+    
+    # Make predictions
+    with torch.no_grad():
+        predictions = model(X_tensor)
+    
+    # Convert to numpy
+    predictions_np = predictions.numpy()
+    # Process predictions based on approach
+    if approach in ['dl_r', 'ml_r']:
+        # Regression - inverse transform to get original scale
+        predictions_original = target_transformer.inverse_transform(predictions_np)
+        return predictions_original
+    else:
+        # Classification - convert to class labels
+        if predictions_np.shape[1] > 1:
+            # Multi-class: get class with highest probability
+            pred_classes = np.argmax(predictions_np, axis=1)
+            # Map indices to labels
+            return [target_transformer[i] for i in pred_classes]
+        else:
+            # Binary classification
+            pred_classes = (predictions_np > 0.5).astype(int)
+            # Map 0/1 to actual class labels
+            return [target_transformer[i[0]] for i in pred_classes]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
