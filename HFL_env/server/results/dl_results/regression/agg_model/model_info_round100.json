@@ -1,0 +1,6 @@
+{
+  "model_type": "dl_r",
+  "input_dim": 3,
+  "num_classes": 0,
+  "round": 100
+}

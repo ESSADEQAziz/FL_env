@@ -21,7 +21,7 @@ logger.info(f"Starting node {NODE_ID} ...")
 
 # Define a Flower client
 class NodeClient(fl.client.NumPyClient):
-    def __init__(self, target_table, features_x, feature_y, missing_rate):
+    def __init__(self, target_table, features_x, feature_y):
         self.epochs = 100
         self.learning_rate = 0.01
         self.accuracy=0
@@ -30,7 +30,7 @@ class NodeClient(fl.client.NumPyClient):
         logger.info(f"the features ({features_x}) {X.shape} and the target  ({feature_y}) {Y.shape} loaded from table {target_table}")
 
         self.X_train, self.X_test, self.Y_train, self.Y_test = functions.split_reshape_normalize(
-            X, Y, test_size=missing_rate, random_state=42)
+            X, Y, test_size=0.2, random_state=42)
         logger.info(f"the x_train = {self.X_train.shape} y_train = {self.Y_train.shape} x_test = {self.X_test.shape} y_test = {self.Y_test.shape}")
         self.input_dim = X.shape[1]
         self.num_classes= Y.shape[1]
@@ -106,7 +106,6 @@ class NodeClient(fl.client.NumPyClient):
 if __name__ == "__main__":
 
     target_table = "../data/admissions.csv"
-    missing_rate = 0.2
     features_x = ['insurance', 'marital_status']
     feature_y = "race"
 
@@ -114,7 +113,7 @@ if __name__ == "__main__":
     public_key = Path(f"../auth_keys/node{NODE_ID}_key.pub")
     ca_cert = Path(f"../certs/ca.pem").read_bytes()
 
-    client = NodeClient(target_table, features_x, feature_y, missing_rate).to_client()
+    client = NodeClient(target_table, features_x, feature_y).to_client()
     fl.client.start_client(
         server_address="central_server:5000",
         client=client,

@@ -5,10 +5,9 @@ import torch.nn as nn
 import numpy as np
 from flwr.common import parameters_to_ndarrays
 
-
 def save_model(aggregated_parameters, server_round, input_dim, indx, num_classes=0):
     """
-    Save the full model with weights from aggregated parameters.
+    Save the model state_dict with weights from aggregated parameters.
     
     Args:
         aggregated_parameters: Aggregated model parameters from Flower
@@ -42,21 +41,10 @@ def save_model(aggregated_parameters, server_round, input_dim, indx, num_classes
     # Load parameters into model
     model.load_state_dict({k: torch.tensor(v) for k, v in zip(model.state_dict().keys(), model_params)})
     
-    # Set model to evaluation mode before saving
-    model.eval()
+    # Save the state_dict (safer and more compatible)
+    torch.save(model.state_dict(), save_path)
     
-    # Save the full model (not just state_dict)
-    torch.save(model, save_path)
-    
-    # Also save a separate copy of the state_dict for compatibility
-    state_dict_path = os.path.join(
-        os.path.dirname(save_path),
-        f"state_dict_round{server_round}.pth"
-    )
-    torch.save(model.state_dict(), state_dict_path)
-    
-    print(f"Model saved to {save_path}")
-    print(f"Model state_dict saved to {state_dict_path}")
+    print(f"Model state_dict saved to {save_path}")
     
     # Save model architecture information separately for easier loading later
     model_info = {
@@ -74,8 +62,7 @@ def save_model(aggregated_parameters, server_round, input_dim, indx, num_classes
     with open(info_path, 'w') as f:
         json.dump(model_info, f, indent=2)
     
-    return save_path
-
+    return save_path   
 
 class LogisticRegressionModel(nn.Module):
     def __init__(self, input_dim, output_dim):
@@ -83,8 +70,7 @@ class LogisticRegressionModel(nn.Module):
         self.linear = nn.Linear(input_dim, output_dim)
 
     def forward(self, x):
-        return self.linear(x)
-    
+        return self.linear(x)    
 
 class SimpleRegressor(nn.Module):
     def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
@@ -139,14 +125,14 @@ def save_history_metrics(history, indx):
         isClassification = False
 
     elif indx == "ml_r":
-
         path = "../results/ml_results/regression/metrics.json"
         isClassification = False
+
     elif indx == "ml_c":
 
         path = "../results/ml_results/classification/metrics.json"
 
-    if indx == "stat":
+    elif indx == "stat":
         path = "../results/stat_results/metrics.json"
 
         os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -249,11 +235,6 @@ def save_history_metrics(history, indx):
             f.write(json.dumps(entry) + '\n')
     return True
 
-def insure_none(x):
-    if torch.isnan(x).any():
-        print("Warning: NaN values detected in target y, replacing them with 0 to avoid loss and gradients calculus.(consider it as noise)")
-        x = torch.nan_to_num(x, nan=0.0)
-    return x 
 
 
 

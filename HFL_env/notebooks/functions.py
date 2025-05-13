@@ -3,12 +3,260 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.feature_selection import mutual_info_regression
-from sklearn.compose import ColumnTransformer
 from IPython.display import display
 import torch
+import torch.nn as nn
 import pickle
+import json
 import os
+from scipy import stats
+import warnings
 
+def analyze_feature(df, feature):
+    """
+    Analyze a single feature in a dataframe, providing comprehensive statistics and visualizations.
+    
+    Args:
+        df: pandas DataFrame
+        feature: name of the column to analyze
+    """
+    # Check if feature exists
+    if feature not in df.columns:
+        print(f"Error: Feature '{feature}' not found in DataFrame columns.")
+        print(f"Available columns: {', '.join(df.columns)}")
+        return
+    
+    # Get the series
+    series = df[feature]
+    
+    print(f"\n{'='*50}")
+    print(f"ANALYSIS OF FEATURE: {feature}")
+    print(f"{'='*50}")
+    
+    # Basic information
+    print("\n--- Basic Information ---")
+    print(f"Data type: {series.dtype}")
+    null_count = series.isna().sum()
+    null_percent = (null_count / len(series)) * 100
+    print(f"Missing values: {null_count} ({null_percent:.2f}%)")
+    print(f"Unique values: {series.nunique()} ({series.nunique()/len(series)*100:.2f}% of total)")
+    
+    # For categorical features
+    if series.dtype == 'object' or series.dtype.name == 'category' or series.nunique() < 10:
+        print("\n--- Categorical Analysis ---")
+        value_counts = series.value_counts()
+        value_percent = series.value_counts(normalize=True) * 100
+        
+        # Create a DataFrame with counts and percentages
+        cat_df = pd.DataFrame({
+            'Count': value_counts,
+            'Percentage': value_percent
+        })
+        print(cat_df)
+        
+        # Plot bar chart for categorical data
+        plt.figure(figsize=(10, 6))
+        sns.countplot(y=feature, data=df, order=value_counts.index)
+        plt.title(f'Distribution of {feature}')
+        plt.tight_layout()
+        plt.show()
+    
+    # For numeric features
+    if np.issubdtype(series.dtype, np.number):
+        print("\n--- Numeric Analysis ---")
+        
+        # Basic statistics
+        stats_df = pd.DataFrame({
+            'Statistic': ['count', 'mean', 'std', 'min', '25%', '50% (median)', '75%', 'max', 
+                         'skewness', 'kurtosis', 'IQR', 'range'],
+            'Value': [
+                series.count(),
+                series.mean(),
+                series.std(),
+                series.min(),
+                series.quantile(0.25),
+                series.median(),
+                series.quantile(0.75),
+                series.max(),
+                series.skew(),
+                series.kurtosis(),
+                series.quantile(0.75) - series.quantile(0.25),
+                series.max() - series.min()
+            ]
+        })
+        print(stats_df)
+        
+        # Check for outliers using IQR method
+        q1 = series.quantile(0.25)
+        q3 = series.quantile(0.75)
+        iqr = q3 - q1
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+        outliers = series[(series < lower_bound) | (series > upper_bound)]
+        
+        print(f"\nOutliers (IQR method): {len(outliers)} ({len(outliers)/len(series)*100:.2f}% of non-null values)")
+        print(f"Outlier bounds: Lower < {lower_bound:.2f} or Upper > {upper_bound:.2f}")
+        
+        if len(outliers) > 0 and len(outliers) < 20:
+            print("Outlier values:")
+            print(outliers.values)
+        
+        # Normality test (Shapiro-Wilk)
+        if series.count() > 3 and series.count() <= 5000:
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    stat, p_value = stats.shapiro(series.dropna())
+                    print(f"\nShapiro-Wilk Normality Test: statistic={stat:.4f}, p-value={p_value:.4f}")
+                    alpha = 0.05
+                    if p_value > alpha:
+                        print(f"Feature appears normally distributed (p > {alpha})")
+                    else:
+                        print(f"Feature does not appear normally distributed (p < {alpha})")
+            except:
+                print("Couldn't perform Shapiro-Wilk normality test")
+        elif series.count() > 5000:
+            print("\nSkipping Shapiro-Wilk normality test due to large sample size (n > 5000).")
+            
+        # Visualizations
+        plt.figure(figsize=(15, 10))
+        
+        # Histogram
+        plt.subplot(2, 2, 1)
+        sns.histplot(series, kde=True)
+        plt.title(f'Distribution of {feature}')
+        
+        # Box plot
+        plt.subplot(2, 2, 2)
+        sns.boxplot(y=series)
+        plt.title(f'Box Plot of {feature}')
+        
+        # Q-Q plot
+        plt.subplot(2, 2, 3)
+        stats.probplot(series.dropna(), dist="norm", plot=plt)
+        plt.title(f'Q-Q Plot of {feature}')
+        
+        # KDE plot
+        plt.subplot(2, 2, 4)
+        sns.kdeplot(series)
+        plt.title(f'KDE Plot of {feature}')
+        
+        plt.tight_layout()
+        plt.show()
+    
+    # Time series analysis if timestamp
+    if pd.api.types.is_datetime64_any_dtype(series) or feature.lower() in ['date', 'time', 'timestamp', 'datetime']:
+        print("\n--- Time Series Analysis ---")
+        
+        try:
+            # Convert to datetime if not already
+            if not pd.api.types.is_datetime64_any_dtype(series):
+                series = pd.to_datetime(series, errors='coerce')
+                
+            print(f"Date range: {series.min()} to {series.max()}")
+            print(f"Time span: {series.max() - series.min()}")
+            
+            # Count by year, month, and day of week
+            if (series.max() - series.min()).days > 365:
+                yearly_counts = series.dt.year.value_counts().sort_index()
+                print("\nCounts by year:")
+                print(yearly_counts)
+            
+            monthly_counts = series.dt.month.value_counts().sort_index()
+            print("\nCounts by month:")
+            print(monthly_counts)
+            
+            dow_counts = series.dt.day_name().value_counts()
+            print("\nCounts by day of week:")
+            print(dow_counts)
+            
+            # Plot time series
+            plt.figure(figsize=(12, 8))
+            
+            # By month
+            plt.subplot(2, 1, 1)
+            sns.countplot(x=series.dt.month, order=range(1, 13))
+            plt.title(f'Distribution of {feature} by Month')
+            plt.xlabel('Month')
+            
+            # By day of week
+            plt.subplot(2, 1, 2)
+            sns.countplot(y=series.dt.day_name(), order=['Monday', 'Tuesday', 'Wednesday', 
+                                                       'Thursday', 'Friday', 'Saturday', 'Sunday'])
+            plt.title(f'Distribution of {feature} by Day of Week')
+            
+            plt.tight_layout()
+            plt.show()
+            
+        except Exception as e:
+            print(f"Couldn't perform time series analysis: {e}")
+    
+    # Correlation with other numeric features
+    if np.issubdtype(series.dtype, np.number) and len(df.select_dtypes(include=[np.number]).columns) > 1:
+        print("\n--- Correlation with Other Numeric Features ---")
+        
+        # Calculate correlations
+        numeric_cols = df.select_dtypes(include=[np.number]).columns
+        correlations = df[numeric_cols].corr()[feature].sort_values(ascending=False)
+        
+        # Remove self-correlation
+        correlations = correlations[correlations.index != feature]
+        
+        corr_df = pd.DataFrame({
+            'Feature': correlations.index,
+            'Pearson Correlation': correlations.values
+        })
+        print(corr_df)
+        
+        # Plot top and bottom correlations
+        if len(correlations) > 0:
+            plt.figure(figsize=(10, 6))
+            
+            # Get top 10 and bottom 10 correlations
+            top_corr = correlations.abs().sort_values(ascending=False).head(10).index
+            
+            # Create correlation plot for selected features
+            if len(top_corr) > 0:
+                corr_data = df[[feature] + list(top_corr)].corr()
+                mask = np.triu(np.ones_like(corr_data, dtype=bool))
+                sns.heatmap(corr_data, mask=mask, annot=True, cmap='coolwarm', vmin=-1, vmax=1, center=0)
+                plt.title(f'Correlation of {feature} with Other Features')
+                plt.tight_layout()
+                plt.show()
+                
+                # Scatter plots for the top 3 correlations
+                if len(top_corr) >= 3:
+                    plt.figure(figsize=(15, 5))
+                    for i, col in enumerate(top_corr[:3]):
+                        plt.subplot(1, 3, i+1)
+                        sns.scatterplot(x=col, y=feature, data=df)
+                        plt.title(f'{feature} vs {col}')
+                    plt.tight_layout()
+                    plt.show()
+                
+    # Return the analysis as a dictionary
+    analysis_summary = {
+        'feature': feature,
+        'dtype': str(series.dtype),
+        'missing_count': null_count,
+        'missing_percent': null_percent,
+        'unique_values': series.nunique(),
+    }
+    
+    if np.issubdtype(series.dtype, np.number):
+        analysis_summary.update({
+            'mean': series.mean(),
+            'median': series.median(),
+            'std': series.std(),
+            'min': series.min(),
+            'max': series.max(),
+            'skewness': series.skew(),
+            'kurtosis': series.kurtosis(),
+            'has_outliers': len(outliers) > 0,
+            'outliers_count': len(outliers)
+        })
+    
+    print("\nAnalysis complete!")
 
 def analyze_dataframe(df=None, csv_path=None):
     """
@@ -476,89 +724,9 @@ def prepare_clean_dataset(df, feature1, feature2):
     
     return clean_df
 
-def convert_feature_to_float(df, feature_name):
+def load_model_for_prediction(model_path, preprocessor_dir, approach):
     """
-    Convert a feature to float type if it contains string values.
-    
-    Args:
-        df: pandas DataFrame
-        feature_name: name of the feature to convert
-        
-    Returns:
-        DataFrame with the feature converted to float if possible
-    """
-    # Make a copy to avoid modifying the original DataFrame
-    df_copy = df.copy()
-    
-    # Check if the feature exists
-    if feature_name not in df_copy.columns:
-        print(f"Error: Feature '{feature_name}' not found in the DataFrame")
-        return df_copy
-    
-    # Check current dtype
-    current_dtype = df_copy[feature_name].dtype
-    print(f"Current dtype of '{feature_name}': {current_dtype}")
-    
-    # If already numeric, return the DataFrame
-    if np.issubdtype(current_dtype, np.number):
-        print(f"Feature '{feature_name}' is already numeric type ({current_dtype})")
-        return df_copy
-    
-    # Try to convert to float
-    try:
-        # Handle common issues in string representations of numbers
-        if df_copy[feature_name].dtype == 'object':
-            # Replace common string patterns
-            df_copy[feature_name] = df_copy[feature_name].astype(str)
-            df_copy[feature_name] = df_copy[feature_name].str.replace(',', '.')  # European decimal separator
-            df_copy[feature_name] = df_copy[feature_name].str.replace(' ', '')   # Remove spaces
-            df_copy[feature_name] = df_copy[feature_name].str.replace('$', '')   # Remove dollar signs
-            df_copy[feature_name] = df_copy[feature_name].str.replace('%', '')   # Remove percent signs
-            
-            # Replace empty strings with NaN
-            df_copy[feature_name] = df_copy[feature_name].replace('', np.nan)
-        
-        # Convert to float
-        df_copy[feature_name] = df_copy[feature_name].astype(float)
-        print(f"Successfully converted '{feature_name}' to float type")
-        
-        # Report missing values after conversion
-        missing_count = df_copy[feature_name].isna().sum()
-        print(f"Missing values after conversion: {missing_count} ({missing_count/len(df_copy):.2%})")
-        
-    except Exception as e:
-        print(f"Error converting '{feature_name}' to float: {e}")
-        print("Examples of problematic values:")
-        # Show some examples of values that couldn't be converted
-        non_convertible = df_copy[~df_copy[feature_name].astype(str).str.replace(',', '.').str.replace(' ', '').str.replace('$', '').str.replace('%', '').str.match(r'^[-+]?[0-9]*\.?[0-9]+$')]
-        if len(non_convertible) > 0:
-            print(non_convertible[feature_name].head())
-    
-    return df_copy
-
-# Extended convert_feature_to_float to handle multiple features
-def convert_features_to_float(df, feature_names):
-    """
-    Convert multiple features to float type if they contain string values.
-    
-    Args:
-        df: pandas DataFrame
-        feature_names: list of feature names to convert
-        
-    Returns:
-        DataFrame with features converted to float if possible
-    """
-    df_result = df.copy()
-    
-    for feature in feature_names:
-        df_result = convert_feature_to_float(df_result, feature)
-        print("-" * 50)  # Separator between features
-    
-    return df_result
-
-def load_model_and_preprocessors(model_path, preprocessor_dir, approach):
-    """
-    Load the saved model and all necessary preprocessors.
+    Load the saved model state_dict and all necessary preprocessors.
     
     Args:
         model_path: Path to the saved model (.pth file)
@@ -570,13 +738,97 @@ def load_model_and_preprocessors(model_path, preprocessor_dir, approach):
         feature_preprocessor: Loaded feature preprocessor
         target_transformer: Target scaler or label map
     """
-    # Load the model
-    model = torch.load(model_path)
-    model.eval()  # Set to evaluation mode
+    # Extract model info from path
+    info_path = model_path.replace("model_round", "model_info_round").replace(".pth", ".json")
     
-    # Load the feature preprocessor
+    if not os.path.exists(info_path):
+        # Try to infer the model type from the approach
+        if approach == "dl_r":
+            model_info = {"model_type": "dl_r", "input_dim": None}
+        elif approach == "ml_r":
+            model_info = {"model_type": "ml_r", "input_dim": None}
+        elif approach == "dl_c":
+            model_info = {"model_type": "dl_c", "input_dim": None, "num_classes": None}
+        elif approach == "ml_c":
+            model_info = {"model_type": "ml_c", "input_dim": None, "num_classes": None}
+        else:
+            raise ValueError(f"Cannot determine model type from approach: {approach}")
+        
+        print(f"Warning: Model info file not found at {info_path}. Using default values.")
+    else:
+        # Load model info
+        with open(info_path, 'r') as f:
+            model_info = json.load(f)
+    
+    # Load feature preprocessor to determine input dimensions if needed
     with open(os.path.join(preprocessor_dir, "feature_preprocessor.pkl"), "rb") as f:
         feature_preprocessor = pickle.load(f)
+    
+    # Determine input dimensions from preprocessor if not available in model_info
+    if model_info["input_dim"] is None:
+        # Check if the preprocessor has a 'named_transformers_' attribute (ColumnTransformer)
+        if hasattr(feature_preprocessor, 'named_transformers_'):
+            # Get a sample feature vector to determine dimensions
+            try:
+                # Create a small dummy DataFrame with the right columns
+                dummy_data = {}
+                for name, transformer, columns in feature_preprocessor.transformers_:
+                    for col in columns:
+                        if name == 'num':
+                            dummy_data[col] = [0.0]
+                        else:
+                            dummy_data[col] = ["dummy"]
+                
+                dummy_df = pd.DataFrame(dummy_data)
+                transformed = feature_preprocessor.transform(dummy_df)
+                
+                # Get the shape of the transformed data
+                if hasattr(transformed, 'toarray'):
+                    transformed = transformed.toarray()
+                
+                model_info["input_dim"] = transformed.shape[1]
+                print(f"Inferred input dimension: {model_info['input_dim']}")
+            except Exception as e:
+                print(f"Error inferring input dimensions: {e}")
+                # Use a default value
+                model_info["input_dim"] = 10
+                print(f"Using default input dimension: {model_info['input_dim']}")
+        else:
+            # Use a default value if we can't determine
+            model_info["input_dim"] = 10
+            print(f"Using default input dimension: {model_info['input_dim']}")
+    
+    # Determine number of classes for classification models if needed
+    if approach in ['dl_c', 'ml_c'] and model_info.get("num_classes") is None:
+        # Try to load label map to determine number of classes
+        try:
+            with open(os.path.join(preprocessor_dir, "label_map.pkl"), "rb") as f:
+                label_map = pickle.load(f)
+                model_info["num_classes"] = len(label_map)
+                print(f"Inferred number of classes: {model_info['num_classes']}")
+        except Exception as e:
+            print(f"Error inferring number of classes: {e}")
+            # Use a default value
+            model_info["num_classes"] = 2
+            print(f"Using default number of classes: {model_info['num_classes']}")
+    
+    # Create model instance based on info
+    if model_info["model_type"] == "dl_r":
+        model = SimpleRegressor(input_dim=model_info["input_dim"])
+    elif model_info["model_type"] == "ml_r":
+        model = LinearRegressionModel(input_dim=model_info["input_dim"])
+    elif model_info["model_type"] == "ml_c":
+        model = LogisticRegressionModel(input_dim=model_info["input_dim"], 
+                                        output_dim=model_info["num_classes"])
+    elif model_info["model_type"] == "dl_c":
+        model = SimpleClassifier(input_dim=model_info["input_dim"], 
+                                num_classes=model_info["num_classes"])
+    else:
+        raise ValueError(f"Unknown model type: {model_info['model_type']}")
+    
+    # Load state dict
+    model.load_state_dict(torch.load(model_path))
+    model.eval()
     
     # Load target transformer based on approach
     if approach in ['dl_r', 'ml_r']:
@@ -589,7 +841,6 @@ def load_model_and_preprocessors(model_path, preprocessor_dir, approach):
             target_transformer = pickle.load(f)
     
     return model, feature_preprocessor, target_transformer
-
 
 def predict(model, df, features, feature_preprocessor, target_transformer, approach):
     """
@@ -683,19 +934,352 @@ def predict(model, df, features, feature_preprocessor, target_transformer, appro
             # Map 0/1 to actual class labels
             return [target_transformer[i[0]] for i in pred_classes]
 
+class LogisticRegressionModel(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(LogisticRegressionModel, self).__init__()
+        self.linear = nn.Linear(input_dim, output_dim)
 
+    def forward(self, x):
+        return self.linear(x)    
 
+class SimpleRegressor(nn.Module):
+    def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
+        super(SimpleRegressor, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, output_dim)
+        )
+    
+    def forward(self, x):
+        return self.model(x)
 
+class SimpleClassifier(nn.Module):
+    def __init__(self, input_dim, num_classes):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 16),
+            nn.ReLU(),
+            nn.Linear(16, num_classes)
+        )
 
+    def forward(self, x):
+        return self.model(x)
 
+class LinearRegressionModel(nn.Module):
+    def __init__(self, input_dim):
+        super().__init__()
+        self.linear = nn.Linear(input_dim, 1)
 
+    def forward(self, x):
+        return self.linear(x)  
 
+def predict_with_model(model, df, features, feature_preprocessor, target_transformer, approach):
+    """
+    Make predictions using a loaded model with proper preprocessing and NaN handling.
+    
+    Args:
+        model: Loaded PyTorch model
+        df: DataFrame with input data
+        features: List of feature names
+        feature_preprocessor: Loaded feature preprocessor
+        target_transformer: Target scaler or label map
+        approach: 'dl_r', 'ml_r', 'dl_c', or 'ml_c'
+    
+    Returns:
+        predictions: Processed predictions in original scale
+    """
+    # Determine feature types based on preprocessor
+    feature_types = {}
+    categorical_features = []
+    numerical_features = []
+    
+    # Extract feature types from the ColumnTransformer
+    if hasattr(feature_preprocessor, 'transformers_'):
+        for name, transformer, columns in feature_preprocessor.transformers_:
+            if name == 'num':
+                numerical_features.extend(columns)
+            elif name == 'cat':
+                categorical_features.extend(columns)
+    
+    # Preprocess features using saved preprocessor
+    X = feature_preprocessor.transform(df[features])
+    
+    # Convert to dense if needed
+    if hasattr(X, "toarray"):
+        X = X.toarray()
+    
+    # Convert to torch tensor
+    X_tensor = torch.tensor(X, dtype=torch.float32)
+    
+    # Identify feature ranges for each type
+    if numerical_features and categorical_features:
+        # Start index for categorical features depends on where numerical features end
+        # This is an approximation and may need adjustment based on your preprocessing
+        num_end = len(numerical_features)
+        cat_start = num_end
+        
+        feature_types[(0, num_end)] = 'numerical'
+        feature_types[(cat_start, X_tensor.shape[1])] = 'categorical'
+    elif numerical_features:
+        feature_types[(0, X_tensor.shape[1])] = 'numerical'
+    elif categorical_features:
+        feature_types[(0, X_tensor.shape[1])] = 'categorical'
+    
+    # Handle NaN values based on feature types
+    for range_or_idx, feat_type in feature_types.items():
+        if isinstance(range_or_idx, tuple):
+            # Range of columns
+            start, end = range_or_idx
+            if end > X_tensor.shape[1]:
+                end = X_tensor.shape[1]
+                
+            X_subset = X_tensor[:, start:end]
+            
+            # Skip if no columns in this range
+            if start >= X_subset.shape[1] or end <= 0:
+                continue
+                
+            # Handle NaNs in this subset
+            column_means = None
+            if feat_type == 'numerical' and torch.isnan(X_subset).any():
+                column_means = torch.nanmean(X_subset, dim=0, keepdim=True)
+                
+            X_subset = insure_none(X_subset, feature_type=feat_type, column_means=column_means)
+            
+            # Put back into X_tensor
+            X_tensor[:, start:end] = X_subset
+    
+    # Make predictions
+    with torch.no_grad():
+        predictions = model(X_tensor)
+    
+    # Convert to numpy
+    predictions_np = predictions.detach().numpy()
+    
+    # Process predictions based on approach
+    if approach in ['dl_r', 'ml_r']:
+        # Regression - inverse transform to get original scale
+        predictions_original = target_transformer.inverse_transform(predictions_np)
+        return predictions_original
+    else:
+        # Classification - convert to class labels
+        if predictions_np.shape[1] > 1:
+            # Multi-class: get class with highest probability
+            pred_classes = np.argmax(predictions_np, axis=1)
+            # Map indices to labels
+            return [target_transformer[i] for i in pred_classes]
+        else:
+            # Binary classification
+            pred_classes = (predictions_np > 0.5).astype(int)
+            # Map 0/1 to actual class labels
+            return [target_transformer[i[0]] for i in pred_classes]
 
+# Example function to run the prediction pipeline
+def predict_pipline(dataframe, model_path, preprocessor_dir, features,target, approach):
+    """
+    Load a model and make predictions on new data.
+    
+    Args:
+        csv_path: Path to CSV with input data
+        model_path: Path to saved model state_dict
+        preprocessor_dir: Directory with preprocessors
+        features: List of feature names
+        approach: 'dl_r', 'ml_r', 'dl_c', or 'ml_c'
+    
+    Returns:
+        DataFrame with original data and predictions
+    """
+    # Load the data
+    df = dataframe
+    
+    # Check if all required features are in the dataframe
+    missing_features = [f for f in features if f not in df.columns]
+    if missing_features:
+        raise ValueError(f"Missing features in input data: {missing_features}")
+    
+    # Load model and preprocessors
+    model, feature_preprocessor, target_transformer = load_model_for_prediction(
+        model_path, preprocessor_dir, approach
+    )
+    
+    # Make predictions
+    predictions = predict_with_model(
+        model, df, features, feature_preprocessor, target_transformer, approach
+    )
+    
+    # Add predictions to dataframe
+    if approach in ['dl_r', 'ml_r']:
+        df[f'{target}'] = predictions
+    else:
+        df[f'{target}'] = predictions
+    
+    return df
 
+def insure_none(x, feature_type='numerical', column_means=None, is_target=False):
+    """
+    Handle NaN values in tensor data by filling with appropriate values.
+    
+    Args:
+        x: Tensor data potentially containing NaN values
+        feature_type: Type of features ('numerical' or 'categorical')
+        column_means: Precomputed column means for filling (if None, will compute from x)
+        is_target: Whether this tensor is a target variable
+        
+    Returns:
+        Tensor with NaN values replaced
+    """
+    if torch.isnan(x).any():
+        if is_target:
+            # For target variables, we might want special handling
+            print("Warning: NaN values detected in target variable.")
+            if feature_type == 'numerical':
+                # For numerical targets, use mean imputation
+                if column_means is None:
+                    # Compute mean ignoring NaNs
+                    column_means = torch.nanmean(x, dim=0, keepdim=True)
+                
+                print(f"Replacing NaN values in target with mean value: {column_means.item():.4f}")
+                x = torch.nan_to_num(x, nan=column_means.item())
+            else:
+                # For categorical targets, this is more complex
+                print("Warning: NaN values in categorical target may cause issues in model training.")
+                # Fill with zeros, but this could be improved
+                x = torch.nan_to_num(x, nan=0.0)
+        else:
+            # For feature variables
+            if feature_type == 'numerical':
+                # For numerical features, use column-wise mean imputation
+                if column_means is None:
+                    # Calculate mean for each feature, ignoring NaNs
+                    column_means = torch.nanmean(x, dim=0, keepdim=True)
+                
+                # Create a mask of NaN values
+                nan_mask = torch.isnan(x)
+                
+                # Fill NaN values with corresponding column means
+                for col_idx in range(x.shape[1]):
+                    col_mask = nan_mask[:, col_idx]
+                    if col_mask.any():
+                        x[col_mask, col_idx] = column_means[0, col_idx]
+                
+                print(f"Replaced NaN values in {torch.sum(nan_mask).item()} positions with column means.")
+            
+            elif feature_type == 'categorical':
+                # For one-hot encoded categorical features
+                # In one-hot encoding, NaN should translate to all zeros in that group
+                nan_rows = torch.isnan(x).any(dim=1)
+                if nan_rows.any():
+                    print(f"Replaced NaN values in {torch.sum(nan_rows).item()} categorical instances with zeros.")
+                    # Replace all NaNs with zeros (effectively making "unknown" category)
+                    x = torch.nan_to_num(x, nan=0.0)
+    
+    return x
 
-
-
-
+def return_regression_results(dataframe, features, target):
+    """
+    Run prediction pipeline and add statistical aggregation (mean/median) columns.
+    
+    Args:
+        dataframe: Input DataFrame
+        features: List of feature names
+        target: Target column name
+    
+    Returns:
+        DataFrame with predictions from ML/DL models and statistical aggregations
+    """
+    # Statistical metrics path
+    path_statistical_metrics = "../server/results/stat_results/metrics.json"
+    
+    # Load mean and median values from JSON file
+    try:
+        with open(path_statistical_metrics, 'r') as f:
+            stat_metrics = json.load(f)
+            
+        # Extract mean and median values
+        if "Aggregated mean/median" in stat_metrics:
+            mean_value = stat_metrics["Aggregated mean/median"][0]
+            median_value = stat_metrics["Aggregated mean/median"][1]
+            print(f"Loaded statistical metrics - Mean: {mean_value}, Median: {median_value}")
+        else:
+            print("Warning: 'Aggregated mean/median' not found in metrics JSON file")
+            mean_value = None
+            median_value = None
+    except Exception as e:
+        print(f"Error loading statistical metrics: {e}")
+        mean_value = None
+        median_value = None
+    
+    # Run prediction for ML and DL models
+    for i in ['dl', 'ml']:
+        model_path = f"../server/results/{i}_results/regression/agg_model/model_round100.pth"
+        preprocessor_dir = f"../nodes/results/{i}_regression/"
+        
+        try:
+            dataframe = predict_pipline(dataframe, model_path, preprocessor_dir, 
+                                        features, target+f'_{i}', f"{i}_r")
+        except Exception as e:
+            print(f"Error during {i.upper()} prediction: {e}")
+            # Create empty prediction column if prediction fails
+            dataframe[target+f'_{i}'] = np.nan
+    
+    # Add mean and median columns if values were loaded successfully
+    if mean_value is not None:
+        dataframe[target+'_agg_mean'] = mean_value
+        print(f"Added column '{target}_agg_mean' with value {mean_value}")
+    
+    if median_value is not None:
+        dataframe[target+'_agg_median'] = median_value
+        print(f"Added column '{target}_agg_median' with value {median_value}")
+        
+    # Calculate ensemble average of machine learning and deep learning predictions,
+    # plus the aggregated mean and median values
+    try:
+        # Get values for each prediction method
+        values_to_average = []
+        columns_used = []
+        
+        # Add ML prediction if it exists
+        if target+'_ml' in dataframe.columns:
+            values_to_average.append(dataframe[target+'_ml'])
+            columns_used.append(target+'_ml')
+        
+        # Add DL prediction if it exists
+        if target+'_dl' in dataframe.columns:
+            values_to_average.append(dataframe[target+'_dl'])
+            columns_used.append(target+'_dl')
+        
+        # Add aggregated mean if it exists
+        if target+'_agg_mean' in dataframe.columns:
+            values_to_average.append(dataframe[target+'_agg_mean'])
+            columns_used.append(target+'_agg_mean')
+        
+        # Add aggregated median if it exists
+        if target+'_agg_median' in dataframe.columns:
+            values_to_average.append(dataframe[target+'_agg_median'])
+            columns_used.append(target+'_agg_median')
+        
+        # Calculate average if we have values
+        if values_to_average:
+            # Sum all values and divide by the number of columns
+            dataframe[target+'_avg_predictions'] = sum(values_to_average) / len(values_to_average)
+            
+            print(f"Added column '{target}_avg_predictions' with average of: {', '.join(columns_used)}")
+            
+            # Verify calculation for the first row
+            first_row_values = [val.iloc[0] for val in values_to_average]
+            first_row_avg = sum(first_row_values) / len(first_row_values)
+            print(f"First row values: {first_row_values}")
+            print(f"First row average: {first_row_avg}")
+        else:
+            print(f"Warning: No prediction columns found for averaging")
+            
+    except Exception as e:
+        print(f"Error calculating average predictions: {e}")
+    
+    return dataframe
 
 
 

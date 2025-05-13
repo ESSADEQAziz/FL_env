@@ -22,7 +22,7 @@ logger.info(f"Starting node {NODE_ID} ...")
 
 # Define a Flower client
 class NodeClient(fl.client.NumPyClient):
-    def __init__(self, target_table, feature_x, feature_y,missing_rate):
+    def __init__(self, target_table, feature_x, feature_y):
         self.epochs = 100
         self.iterations=100
         self.learning_rate=0.01
@@ -30,7 +30,7 @@ class NodeClient(fl.client.NumPyClient):
         X, Y = functions.preprocess_node_data(target_table, feature_x, feature_y,'ml_r')
         logger.info(f"the features ({feature_x}) {X.shape} and the target  ({feature_y}) {Y.shape} laoded from table {target_table}")
         # Split data into train and test sets
-        self.X_train, self.X_test, self.Y_train, self.Y_test = functions.split_reshape_normalize(X, Y, test_size=missing_rate, random_state=42)
+        self.X_train, self.X_test, self.Y_train, self.Y_test = functions.split_reshape_normalize(X, Y, test_size=0.2, random_state=42)
         logger.info(f"X_train {self.X_train.shape},Y_train {self.Y_train.shape},X_test {self.X_test.shape} Y_test {self.Y_test.shape}")
 
         self.input_dim = X.shape[1]
@@ -79,8 +79,7 @@ class NodeClient(fl.client.NumPyClient):
 if __name__ == "__main__":
     
     target_table = "../data/extracted_vital_signs.csv"
-    missing_rate = 0.2
-    feature_x = ['heart_rate']
+    feature_x = ['heart_rate','gender']
     feature_y = "respiratory_rate"
 
 
@@ -92,7 +91,7 @@ if __name__ == "__main__":
     because the purpose of it is to perserve a data nerver seen by the model to evalute the performence,
     and we already apply the same process implecitlly using the train_test_split logic where (missing_rate = = test_size)  """
 
-    client = NodeClient(target_table, feature_x, feature_y,missing_rate).to_client()
+    client = NodeClient(target_table, feature_x, feature_y).to_client()
     fl.client.start_client(server_address="central_server:5000", client=client,
         root_certificates=ca_cert,
         insecure=False,)

@@ -55,7 +55,7 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
         logger.info(f"the aggregated parameters are {aggregated_parameters} /// metrics {metrics}")
 
         if server_round == self.final_round : 
-            functions.save_model(aggregated_parameters,server_round,input_dim,"ml_r")
+            functions.save_model(aggregated_parameters=aggregated_parameters,server_round=server_round,input_dim=input_dim,indx="ml_r")
             logger.info("The model saved successfully.")
         
         return aggregated_parameters, metrics

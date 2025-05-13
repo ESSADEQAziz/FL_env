@@ -24,7 +24,7 @@ logger.info(f"Starting node {NODE_ID} ...")
 
 # Define a Flower client
 class NodeClient(fl.client.NumPyClient):
-    def __init__(self, target_table,feature_x,feature_y,missing_rate):
+    def __init__(self, target_table,feature_x,feature_y):
         self.epochs = 10
         self.iterations=10  
         self.learning_rate=0.01
@@ -39,7 +39,7 @@ class NodeClient(fl.client.NumPyClient):
         logger.info(f"The size of the features is: '{X.shape}' and '{Y.shape}'")
 
         # Split data into train and test sets
-        self.X_train, self.X_test, self.Y_train, self.Y_test = split_reshape_normalize(X, Y, test_size=missing_rate, random_state=42)
+        self.X_train, self.X_test, self.Y_train, self.Y_test = split_reshape_normalize(X, Y, test_size=0.2, random_state=42)
 
         logger.info(f"the result of test_split_reshape() : x_train = {self.X_train.shape} x_test = {self.X_test.shape} y_train = {self.Y_train.shape} y_test= {self.Y_test.shape}")
         self.model = SimpleClassifier(input_dim= self.input_dim ,num_classes= self.num_classes) 
@@ -115,7 +115,6 @@ class NodeClient(fl.client.NumPyClient):
         
 if __name__ == "__main__":
     target_table = "../data/labevents.csv"
-    missing_rate = 0.2
     feature_x = ['valuenum','flag']
     feature_y = "priority"
 
@@ -125,7 +124,7 @@ if __name__ == "__main__":
     ca_cert = Path(f"../certs/ca.pem").read_bytes()
     
     
-    client = NodeClient(target_table, feature_x, feature_y,missing_rate).to_client()
+    client = NodeClient(target_table, feature_x, feature_y).to_client()
     fl.client.start_client(server_address="central_server:5000", client=client,
         root_certificates=ca_cert,
         insecure=False,)

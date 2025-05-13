@@ -114,9 +114,6 @@ def calculate_statistics(file_path, feature):
     num_samples = len(df)
     return [mean_value, median_value],num_samples
 
-def remove_nan_values(lst):
-    return [x for x in lst if not (isinstance(x, float) and math.isnan(x))]
-
 #-----------------------------------------------------------------------------------------------------------------
 
 def preprocess_node_data(csv_path,features,target,indx):
@@ -238,7 +235,6 @@ class SimpleRegressor(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-
 def insure_none(x, feature_type='numerical', column_means=None, is_target=False):
     """
     Handle NaN values in tensor data by filling with appropriate values.
@@ -266,9 +262,8 @@ def insure_none(x, feature_type='numerical', column_means=None, is_target=False)
                 x = torch.nan_to_num(x, nan=column_means.item())
             else:
                 # For categorical targets, this is more complex
-                # Ideally targets shouldn't have NaNs, but if they do, we need to handle carefully
                 print("Warning: NaN values in categorical target may cause issues in model training.")
-                # For now, we'll fill with zeros, but this could be improved
+                # Fill with zeros, but this could be improved
                 x = torch.nan_to_num(x, nan=0.0)
         else:
             # For feature variables
@@ -277,6 +272,7 @@ def insure_none(x, feature_type='numerical', column_means=None, is_target=False)
                 if column_means is None:
                     # Calculate mean for each feature, ignoring NaNs
                     column_means = torch.nanmean(x, dim=0, keepdim=True)
+                
                 # Create a mask of NaN values
                 nan_mask = torch.isnan(x)
                 
@@ -291,7 +287,6 @@ def insure_none(x, feature_type='numerical', column_means=None, is_target=False)
             elif feature_type == 'categorical':
                 # For one-hot encoded categorical features
                 # In one-hot encoding, NaN should translate to all zeros in that group
-                # First, identify the nan rows
                 nan_rows = torch.isnan(x).any(dim=1)
                 if nan_rows.any():
                     print(f"Replaced NaN values in {torch.sum(nan_rows).item()} categorical instances with zeros.")
