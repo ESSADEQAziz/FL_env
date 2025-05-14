@@ -116,124 +116,129 @@ def calculate_statistics(file_path, feature):
 
 #-----------------------------------------------------------------------------------------------------------------
 
-def preprocess_node_data(csv_path,features,target,indx):
+def preprocess_node_data(csv_path, features, target, indx):
     df = pd.read_csv(csv_path)
     column_names = df.columns
 
-    num_features=[]
-    cat_features=[]
+    num_features = []
+    cat_features = []
 
     for item in column_names:
-            if item in features :
-                if df[item].dtype in ['int64', 'float64'] :
-                    num_features.append(item)
-                elif df[item].dtype in ['object']:
-                    cat_features.append(item)
+        if item in features:
+            if df[item].dtype in ['int64', 'float64']:
+                num_features.append(item)
+            elif df[item].dtype in ['object']:
+                cat_features.append(item)
+
+    # Handle missing values in numerical features
+    for col in num_features:
+        # Replace NaN values with column mean
+        if df[col].isna().any():
+            col_mean = df[col].mean()
+            df[col].fillna(col_mean, inplace=True)
+            # filled the numerical feature col with the mean col_mean
+
+            
+    # Handle missing values in categorical features
+    for col in cat_features:
+        if df[col].isna().any():
+            df[col].fillna(df[col].mode()[0], inplace=True)
+            # filled the categorical feature col with the mode df[col].mode()[0]
+
+    # Handle missing values in target
+    if df[target].isna().any():
+        if df[target].dtype in ['int64', 'float64']:
+            target_mean = df[target].mean()
+            df[target].fillna(target_mean, inplace=True)
+            # Replaced NaN values in target with mean: target_mean
+        elif df[target].dtype in ['object']:
+            df[target].fillna(df[target].mode()[0], inplace=True)
+            # Replaced NaN values in categorical target with the most frequent value 'mode'
 
     preprocessor = ColumnTransformer([
-            ('num', StandardScaler(), num_features),
-            ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
-            ])
+        ('num', StandardScaler(), num_features),
+        ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
+    ])
 
     if df[target].dtype in ['int64', 'float64']:
         # Preprocessor for target
         target_scaler = StandardScaler()
         Y = target_scaler.fit_transform(df[[target]])  # Keep as 2D array (n_samples, 1)
-
+        label_map = None
     elif df[target].dtype in ['object']:
         target_f = pd.get_dummies(df[target])
         Y = pd.get_dummies(df[target]).values
         label_map = list(target_f.columns)
-        
-    else :
-        raise ValueError("Failure processing taget feature.")
-        
+    else:
+        raise ValueError("Failure processing target feature.")
 
+    # Create appropriate directory structure based on indx
     if indx == 'dl_r':
-        # Save the features processor for the future tests and evaluations 
-        preprocessor_path = "../results/dl_regression/"  
+        preprocessor_path = "../results/dl_regression/"
         os.makedirs(preprocessor_path, exist_ok=True)
-        # Save target scaler separately
         with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
             pickle.dump(target_scaler, f)
-        
-    elif indx == 'ml_r' :
-        # Save the features processor for the future tests and evaluations 
-        preprocessor_path = "../results/ml_regression/"  
+    elif indx == 'ml_r':
+        preprocessor_path = "../results/ml_regression/"
         os.makedirs(preprocessor_path, exist_ok=True)
-        # Save target scaler separately
         with open(os.path.join(preprocessor_path, "target_scaler.pkl"), "wb") as f:
             pickle.dump(target_scaler, f)
-
     elif indx == 'dl_c':
-        preprocessor_path = "../results/dl_classification/"  
+        preprocessor_path = "../results/dl_classification/"
         os.makedirs(preprocessor_path, exist_ok=True)
-
-        with open( preprocessor_path+"label_map.pkl", "wb") as f:
+        with open(preprocessor_path + "label_map.pkl", "wb") as f:
             pickle.dump(label_map, f)
-
     elif indx == 'ml_c':
-        preprocessor_path = "../results/ml_classification/"  
+        preprocessor_path = "../results/ml_classification/"
         os.makedirs(preprocessor_path, exist_ok=True)
-
-        with open( preprocessor_path+"label_map.pkl", "wb") as f:
+        with open(preprocessor_path + "label_map.pkl", "wb") as f:
             pickle.dump(label_map, f)
-    else :
-        raise ValueError(f"Approche not supportable. (only ml and dl)")
-    
+    else:
+        raise ValueError(f"Approach not supported. (only ml and dl)")
 
     X = preprocessor.fit_transform(df[features])
     with open(os.path.join(preprocessor_path, "feature_preprocessor.pkl"), "wb") as f:
-            pickle.dump(preprocessor, f)
-
+        pickle.dump(preprocessor, f)
 
     # If X is sparse (because of OneHotEncoder), convert to dense
     if hasattr(X, "toarray"):
         X = X.toarray()
 
-    return X , Y
+    # Convert to torch tensors and handle any remaining NaN values with insure_none
+    X_tensor = torch.tensor(X, dtype=torch.float32)
+    Y_tensor = torch.tensor(Y, dtype=torch.float32)
+    
+    # Handle any remaining NaN values that might have been introduced in processing
+    X_tensor = insure_none(X_tensor, feature_type='numerical')
+    Y_tensor = insure_none(Y_tensor, feature_type='numerical' if df[target].dtype in ['int64', 'float64'] else 'categorical', is_target=True)
+
+    return X_tensor, Y_tensor
 
 #-----------------------------------------------------------------------------------------------------------------
 
-def split_reshape_normalize (X, Y, test_size=0.2, random_state=42):
-     # Split data into train and test sets
-        X_train, X_test, Y_train, Y_test = train_test_split(
-            X, Y, test_size=test_size, random_state=random_state
-        )
+def split_reshape_normalize(X, Y, test_size=0.2, random_state=42):
+    # Split data into train and test sets
+    X_train, X_test, Y_train, Y_test = train_test_split(
+        X, Y, test_size=test_size, random_state=random_state
+    )
 
-        # Ensure X and Y are float64 before fitting
-        X_train = np.asarray(X_train, dtype=np.float64)
-        Y_train = np.asarray(Y_train, dtype=np.float64)
-        X_test = np.asarray(X_test, dtype=np.float64)
-        Y_test = np.asarray(Y_test, dtype=np.float64)
+    # Ensure X and Y are float64 before fitting
+    X_train = np.asarray(X_train, dtype=np.float64)
+    Y_train = np.asarray(Y_train, dtype=np.float64)
+    X_test = np.asarray(X_test, dtype=np.float64)
+    Y_test = np.asarray(Y_test, dtype=np.float64)
 
+    X_train = torch.tensor(X_train, dtype=torch.float32)
+    Y_train = torch.tensor(Y_train, dtype=torch.float32)        
+    X_test = torch.tensor(X_test, dtype=torch.float32)
+    Y_test = torch.tensor(Y_test, dtype=torch.float32)
 
-        X_train = torch.tensor(X_train, dtype=torch.float32)
-        Y_train = torch.tensor(Y_train, dtype=torch.float32)        
-        X_test = torch.tensor(X_test, dtype=torch.float32)
-        Y_test = torch.tensor(Y_test, dtype=torch.float32)
+    X_train = insure_none(X_train)
+    Y_train = insure_none(Y_train)
+    X_test = insure_none(X_test)
+    Y_test = insure_none(Y_test)
 
-        X_train = insure_none(X_train)
-        Y_train = insure_none(Y_train)
-        X_test = insure_none(X_test)
-        Y_test = insure_none(Y_test)
-
-        return X_train, X_test, Y_train, Y_test
-
-
-class SimpleRegressor(nn.Module):
-    def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
-        super(SimpleRegressor, self).__init__()
-        self.model = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, output_dim)
-        )
-    
-    def forward(self, x):
-        return self.model(x)
+    return X_train, X_test, Y_train, Y_test
 
 def insure_none(x, feature_type='numerical', column_means=None, is_target=False):
     """
@@ -295,6 +300,21 @@ def insure_none(x, feature_type='numerical', column_means=None, is_target=False)
     
     return x
 
+
+class SimpleRegressor(nn.Module):
+    def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
+        super(SimpleRegressor, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, output_dim)
+        )
+    
+    def forward(self, x):
+        return self.model(x)
+
 class LinearRegressionModel(nn.Module):
     def __init__(self, input_dim):
         super().__init__()
@@ -315,7 +335,6 @@ class SimpleClassifier(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-# Define the model
 class LogisticRegressionModel(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(LogisticRegressionModel, self).__init__()

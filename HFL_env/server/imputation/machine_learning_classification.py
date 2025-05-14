@@ -70,18 +70,18 @@ class CustomFedAvg(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = CustomFedAvg(
-        final_round=5,
+        final_round=100,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=5,
-        min_evaluate_clients=5,
-        min_available_clients=5,
+        min_fit_clients=2,
+        min_evaluate_clients=2,
+        min_available_clients=2,
     )
 
     history = fl.server.start_server(
         server_address="central_server:5000",
         strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=5),
+        config=fl.server.ServerConfig(num_rounds=100),
         certificates=(
             Path("../certs/ca.pem").read_bytes(),
             Path("../certs/central_server.pem").read_bytes(),

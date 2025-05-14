@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import pickle
 import json
+from scipy.stats import chi2_contingency, f_oneway
 import os
 from scipy import stats
 import warnings
@@ -257,8 +258,6 @@ def analyze_feature(df, feature):
             'has_outliers': len(outliers) > 0,
             'outliers_count': len(outliers)
         })
-    
-    print("\nAnalysis complete!")
 
 def analyze_dataframe(df=None, csv_path=None):
     """
@@ -346,6 +345,7 @@ def analyze_dataframe(df=None, csv_path=None):
         print("No missing values found in the dataset.")
     
     return df
+
 
 def calculate_spearman_correlation(df, target_col=None):
     """
@@ -577,65 +577,71 @@ def calculate_mutual_information(df, target_col):
     
     return mi_df
 
-def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None, seed=42):
+
+def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=None, task='regression', seed=42):
     """
     Introduce missing values in a specific feature of a DataFrame with a given pattern and rate,
-    while saving only the original values paired with charttime.
+    while saving the original values paired with appropriate time or ID index.
     
     Args:
         df (pandas.DataFrame): DataFrame containing the data
-        feature (str): Name of the feature to introduce missing values
+        feature1 (str): Name of the feature to introduce missing values
         missing_rate (float): Rate of missing values to introduce (between 0 and 1)
         pattern (str): Pattern of missingness ('MCAR', 'MAR', or 'MNAR')
-        target (str, optional): Name of the target variable (needed for MAR pattern)
+        feature2 (str, optional): Name of the target variable (needed for MAR pattern)
+        task (str): Specifies the task type - 'regression' (uses 'charttime' as index) or 
+                   'classification' (uses 'hadm_id' as index)
         seed (int): Random seed for reproducibility
     
     Returns:
         tuple: (df_with_missing, ground_truth) where:
             - df_with_missing: DataFrame with missing values introduced
-            - ground_truth: DataFrame with only original values and charttime
+            - ground_truth: DataFrame with only original values and appropriate index
     """
     
     # Set random seed for reproducibility
     np.random.seed(seed)
     
     # Check if feature exists in DataFrame
-    if feature not in df.columns:
-        raise ValueError(f"Feature '{feature}' not found in DataFrame columns: {df.columns.tolist()}")
+    if feature1 not in df.columns:
+        raise ValueError(f"Feature '{feature1}' not found in DataFrame columns: {df.columns.tolist()}")
     
-    # Check if charttime exists
-    if 'charttime' not in df.columns:
-        raise ValueError("Column 'charttime' not found in DataFrame.")
+    # Determine index column based on task type
+    index_col = 'charttime' if task == 'regression' else 'hadm_id'
+    
+    # Check if index column exists
+    if index_col not in df.columns:
+        raise ValueError(f"Column '{index_col}' not found in DataFrame. Required for task='{task}'")
     
     # Check if we need target for MAR pattern
-    if pattern == 'MAR' and (target is None or target not in df.columns):
-        raise ValueError(f"Target variable is required for MAR pattern. Target '{target}' not found.")
+    if pattern == 'MAR' and (feature2 is None or feature2 not in df.columns):
+        raise ValueError(f"Target variable is required for MAR pattern. Target '{feature2}' not found.")
     
     # Create a copy of the DataFrame to avoid modifying the original
     df_copy = df.copy()
 
-    # Create a ground truth DataFrame with only original values and charttime
+    # Create a ground truth DataFrame with only original values and the appropriate index
     ground_truth = pd.DataFrame(index=df_copy.index)
-    ground_truth['original_values'] = df_copy[feature].copy()
-    ground_truth['charttime'] = df_copy['charttime'].copy()
+    ground_truth['original_values'] = df_copy[feature1].copy()
+    ground_truth[index_col] = df_copy[index_col].copy()
     
     # Check for existing NaN values
-    original_mask = df_copy[feature].isna()
+    original_mask = df_copy[feature1].isna()
     existing_nan_count = original_mask.sum()
     n_samples = len(df_copy)
     existing_nan_rate = existing_nan_count / n_samples
     
     # Calculate how many values to make missing
     if existing_nan_rate > 0:
-        print(f"Warning: Feature '{feature}' already has {existing_nan_rate:.2%} missing values.")
+        print(f"Warning: Feature '{feature1}' already has {existing_nan_rate:.2%} missing values.")
         print("Using only rows with existing values to introduce new missingness.")
     
     # Focus only on non-missing values for introducing missingness
-    valid_mask = ~df_copy[feature].isna()
+    valid_mask = ~df_copy[feature1].isna()
     valid_indices = df_copy.index[valid_mask].tolist()
     
     if len(valid_indices) == 0:
-        raise ValueError(f"Feature '{feature}' has no valid values. Cannot introduce missingness.")
+        raise ValueError(f"Feature '{feature1}' has no valid values. Cannot introduce missingness.")
     
     # Calculate number of values to make missing
     n_to_make_missing = int(n_samples * missing_rate - existing_nan_count)
@@ -662,7 +668,7 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
         # Create a DataFrame with valid indices and target values
         target_df = pd.DataFrame({
             'index': valid_indices,
-            'target_value': df_copy.loc[valid_indices, target].values
+            'target_value': df_copy.loc[valid_indices, feature2].values
         })
         
         # Sort by target values and select indices with lowest target values
@@ -674,7 +680,7 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
         # Create a DataFrame with valid indices and feature values
         feature_df = pd.DataFrame({
             'index': valid_indices,
-            'feature_value': df_copy.loc[valid_indices, feature].values
+            'feature_value': df_copy.loc[valid_indices, feature1].values
         })
         
         # Sort by feature values and select indices with lowest feature values
@@ -685,12 +691,13 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
         raise ValueError("Pattern must be one of: 'MCAR', 'MAR', 'MNAR'")
     
     # Introduce missing values in the copy
-    df_copy.loc[missing_indices, feature] = np.nan
+    df_copy.loc[missing_indices, feature1] = np.nan
     
     # Calculate final missing rate for verification
-    final_missing_count = df_copy[feature].isna().sum()
+    final_missing_count = df_copy[feature1].isna().sum()
     final_missing_rate = final_missing_count / n_samples
     
+    print(f"Task: {task} (using {index_col} as index)")
     print(f"Missingness pattern: {pattern}")
     print(f"Original missing rate: {existing_nan_rate:.2%}")
     print(f"Added {n_to_make_missing} missing values")
@@ -698,7 +705,8 @@ def introduce_missingness(df, feature, missing_rate, pattern='MCAR', target=None
     
     return df_copy, ground_truth
 
-def prepare_clean_dataset(df, feature1, feature2):
+
+def prepare_clean_dataset(df, target=None, features=None):
     """
     Create a new DataFrame with only rows that have non-missing values for both specified features.
     
@@ -710,8 +718,12 @@ def prepare_clean_dataset(df, feature1, feature2):
     Returns:
         pandas.DataFrame: Clean dataset with no missing values in both specified features
     """
-    # Filter rows with non-missing values in both features
-    clean_df = df.dropna(subset=[feature1, feature2])
+    if features is not None :
+        clean_df = df.dropna(subset=features)
+    else :
+        clean_df = df.dropna(subset=[target])
+  
+    
     
     # Report statistics
     original_count = len(df)
@@ -720,11 +732,10 @@ def prepare_clean_dataset(df, feature1, feature2):
     print(f"Original dataset: {original_count} rows")
     print(f"Clean dataset: {clean_count} rows ({clean_count/original_count:.2%} of original)")
     print(f"\nMissing values summary:")
-    print(f"{feature1}: {df[feature1].isna().sum()} missing values")
-    print(f"{feature2}: {df[feature2].isna().sum()} missing values")
     print(f"Rows missing either feature: {original_count - clean_count}")
     
     return clean_df
+
 
 def load_model_for_prediction(model_path, preprocessor_dir, approach):
     """
@@ -1060,6 +1071,7 @@ def predict_with_model(model, df, features, feature_preprocessor, target_transfo
     
     # Convert to numpy
     predictions_np = predictions.detach().numpy()
+
     
     # Process predictions based on approach
     if approach in ['dl_r', 'ml_r']:
@@ -1079,7 +1091,6 @@ def predict_with_model(model, df, features, feature_preprocessor, target_transfo
             # Map 0/1 to actual class labels
             return [target_transformer[i[0]] for i in pred_classes]
 
-# Example function to run the prediction pipeline
 def predict_pipline(dataframe, model_path, preprocessor_dir, features,target, approach):
     """
     Load a model and make predictions on new data.
@@ -1179,6 +1190,7 @@ def insure_none(x, feature_type='numerical', column_means=None, is_target=False)
                     x = torch.nan_to_num(x, nan=0.0)
     
     return x
+
 
 def return_regression_results(dataframe, features, target):
     """
@@ -1283,6 +1295,41 @@ def return_regression_results(dataframe, features, target):
     
     return dataframe
 
+def return_classification_results(dataframe, features):
+    """
+    Run prediction pipeline and add statistical mode column.
+    
+    Args:
+        dataframe: Input DataFrame
+        features: List of feature names
+        target: Target column name
+    
+    Returns:
+        DataFrame with predictions from ML/DL models and statistical aggregations
+    """
+    target = features[0]
+    features=features[1:]
+    # Statistical mode
+    statistical_mode = dataframe[target].mode()[0]
+    
+    # Run prediction for ML and DL models
+    for i in ['dl', 'ml']:
+        model_path = f"../server/results/{i}_results/classification/agg_model/model_round100.pth"
+        preprocessor_dir = f"../nodes/results/{i}_classification/"
+        
+        try:
+            dataframe = predict_pipline(dataframe, model_path, preprocessor_dir, 
+                                        features, target+f'_{i}', f"{i}_c")
+        except Exception as e:
+            print(f"Error during {i.upper()} prediction: {e}")
+            # Create empty prediction column if prediction fails
+            dataframe[target+f'_{i}'] = np.nan
+    
+    # Add mode column if values were loaded successfully
+    if statistical_mode is not None:
+        dataframe[target+'_mode'] = statistical_mode
+
+    return dataframe
 
 def benchmark_predictions(pred_df, original_df, target, time_col='charttime'):
     """
@@ -1635,6 +1682,260 @@ def make_serializable(obj):
         return [make_serializable(i) for i in obj]
     else:
         return obj
+
+
+def _interpret_eta_squared(eta_squared):
+    """Interpret eta squared value"""
+    if eta_squared < 0.01:
+        return "Negligible"
+    elif eta_squared < 0.06:
+        return "Small"
+    elif eta_squared < 0.14:
+        return "Medium"
+    else:
+        return "Large"
+
+def _interpret_cramers_v(v):
+    """Interpret Cramer's V value"""
+    if v < 0.1:
+        return "Negligible"
+    elif v < 0.2:
+        return "Weak"
+    elif v < 0.3:
+        return "Moderate"
+    elif v < 0.4:
+        return "Relatively Strong"
+    else:
+        return "Strong"
+
+def identify_significant_features(df, target_col, significance_threshold=0.05, 
+                                  cramers_v_threshold=0.1, eta_squared_threshold=0.01,
+                                  top_n=None, show_plots=False):
+    """
+    Identifies the most significant features for predicting a categorical target
+    based on statistical metrics (p-values, Cramer's V, and eta squared).
+    
+    Args:
+        df: DataFrame containing the data
+        target_col: Categorical target column
+        significance_threshold: p-value threshold for statistical significance (default: 0.05)
+        cramers_v_threshold: minimum Cramer's V value for categorical features (default: 0.1)
+        eta_squared_threshold: minimum eta squared value for numerical features (default: 0.01)
+        top_n: optional limit on number of features to return (default: None = all significant)
+        show_plots: whether to display distribution plots (default: False)
+    
+    Returns:
+        DataFrame containing the most significant features and their metrics
+    """
+    # Check if target column exists
+    if target_col not in df.columns:
+        print(f"Error: {target_col} not found in dataframe")
+        return None
+    
+    # Get all feature columns (excluding target)
+    feature_cols = [col for col in df.columns if col != target_col]
+    
+    if not feature_cols:
+        print("No features found to analyze")
+        return None
+    
+    print(f"Analyzing {len(feature_cols)} features to identify predictors for '{target_col}'")
+    
+    # Store all feature results
+    all_features_data = []
+    
+    # Process each feature
+    for col in feature_cols:
+        # Create a clean subset with this pair
+        pair_df = df[[col, target_col]].dropna()
+        valid_count = len(pair_df)
+        total_count = len(df)
+        
+        if valid_count < 5:
+            continue
+        
+        # Determine if feature is categorical or numerical
+        is_categorical = False
+        
+        # Check if column is categorical-like
+        if not pd.api.types.is_numeric_dtype(df[col]):
+            is_categorical = True
+        # Or if it's a numeric column with few unique values (likely categorical)
+        elif df[col].nunique() <= 10:
+            is_categorical = True
+        
+        # Analysis based on feature type
+        feature_data = {
+            'Feature': col,
+            'Type': 'categorical' if is_categorical else 'numerical',
+            'Valid Observations': valid_count,
+            'Data Coverage': f"{valid_count/total_count:.1%}"
+        }
+        
+        if is_categorical:
+            metrics = _analyze_cat_feature_metrics(pair_df, col, target_col)
+            if metrics:
+                feature_data.update({
+                    'Test': 'Chi-square',
+                    'Statistic': metrics['chi2'],
+                    'p-value': metrics['p_value'],
+                    'Effect Size': metrics['cramers_v'],
+                    'Effect Size Name': "Cramer's V",
+                    'Interpretation': metrics['interpretation'],
+                    'Significant': metrics['p_value'] <= significance_threshold,
+                    'Strong Enough': metrics['cramers_v'] >= cramers_v_threshold,
+                    'Low Expected Freq': metrics['low_expected_freq'],
+                    'DoF': metrics['dof']
+                })
+                all_features_data.append(feature_data)
+        else:
+            metrics = _analyze_num_feature_metrics(pair_df, col, target_col, False)
+            if metrics and 'error' not in metrics:
+                feature_data.update({
+                    'Test': 'ANOVA',
+                    'Statistic': metrics['f_stat'],
+                    'p-value': metrics['p_value'],
+                    'Effect Size': metrics['eta_squared'],
+                    'Effect Size Name': "Eta squared",
+                    'Interpretation': metrics['interpretation'],
+                    'Significant': metrics['p_value'] <= significance_threshold,
+                    'Strong Enough': metrics['eta_squared'] >= eta_squared_threshold,
+                    'Low Expected Freq': False,
+                    'DoF': None
+                })
+                all_features_data.append(feature_data)
+    
+    # If no valid features found
+    if not all_features_data:
+        print("No valid features found for analysis")
+        return None
+        
+    # Create DataFrame with all features
+    all_features_df = pd.DataFrame(all_features_data)
+    
+    # Sort by significance and effect size
+    all_features_df['Recommended'] = all_features_df['Significant'] & all_features_df['Strong Enough']
+    all_features_df = all_features_df.sort_values(['Recommended', 'Effect Size'], ascending=[False, False])
+    
+    # Format the full results table
+    display_cols = ['Feature', 'Type', 'Test', 'Statistic', 'p-value', 
+                    'Effect Size', 'Effect Size Name', 'Interpretation',
+                    'Significant', 'Strong Enough', 'Recommended', 
+                    'Valid Observations', 'Data Coverage']
+    
+    if 'Low Expected Freq' in all_features_df.columns:
+        display_cols.insert(display_cols.index('Valid Observations'), 'Low Expected Freq')
+    
+    full_results = all_features_df[display_cols].copy()
+    
+    # Filter for significant features
+    sig_features = all_features_df[all_features_df['Recommended']].copy()
+    
+    # Apply top_n limit if specified
+    if top_n is not None and top_n > 0 and len(sig_features) > top_n:
+        sig_features = sig_features.head(top_n)
+    
+    # Display the results table
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', 1000)
+    
+    print("\n=========================================== Full Analysis Results =========================================== ")
+    print(full_results)
+    
+    print("\n===========================================  RECOMMENDED FEATURES FOR PREDICTING", target_col.upper(), "=========================================== ")
+    if len(sig_features) > 0:
+        # Simplify the recommended features display
+        recommended_cols = ['Feature', 'Type', 'Effect Size', 'Effect Size Name', 
+                           'p-value', 'Interpretation']
+        print(sig_features[recommended_cols])
+    else:
+        print("No features meet the significance and effect size criteria.")
+        print(f"Consider relaxing the thresholds (p-value < {significance_threshold}, effect size thresholds).")
+    
+def _analyze_num_feature_metrics(df, feature_col, target_col, show_plot=False):
+    """Get metrics for numerical feature vs categorical target"""
+    try:
+        # ANOVA test
+        groups = [df[df[target_col] == cat][feature_col].values for cat in df[target_col].unique()]
+        
+        if len(groups) < 2 or not all(len(g) > 1 for g in groups):
+            return {
+                'error': 'insufficient_groups',
+                'mean': df[feature_col].mean(),
+                'std': df[feature_col].std()
+            }
+        
+        # Run ANOVA
+        f_stat, p_value = f_oneway(*groups)
+        
+        # Calculate eta squared (effect size)
+        grand_mean = df[feature_col].mean()
+        total_ss = sum((df[feature_col] - grand_mean) ** 2)
+        between_ss = sum(len(g) * (np.mean(g) - grand_mean) ** 2 for g in groups)
+        eta_squared = between_ss / total_ss if total_ss > 0 else 0
+        
+        result = {
+            'f_stat': f_stat,
+            'p_value': p_value,
+            'eta_squared': eta_squared,
+            'interpretation': _interpret_eta_squared(eta_squared)
+        }
+        
+        # Distribution plot if requested (disabled by default)
+        if show_plot and p_value <= 0.05 and eta_squared >= 0.01:
+            plt.figure(figsize=(10, 6))
+            
+            # Plot KDE for each category
+            for category in df[target_col].unique():
+                subset = df[df[target_col] == category]
+                sns.kdeplot(subset[feature_col], label=f"{target_col}={category}")
+            
+            plt.title(f'Distribution of {feature_col} by {target_col}')
+            plt.xlabel(feature_col)
+            plt.ylabel('Density')
+            plt.legend()
+            plt.tight_layout()
+            plt.show()
+        
+        return result
+    except:
+        return None
+
+def _analyze_cat_feature_metrics(df, feature_col, target_col):
+    """Get metrics for categorical feature vs categorical target"""
+    try:
+        # Calculate contingency table
+        cross_tab = pd.crosstab(df[feature_col], df[target_col])
+        
+        # Chi-square test
+        chi2, p, dof, expected = chi2_contingency(cross_tab)
+        
+        # Calculate Cramer's V
+        n = cross_tab.sum().sum()
+        phi2 = chi2 / n
+        r, k = cross_tab.shape
+        phi2_corr = max(0, phi2 - ((k-1)*(r-1))/(n-1))
+        r_corr = r - (r-1)**2/(n-1)
+        k_corr = k - (k-1)**2/(n-1)
+        cramers_v = np.sqrt(phi2_corr / min(k_corr-1, r_corr-1)) if min(k_corr-1, r_corr-1) > 0 else 0
+        
+        # Check for low expected frequencies
+        low_exp_freq = (expected < 5).any()
+        
+        return {
+            'chi2': chi2,
+            'p_value': p,
+            'dof': dof,
+            'cramers_v': cramers_v,
+            'interpretation': _interpret_cramers_v(cramers_v),
+            'low_expected_freq': low_exp_freq
+        }
+    except:
+        return None
+
+   
+
+
 
 
 

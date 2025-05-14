@@ -114,9 +114,10 @@ class NodeClient(fl.client.NumPyClient):
 
         
 if __name__ == "__main__":
-    target_table = "../data/labevents.csv"
-    feature_x = ['valuenum','flag']
-    feature_y = "priority"
+
+    target_table = "../data/extracted_lab_results.csv"
+    feature_x = ['creatinine','blood_glucose']
+    feature_y = "gender"
 
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")

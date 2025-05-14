@@ -105,15 +105,15 @@ class NodeClient(fl.client.NumPyClient):
 
 if __name__ == "__main__":
 
-    target_table = "../data/admissions.csv"
-    features_x = ['insurance', 'marital_status']
-    feature_y = "race"
+    target_table = "../data/extracted_lab_results.csv"
+    feature_x = ['creatinine','blood_glucose']
+    feature_y = "gender"
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")
     public_key = Path(f"../auth_keys/node{NODE_ID}_key.pub")
     ca_cert = Path(f"../certs/ca.pem").read_bytes()
 
-    client = NodeClient(target_table, features_x, feature_y).to_client()
+    client = NodeClient(target_table, feature_x, feature_y).to_client()
     fl.client.start_client(
         server_address="central_server:5000",
         client=client,
