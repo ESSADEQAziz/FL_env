@@ -10,10 +10,15 @@ import pickle
 import json
 from scipy.stats import chi2_contingency, f_oneway
 import os
+import math
 from scipy import stats
 import warnings
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, explained_variance_score
-import math
+from sklearn.metrics import (
+        mean_squared_error, mean_absolute_error, r2_score, 
+        explained_variance_score, accuracy_score, precision_score,
+        recall_score, f1_score, confusion_matrix, classification_report
+    )
+
 
 def analyze_feature(df, feature):
     """
@@ -606,8 +611,8 @@ def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=N
     if feature1 not in df.columns:
         raise ValueError(f"Feature '{feature1}' not found in DataFrame columns: {df.columns.tolist()}")
     
-    # Determine index column based on task type
-    index_col = 'charttime' if task == 'regression' else 'hadm_id'
+    # Determine index column based on task type (same for both)
+    index_col = 'charttime' 
     
     # Check if index column exists
     if index_col not in df.columns:
@@ -1331,30 +1336,31 @@ def return_classification_results(dataframe, features):
 
     return dataframe
 
-def benchmark_predictions(pred_df, original_df, target, time_col='charttime'):
+
+def benchmark_predictions(pred_df, original_df, target, task_type='regression'):
     """
     Perform detailed benchmarking of predicted values against original values.
     
     Args:
         pred_df: DataFrame containing predictions from various approaches
-        original_df: DataFrame containing original values and charttime
+        original_df: DataFrame containing original values
         target: Name of the target variable (without suffixes)
-        time_col: Name of the time column for merging
+        index: Column to use as the index for merging ('charttime' for regression, 'hadm_id' for classification)
+        task_type: 'regression' or 'classification'
     
     Returns:
         Dictionary with benchmark results
     """
-
-    path = "./benchmark_results"
-
-    os.makedirs(os.path.dirname(path), exist_ok=True)
     
     print(f"{'='*80}")
     print(f"BENCHMARKING PREDICTIONS FOR {target.upper()}")
     print(f"{'='*80}")
+
+
+    index = 'charttime'
     
     # Merge prediction dataframe with original values
-    benchmark_df = pd.merge(pred_df, original_df, on=time_col, how='inner')
+    benchmark_df = pd.merge(pred_df, original_df, on=index, how='inner')
     
     # Identify all prediction columns (those starting with target_)
     pred_columns = [col for col in benchmark_df.columns if col.startswith(target+'_')]
@@ -1363,7 +1369,7 @@ def benchmark_predictions(pred_df, original_df, target, time_col='charttime'):
     for col in pred_columns:
         print(f"  - {col}")
     
-    print(f"\nAnalyzing {len(benchmark_df)} rows with matching timestamps.")
+    print(f"\nAnalyzing {len(benchmark_df)} rows with matching {index} values.")
     
     # Global metrics table
     print(f"\n{'-'*80}")
@@ -1371,65 +1377,119 @@ def benchmark_predictions(pred_df, original_df, target, time_col='charttime'):
     print(f"{'-'*80}")
     
     metrics = {}
-    metrics_df = pd.DataFrame(
-        columns=['Approach', 'RMSE', 'MAE', 'MAPE (%)', 'R²', 'Explained Variance', 
-                 'Mean Error', 'Error Std', 'Correlation']
-    )
+    
+    # Set up metrics dataframe based on task type
+    if task_type == 'regression':
+        path = "./benchmark_results/regression/"
+        metrics_df = pd.DataFrame(
+            columns=['Approach', 'RMSE', 'MAE', 'MAPE (%)', 'R²', 'Explained Variance', 
+                    'Mean Error', 'Error Std', 'Correlation']
+        )
+    else:  # classification
+        path = "./benchmark_results/classification/"
+        metrics_df = pd.DataFrame(
+            columns=['Approach', 'Accuracy', 'Precision', 'Recall', 'F1 Score']
+        )
+    
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     
     # Calculate metrics for each prediction approach
     for i, col in enumerate(pred_columns):
-        # Calculate error metrics
+        # Get true values and predictions
         true = benchmark_df['original_values']
         pred = benchmark_df[col]
         
-        rmse = math.sqrt(mean_squared_error(true, pred))
-        mae = mean_absolute_error(true, pred)
-        
-        # Calculate MAPE with handling for zero values
-        with np.errstate(divide='ignore', invalid='ignore'):
-            mape = np.mean(np.abs((true - pred) / true)) * 100
-            if np.isnan(mape) or np.isinf(mape):
-                # Filter out zeros before calculating MAPE
-                nonzero_idx = true != 0
-                if nonzero_idx.sum() > 0:
-                    mape = np.mean(np.abs((true[nonzero_idx] - pred[nonzero_idx]) / true[nonzero_idx])) * 100
-                else:
-                    mape = np.nan
-        
-        r2 = r2_score(true, pred)
-        exp_var = explained_variance_score(true, pred)
-        
-        # Error analysis
-        errors = true - pred
-        mean_error = np.mean(errors)
-        std_error = np.std(errors)
-        
-        # Correlation
-        correlation, _ = stats.pearsonr(true, pred)
-        
-        # Store metrics
         approach_name = col.replace(target+'_', '')
-        metrics[approach_name] = {
-            'rmse': rmse,
-            'mae': mae,
-            'mape': mape,
-            'r2': r2,
-            'exp_var': exp_var,
-            'mean_error': mean_error,
-            'std_error': std_error,
-            'correlation': correlation,
-            'predictions': pred,
-            'true_values': true
-        }
         
-        # Add to metrics dataframe
-        metrics_df.loc[i] = [
-            approach_name, rmse, mae, f"{mape:.2f}", r2, exp_var, 
-            mean_error, std_error, correlation
-        ]
+        if task_type == 'regression':
+            # Calculate regression metrics
+            rmse = math.sqrt(mean_squared_error(true, pred))
+            mae = mean_absolute_error(true, pred)
+            
+            # Calculate MAPE with handling for zero values
+            with np.errstate(divide='ignore', invalid='ignore'):
+                mape = np.mean(np.abs((true - pred) / true)) * 100
+                if np.isnan(mape) or np.isinf(mape):
+                    # Filter out zeros before calculating MAPE
+                    nonzero_idx = true != 0
+                    if nonzero_idx.sum() > 0:
+                        mape = np.mean(np.abs((true[nonzero_idx] - pred[nonzero_idx]) / true[nonzero_idx])) * 100
+                    else:
+                        mape = np.nan
+            
+            r2 = r2_score(true, pred)
+            exp_var = explained_variance_score(true, pred)
+            
+            # Error analysis
+            errors = true - pred
+            mean_error = np.mean(errors)
+            std_error = np.std(errors)
+            
+            # Correlation
+            correlation, _ = stats.pearsonr(true, pred)
+            
+            # Store metrics
+            metrics[approach_name] = {
+                'rmse': rmse,
+                'mae': mae,
+                'mape': mape,
+                'r2': r2,
+                'exp_var': exp_var,
+                'mean_error': mean_error,
+                'std_error': std_error,
+                'correlation': correlation,
+                'predictions': pred,
+                'true_values': true
+            }
+            
+            # Add to metrics dataframe
+            metrics_df.loc[i] = [
+                approach_name, rmse, mae, f"{mape:.2f}", r2, exp_var, 
+                mean_error, std_error, correlation
+            ]
+            
+        else:  # classification
+            # Calculate classification metrics
+            accuracy = accuracy_score(true, pred)
+            
+            # Handle binary and multiclass cases with categorical labels
+            unique_classes = np.unique(true)
+            
+            # For binary classification with string labels, explicitly set pos_label
+            if len(unique_classes) <= 2:
+                # Always use the first class as the positive label
+                pos_label = unique_classes[0]
+                precision = precision_score(true, pred, pos_label=pos_label, zero_division=0)
+                recall = recall_score(true, pred, pos_label=pos_label, zero_division=0)
+                f1 = f1_score(true, pred, pos_label=pos_label, zero_division=0)
+            else:
+                # For multiclass
+                precision = precision_score(true, pred, average='weighted', zero_division=0)
+                recall = recall_score(true, pred, average='weighted', zero_division=0)
+                f1 = f1_score(true, pred, average='weighted', zero_division=0)
+            
+            # Store metrics
+            metrics[approach_name] = {
+                'accuracy': accuracy,
+                'precision': precision,
+                'recall': recall,
+                'f1': f1,
+                'predictions': pred,
+                'true_values': true
+            }
+            
+            # Add to metrics dataframe
+            metrics_df.loc[i] = [
+                approach_name, accuracy, precision, recall, f1
+            ]
     
-    # Sort metrics by RMSE (best performers first)
-    metrics_df = metrics_df.sort_values('RMSE')
+    # Sort metrics by primary metric (RMSE for regression, Accuracy for classification)
+    if task_type == 'regression':
+        metrics_df = metrics_df.sort_values('RMSE')
+        primary_metric = 'RMSE'
+    else:
+        metrics_df = metrics_df.sort_values('Accuracy', ascending=False)
+        primary_metric = 'Accuracy'
     
     # Display metrics table
     pd.set_option('display.float_format', '{:.4f}'.format)
@@ -1437,174 +1497,316 @@ def benchmark_predictions(pred_df, original_df, target, time_col='charttime'):
     
     # Identify best approach
     best_approach = metrics_df.iloc[0]['Approach']
-    print(f"\nBest performing approach: {best_approach} (RMSE: {metrics_df.iloc[0]['RMSE']:.4f})")
+    if task_type == 'regression':
+        print(f"\nBest performing approach: {best_approach} (RMSE: {metrics_df.iloc[0]['RMSE']:.4f})")
+    else:
+        print(f"\nBest performing approach: {best_approach} (Accuracy: {metrics_df.iloc[0]['Accuracy']:.4f})")
     
     # Create visualizations
     print(f"\n{'-'*80}")
     print("VISUALIZING PREDICTIONS VS ACTUAL VALUES")
     print(f"{'-'*80}")
     
-    # 1. Actual vs Predicted scatter plots
     colors = ['blue', 'green', 'red', 'purple', 'orange', 'brown', 'pink', 'grey']
-    plt.figure(figsize=(18, 10))
     
-    for i, approach_name in enumerate(metrics.keys()):
-        plt.subplot(2, (len(metrics) + 1) // 2, i+1)
+    if task_type == 'regression':
+        # 1. Actual vs Predicted scatter plots for regression
+        plt.figure(figsize=(18, 10))
         
-        true = metrics[approach_name]['true_values']
-        pred = metrics[approach_name]['predictions']
+        for i, approach_name in enumerate(metrics.keys()):
+            plt.subplot(2, (len(metrics) + 1) // 2, i+1)
+            
+            true = metrics[approach_name]['true_values']
+            pred = metrics[approach_name]['predictions']
+            
+            plt.scatter(true, pred, alpha=0.6, color=colors[i % len(colors)])
+            
+            # Add perfect prediction line
+            min_val = min(true.min(), pred.min())
+            max_val = max(true.max(), pred.max())
+            plt.plot([min_val, max_val], [min_val, max_val], 'r--')
+            
+            # Add regression line
+            z = np.polyfit(true, pred, 1)
+            p = np.poly1d(z)
+            plt.plot(true, p(true), color=colors[i % len(colors)], linestyle='-')
+            
+            plt.xlabel('Actual Values')
+            plt.ylabel('Predicted Values')
+            plt.title(f'{approach_name}: R² = {metrics[approach_name]["r2"]:.4f}')
+            
+            # Add RMSE and correlation to plot
+            plt.annotate(f'RMSE: {metrics[approach_name]["rmse"]:.4f}\nCorr: {metrics[approach_name]["correlation"]:.4f}', 
+                       xy=(0.05, 0.85), xycoords='axes fraction')
         
-        plt.scatter(true, pred, alpha=0.6, color=colors[i % len(colors)])
+        plt.tight_layout()
+        plt.savefig(f'{path}/{target}_predictions_scatter.png', dpi=300)
+        plt.show()
         
-        # Add perfect prediction line
-        min_val = min(true.min(), pred.min())
-        max_val = max(true.max(), pred.max())
-        plt.plot([min_val, max_val], [min_val, max_val], 'r--')
+        # 2. Error distribution plots for regression
+        plt.figure(figsize=(18, 10))
         
-        # Add regression line
-        z = np.polyfit(true, pred, 1)
-        p = np.poly1d(z)
-        plt.plot(true, p(true), color=colors[i % len(colors)], linestyle='-')
+        for i, approach_name in enumerate(metrics.keys()):
+            plt.subplot(2, (len(metrics) + 1) // 2, i+1)
+            
+            true = metrics[approach_name]['true_values']
+            pred = metrics[approach_name]['predictions']
+            errors = true - pred
+            
+            sns.histplot(errors, kde=True, color=colors[i % len(colors)])
+            plt.axvline(x=0, color='r', linestyle='--')
+            plt.xlabel('Error (Actual - Predicted)')
+            plt.ylabel('Frequency')
+            plt.title(f'{approach_name}: Error Distribution')
+            
+            # Add error stats to plot
+            plt.annotate(f'Mean: {metrics[approach_name]["mean_error"]:.4f}\nStd: {metrics[approach_name]["std_error"]:.4f}', 
+                       xy=(0.05, 0.85), xycoords='axes fraction')
         
-        plt.xlabel('Actual Values')
-        plt.ylabel('Predicted Values')
-        plt.title(f'{approach_name}: R² = {metrics[approach_name]["r2"]:.4f}')
+        plt.tight_layout()
+        plt.savefig(f'{path}/{target}_error_distribution.png', dpi=300)
+        plt.show()
         
-        # Add RMSE and correlation to plot
-        plt.annotate(f'RMSE: {metrics[approach_name]["rmse"]:.4f}\nCorr: {metrics[approach_name]["correlation"]:.4f}', 
-                   xy=(0.05, 0.85), xycoords='axes fraction')
-    
-    plt.tight_layout()
-    plt.savefig(f'./benchmark_results/{target}_predictions_scatter.png', dpi=300)
-    plt.show()
-    
-    # 2. Error distribution plots
-    plt.figure(figsize=(18, 10))
-    
-    for i, approach_name in enumerate(metrics.keys()):
-        plt.subplot(2, (len(metrics) + 1) // 2, i+1)
+        # 3. Time series plot of actual vs best predictions (only for regression)
+        plt.figure(figsize=(15, 8))
         
-        true = metrics[approach_name]['true_values']
-        pred = metrics[approach_name]['predictions']
-        errors = true - pred
+        # Sort by timestamp
+        time_series_df = benchmark_df.sort_values(by=index)
         
-        sns.histplot(errors, kde=True, color=colors[i % len(colors)])
-        plt.axvline(x=0, color='r', linestyle='--')
-        plt.xlabel('Error (Actual - Predicted)')
-        plt.ylabel('Frequency')
-        plt.title(f'{approach_name}: Error Distribution')
+        # Get the best approach based on RMSE
+        best_pred_col = target + '_' + best_approach
         
-        # Add error stats to plot
-        plt.annotate(f'Mean: {metrics[approach_name]["mean_error"]:.4f}\nStd: {metrics[approach_name]["std_error"]:.4f}', 
-                   xy=(0.05, 0.85), xycoords='axes fraction')
+        plt.plot(time_series_df[index], time_series_df['original_values'], 'b-', label='Actual Values')
+        plt.plot(time_series_df[index], time_series_df[best_pred_col], 'r--', label=f'Predicted ({best_approach})')
+        
+        plt.xlabel('Time')
+        plt.ylabel(target)
+        plt.title(f'Actual vs Best Predictions ({best_approach}) Over Time')
+        plt.legend()
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.savefig(f'{path}/{target}_time_series.png', dpi=300)
+        plt.show()
+        
+        # 4. Boxplot of errors by approach for regression
+        plt.figure(figsize=(12, 8))
+        
+        error_data = []
+        for approach_name in metrics.keys():
+            pred_col = target + '_' + approach_name
+            errors = benchmark_df['original_values'] - benchmark_df[pred_col]
+            for error in errors:
+                error_data.append({
+                    'Approach': approach_name,
+                    'Error': error
+                })
+        
+        error_df = pd.DataFrame(error_data)
+        
+        sns.boxplot(x='Approach', y='Error', data=error_df)
+        plt.axhline(y=0, color='r', linestyle='--')
+        plt.title('Error Distribution by Approach')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.savefig(f'{path}/{target}_error_boxplot.png', dpi=300)
+        plt.show()
+        
+        # 5. Heatmap of prediction correlations (only for regression)
+        plt.figure(figsize=(10, 8))
+        
+        pred_cols = [target + '_' + approach for approach in metrics.keys()]
+        corr_matrix = benchmark_df[pred_cols + ['original_values']].corr()
+        
+        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+        plt.title('Correlation Between Different Prediction Approaches')
+        plt.tight_layout()
+        plt.savefig(f'{path}/{target}_prediction_correlations.png', dpi=300)
+        plt.show()
+        
+    else:  # Classification visualizations
+        # 1. Confusion matrices for each approach
+        for approach_name in metrics.keys():
+            pred_col = target + '_' + approach_name
+            true = benchmark_df['original_values']
+            pred = benchmark_df[pred_col]
+            
+            cm = confusion_matrix(true, pred)
+            unique_classes = np.unique(np.concatenate([true, pred]))
+            
+            plt.figure(figsize=(10, 8))
+            sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                        xticklabels=unique_classes,
+                        yticklabels=unique_classes)
+            plt.xlabel('Predicted')
+            plt.ylabel('True')
+            plt.title(f'Confusion Matrix - {approach_name}')
+            plt.tight_layout()
+            plt.savefig(f'{path}/{target}_{approach_name}_confusion_matrix.png', dpi=300)
+            plt.show()
+        
+        # 2. Classification report visualization for best approach
+        best_pred_col = target + '_' + best_approach
+        true = benchmark_df['original_values']
+        pred = benchmark_df[best_pred_col]
+        
+        # Get classification report as dictionary
+        report = classification_report(true, pred, output_dict=True)
+        
+        # Convert to dataframe for visualization
+        report_df = pd.DataFrame(report).transpose()
+        
+        plt.figure(figsize=(12, 8))
+        sns.heatmap(report_df.iloc[:-3, :3], annot=True, cmap='Blues')
+        plt.title(f'Classification Report - {best_approach}')
+        plt.tight_layout()
+        plt.savefig(f'{path}/{target}_classification_report.png', dpi=300)
+        plt.show()
+        
+        # 3. Agreement heatmap (instead of correlation for categorical data)
+        plt.figure(figsize=(10, 8))
+        
+        # Create a numeric agreement matrix
+        pred_cols = [target + '_' + approach for approach in metrics.keys()]
+        all_cols = pred_cols + ['original_values']
+        
+        # Initialize a numpy array for the agreement values
+        n = len(all_cols)
+        agreement_values = np.zeros((n, n))
+        
+        # Calculate agreement percentages
+        for i, col1 in enumerate(all_cols):
+            for j, col2 in enumerate(all_cols):
+                if i == j:
+                    agreement_values[i, j] = 1.0
+                else:
+                    # Calculate percentage where predictions match
+                    agreement_values[i, j] = (benchmark_df[col1] == benchmark_df[col2]).mean()
+        
+        # Create a heatmap with the numeric values
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(agreement_values, annot=True, cmap='Blues', vmin=0, vmax=1,
+                   xticklabels=[col.replace(target+'_', '') if col.startswith(target) else col 
+                               for col in all_cols],
+                   yticklabels=[col.replace(target+'_', '') if col.startswith(target) else col 
+                               for col in all_cols])
+        plt.title('Agreement Between Different Prediction Approaches')
+        plt.tight_layout()
+        plt.savefig(f'{path}/{target}_prediction_agreement.png', dpi=300)
+        plt.show()
     
-    plt.tight_layout()
-    plt.savefig(f'./benchmark_results/{target}_error_distribution.png', dpi=300)
-    plt.show()
-    
-    # 3. Time series plot of actual vs best predictions
-    plt.figure(figsize=(15, 8))
-    
-    # Sort by timestamp
-    time_series_df = benchmark_df.sort_values(by=time_col)
-    
-    # Get the best approach based on RMSE
-    best_pred_col = target + '_' + best_approach
-    
-    plt.plot(time_series_df[time_col], time_series_df['original_values'], 'b-', label='Actual Values')
-    plt.plot(time_series_df[time_col], time_series_df[best_pred_col], 'r--', label=f'Predicted ({best_approach})')
-    
-    plt.xlabel('Time')
-    plt.ylabel(target)
-    plt.title(f'Actual vs Best Predictions ({best_approach}) Over Time')
-    plt.legend()
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.savefig(f'./benchmark_results/{target}_time_series.png', dpi=300)
-    plt.show()
-    
-    # 4. Boxplot of errors by approach
-    plt.figure(figsize=(12, 8))
-    
-    error_data = []
-    for approach_name in metrics.keys():
-        pred_col = target + '_' + approach_name
-        errors = benchmark_df['original_values'] - benchmark_df[pred_col]
-        for error in errors:
-            error_data.append({
-                'Approach': approach_name,
-                'Error': error
-            })
-    
-    error_df = pd.DataFrame(error_data)
-    
-    sns.boxplot(x='Approach', y='Error', data=error_df)
-    plt.axhline(y=0, color='r', linestyle='--')
-    plt.title('Error Distribution by Approach')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.savefig(f'./benchmark_results/{target}_error_boxplot.png', dpi=300)
-    plt.show()
-    
-    # 5. Heatmap of prediction correlations
-    plt.figure(figsize=(10, 8))
-    
-    pred_cols = [target + '_' + approach for approach in metrics.keys()]
-    corr_matrix = benchmark_df[pred_cols + ['original_values']].corr()
-    
-    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
-    plt.title('Correlation Between Different Prediction Approaches')
-    plt.tight_layout()
-    plt.savefig(f'./benchmark_results/{target}_prediction_correlations.png', dpi=300)
-    plt.show()
-    
-    # Detailed error analysis table
+    # Detailed analysis section
     print(f"\n{'-'*80}")
-    print("DETAILED ERROR ANALYSIS")
+    if task_type == 'regression':
+        print("DETAILED ERROR ANALYSIS")
+    else:
+        print("DETAILED CLASSIFICATION ANALYSIS")
     print(f"{'-'*80}")
     
-    # Create bins for error analysis
-    error_analysis = {}
-    
-    for approach_name in metrics.keys():
-        pred_col = target + '_' + approach_name
+    if task_type == 'regression':
+        # Create bins for error analysis (regression)
+        error_analysis = {}
         
-        # Calculate percent errors
-        true = benchmark_df['original_values']
-        pred = benchmark_df[pred_col]
-        abs_errors = np.abs(true - pred)
+        for approach_name in metrics.keys():
+            pred_col = target + '_' + approach_name
+            
+            # Calculate percent errors
+            true = benchmark_df['original_values']
+            pred = benchmark_df[pred_col]
+            abs_errors = np.abs(true - pred)
+            
+            # Count errors within different ranges
+            error_ranges = {
+                '< 5%': np.mean(abs_errors / true < 0.05) * 100,
+                '5-10%': np.mean((abs_errors / true >= 0.05) & (abs_errors / true < 0.10)) * 100,
+                '10-20%': np.mean((abs_errors / true >= 0.10) & (abs_errors / true < 0.20)) * 100,
+                '> 20%': np.mean(abs_errors / true >= 0.20) * 100
+            }
+            
+            error_analysis[approach_name] = error_ranges
         
-        # Count errors within different ranges
-        error_ranges = {
-            '< 5%': np.mean(abs_errors / true < 0.05) * 100,
-            '5-10%': np.mean((abs_errors / true >= 0.05) & (abs_errors / true < 0.10)) * 100,
-            '10-20%': np.mean((abs_errors / true >= 0.10) & (abs_errors / true < 0.20)) * 100,
-            '> 20%': np.mean(abs_errors / true >= 0.20) * 100
-        }
+        error_analysis_df = pd.DataFrame(error_analysis).T
+        print("Percentage of predictions within error ranges:")
+        print(error_analysis_df)
         
-        error_analysis[approach_name] = error_ranges
-    
-    error_analysis_df = pd.DataFrame(error_analysis).T
-    print("Percentage of predictions within error ranges:")
-    print(error_analysis_df)
+    else:
+        # Class-wise metrics for classification
+        class_metrics = {}
+        
+        for approach_name in metrics.keys():
+            pred_col = target + '_' + approach_name
+            true = benchmark_df['original_values']
+            pred = benchmark_df[pred_col]
+            
+            # Get per-class metrics
+            cls_report = classification_report(true, pred, output_dict=True)
+            
+            # Only store class metrics (not avg/total)
+            class_metrics[approach_name] = {k: v for k, v in cls_report.items() 
+                                          if k not in ['accuracy', 'macro avg', 'weighted avg']}
+        
+        # Print class-wise metrics for best approach
+        print(f"Class-wise metrics for best approach ({best_approach}):")
+        for cls, metrics_dict in class_metrics[best_approach].items():
+            print(f"  Class {cls}:")
+            print(f"    Precision: {metrics_dict['precision']:.4f}")
+            print(f"    Recall: {metrics_dict['recall']:.4f}")
+            print(f"    F1-score: {metrics_dict['f1-score']:.4f}")
+            print(f"    Support: {metrics_dict['support']}")
+        
+        # Create a dataframe for comparison of class-wise metrics
+        error_analysis_data = {}
+        
+        # For each class, compare precision/recall across approaches
+        unique_classes = np.unique(benchmark_df['original_values'])
+        for approach_name in metrics.keys():
+            approach_metrics = {}
+            for cls in unique_classes:
+                if cls in class_metrics[approach_name]:
+                    cls_metrics = class_metrics[approach_name][cls]
+                    for metric, value in cls_metrics.items():
+                        if metric != 'support':  # Exclude support from comparison
+                            approach_metrics[f"{cls}_{metric}"] = value
+            
+            error_analysis_data[approach_name] = approach_metrics
+        
+        # Convert to DataFrame
+        if error_analysis_data:
+            error_analysis_df = pd.DataFrame(error_analysis_data)
+            print("\nComparison of class-wise metrics across approaches:")
+            print(error_analysis_df)
+        else:
+            error_analysis_df = pd.DataFrame()
     
     # Summary of results
     print(f"\n{'-'*80}")
     print("SUMMARY OF FINDINGS")
     print(f"{'-'*80}")
     
-    # Sort approaches by RMSE
-    approaches_by_rmse = metrics_df.sort_values('RMSE')['Approach'].tolist()
+    if task_type == 'regression':
+        # Sort approaches by RMSE
+        approaches_by_metric = metrics_df.sort_values('RMSE')['Approach'].tolist()
+        
+        print(f"1. Best performing approach: {best_approach}")
+        print(f"2. Ranking of approaches by RMSE (best to worst):")
+        for i, approach in enumerate(approaches_by_metric):
+            print(f"   {i+1}. {approach} (RMSE: {metrics_df[metrics_df['Approach'] == approach]['RMSE'].values[0]:.4f})")
+        
+        print(f"3. The best approach ({best_approach}) has:")
+        print(f"   - {error_analysis_df.loc[best_approach]['< 5%']:.1f}% of predictions within 5% of actual values")
+        print(f"   - {error_analysis_df.loc[best_approach]['< 5%'] + error_analysis_df.loc[best_approach]['5-10%']:.1f}% of predictions within 10% of actual values")
     
-    print(f"1. Best performing approach: {best_approach}")
-    print(f"2. Ranking of approaches by RMSE (best to worst):")
-    for i, approach in enumerate(approaches_by_rmse):
-        print(f"   {i+1}. {approach} (RMSE: {metrics_df[metrics_df['Approach'] == approach]['RMSE'].values[0]:.4f})")
-    
-    print(f"3. The best approach ({best_approach}) has:")
-    print(f"   - {error_analysis_df.loc[best_approach]['< 5%']:.1f}% of predictions within 5% of actual values")
-    print(f"   - {error_analysis_df.loc[best_approach]['< 5%'] + error_analysis_df.loc[best_approach]['5-10%']:.1f}% of predictions within 10% of actual values")
-
+    else:
+        # Sort approaches by Accuracy
+        approaches_by_metric = metrics_df.sort_values('Accuracy', ascending=False)['Approach'].tolist()
+        
+        print(f"1. Best performing approach: {best_approach}")
+        print(f"2. Ranking of approaches by Accuracy (best to worst):")
+        for i, approach in enumerate(approaches_by_metric):
+            print(f"   {i+1}. {approach} (Accuracy: {metrics_df[metrics_df['Approach'] == approach]['Accuracy'].values[0]:.4f})")
+        
+        print(f"3. The best approach ({best_approach}) has:")
+        print(f"   - Accuracy: {metrics_df[metrics_df['Approach'] == best_approach]['Accuracy'].values[0]:.4f}")
+        print(f"   - F1 Score: {metrics_df[metrics_df['Approach'] == best_approach]['F1 Score'].values[0]:.4f}")
 
     # Create a copy of detailed_metrics without predictions and true_values
     cleaned_detailed_metrics = {}
@@ -1616,9 +1818,27 @@ def benchmark_predictions(pred_df, original_df, target, time_col='charttime'):
     results_dict = {
         'metrics': metrics_df,
         'detailed_metrics': cleaned_detailed_metrics,
-        'error_analysis': error_analysis_df,
-        'best_approach': best_approach
+        'error_analysis': error_analysis_df if not error_analysis_df.empty else None,
+        'best_approach': best_approach,
+        'task_type': task_type
     }
+
+    # Helper function to make results serializable
+    def make_serializable(obj):
+        if isinstance(obj, dict):
+            return {k: make_serializable(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [make_serializable(i) for i in obj]
+        elif isinstance(obj, (np.int64, np.int32)):
+            return int(obj)
+        elif isinstance(obj, (np.float64, np.float32)):
+            return float(obj)
+        elif isinstance(obj, (np.ndarray)):
+            return make_serializable(obj.tolist())
+        elif isinstance(obj, pd.DataFrame):
+            return make_serializable(obj.to_dict())
+        else:
+            return obj
 
     # Make it all serializable
     serializable_results = make_serializable(results_dict)
@@ -1626,6 +1846,8 @@ def benchmark_predictions(pred_df, original_df, target, time_col='charttime'):
     # Save as JSON
     with open(path + '/summary.json', 'w') as f:
         json.dump(serializable_results, f, indent=2)
+    
+    return results_dict
 
 def get_nan_rows(dataframe, features):
     """
