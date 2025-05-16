@@ -1,0 +1,11 @@
+{
+  "features": [
+    "gender"
+  ],
+  "embedding_size": 2,
+  "data_shape": [
+    3061,
+    2
+  ],
+  "model_type": "dl_c"
+}

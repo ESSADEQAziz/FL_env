@@ -24,21 +24,24 @@ def merge_csvs_on_feature(csv_paths: List[str], merge_on: str, how: str = 'inner
         how (str): Type of merge to perform: 'inner', 'outer', 'left', or 'right'. Default is 'inner'.
 
     Returns:
-        pd.DataFrame: The merged DataFrame.
+        pd.DataFrame: The merged DataFrame with duplicate columns (by name) removed.
     """
     if not csv_paths:
         raise ValueError("No CSV paths provided.")
-    
+
     # Read the first CSV
     merged_df = pd.read_csv(csv_paths[0])
-    
-    # Merge the rest of the CSVs
+
     for path in csv_paths[1:]:
         df = pd.read_csv(path)
-        merged_df = pd.merge(merged_df, df, on=merge_on, how=how)
-    
-    return merged_df
+        
+        # Avoid duplicate columns: keep only columns that are not already in merged_df (except merge_on)
+        duplicate_columns = [col for col in df.columns if col in merged_df.columns and col != merge_on]
+        df = df.drop(columns=duplicate_columns)
 
+        merged_df = pd.merge(merged_df, df, on=merge_on, how=how)
+
+    return merged_df
 
 def analyze_feature(df, feature):
     """
@@ -593,15 +596,16 @@ class SimpleClassifier(nn.Module):
     def __init__(self, input_dim, num_classes):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(input_dim, 16),
+            nn.Linear(input_dim, 32),
             nn.ReLU(),
-            nn.Linear(16, num_classes)
+            nn.Dropout(0.2),
+            nn.Linear(32,16),
+            nn.ReLU(),
+            nn.Linear(16,num_classes)
         )
 
     def forward(self, x):
         return self.model(x)
-    
-    # we apply it to orchestrate the sent and received index between nodes and the server
 
 
 class ClientEncoder(nn.Module):

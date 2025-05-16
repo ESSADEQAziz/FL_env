@@ -1,0 +1,11 @@
+{
+  "features": [
+    "race"
+  ],
+  "embedding_size": 33,
+  "data_shape": [
+    3061,
+    33
+  ],
+  "model_type": "dl_c"
+}

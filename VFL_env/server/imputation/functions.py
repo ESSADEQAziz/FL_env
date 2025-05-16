@@ -214,9 +214,12 @@ class SimpleClassifier(nn.Module):
     def __init__(self, input_dim, num_classes):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(input_dim, 16),
+            nn.Linear(input_dim, 32),
             nn.ReLU(),
-            nn.Linear(16, num_classes)
+            nn.Dropout(0.2),
+            nn.Linear(32,16),
+            nn.ReLU(),
+            nn.Linear(16,num_classes)
         )
 
     def forward(self, x):

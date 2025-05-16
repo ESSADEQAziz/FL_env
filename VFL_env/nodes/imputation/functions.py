@@ -34,7 +34,7 @@ def preprocess_features(csv_path,target_features,node_id,approche):
                 used_features.append(item)
             elif df[item].dtype in ['object']:
                 cat_features.append(item)
-                used_features(item)
+                used_features.append(item)
 
     # Handle missing values in numerical features
     for col in num_features:

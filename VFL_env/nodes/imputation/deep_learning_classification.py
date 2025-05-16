@@ -20,12 +20,13 @@ logger.info(f"Starting node {NODE_ID} ... ")
 
 class VFLClient(fl.client.NumPyClient):
     def __init__(self, csv_path, features, device="cpu"):
-        self.data,used_features = functions.preprocess_features(csv_path, features,"dl_c").to(device)
+        self.data,used_features = functions.preprocess_features(csv_path, features,node_id=NODE_ID ,approche= "dl_c")
+        self.data.to(device)
         self.embedding_size = self.data.shape[1]
         self.encoder = functions.ClientEncoder(input_dim=self.embedding_size).to(device)
         self.encoder.features = used_features
         self.device = device
-        self.encoder.features = target_features
+        self.final_round = 0
         self.optimizer = torch.optim.Adam(self.encoder.parameters(), lr=0.01)
         logger.info(f"Node {NODE_ID} initialized with input size : {self.embedding_size}")
 
@@ -39,6 +40,7 @@ class VFLClient(fl.client.NumPyClient):
         return [embeddings.detach().numpy()], len(self.data), {"node_id": NODE_ID}
 
     def evaluate(self, parameters, config):
+        self.final_round+=1
         logger.info(f"(evaluation function) node {NODE_ID}, the received parameters are : {parameters}")
         grad_np = parameters[int(NODE_ID)] 
 
@@ -52,12 +54,15 @@ class VFLClient(fl.client.NumPyClient):
         self.optimizer.step()
         self.optimizer.zero_grad()
 
+        if self.final_round == 100 :
+            functions.save_encoder(self,NODE_ID,'dl_c')
+
         return 0.0, len(self.data), {}
 
 if __name__ == "__main__":
 
     # before testing , make sure that the numbers of sum(embeddings) from nodes == the input dimention of the global model within the server (because it may be some categorical features can scale dimention due to one hot encoder)
-    target_features = ["gender","marital_status","valuenum","los"]
+    target_features = ["gender","race"]
     target_table = "../data/data.csv"
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")

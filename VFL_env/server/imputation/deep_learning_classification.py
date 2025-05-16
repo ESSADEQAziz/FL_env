@@ -29,7 +29,7 @@ class VFLServer(fl.server.strategy.FedAvg):
         self.test_y = self.test_y.to(device)
         self.num_classes = self.train_y.shape[1]
         self.final_round = final_round
-        self.model = functions.SimpleClassifier(input_dim=20, num_classes=self.num_classes).to(device)# depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ')
+        self.model = functions.SimpleClassifier(input_dim=8, num_classes=self.num_classes).to(device)# depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ')
         
       
     def aggregate_fit(self, server_round, results, failures):
@@ -47,24 +47,37 @@ class VFLServer(fl.server.strategy.FedAvg):
         train_size = self.train_y.shape[0]
         x_train = x[:train_size]
         x_test = x[train_size:]
+        
 
-        output_train = self.model(x_train)
-        output_test = self.model(x_test)
-
-        loss_fn = torch.nn.CrossEntropyLoss()
         y_train = torch.argmax(self.train_y, dim=1)
         y_test = torch.argmax(self.test_y, dim=1)
 
+           
+        class_counts = torch.bincount(y_train)
+        class_weights = 1.0 / (class_counts.float() + 1e-6)  # Add small epsilon to avoid division by zero
+        class_weights = class_weights / class_weights.sum()
+        loss_fn = torch.nn.CrossEntropyLoss(weight=class_weights.to(self.device))
+       
+
+        
+
+        optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=10)
+        
+           # Clear gradients before forward pass
+        optimizer.zero_grad()
+        output_train = self.model(x_train)
         loss = loss_fn(output_train, y_train)
-        acc = (output_test.argmax(dim=1) == y_test).float().mean().item()
+        loss.backward()
+        optimizer.step()
+
+        output_test = self.model(x_test)
+        acc = (output_test.argmax(dim=1) == y_test).float().mean().item() 
 
         logger.info(f"Server round {server_round} - Loss: {loss.item()} - Accuracy: {acc:.4f}")
 
-        loss.backward()
-
         if server_round == self.final_round:
-            os.makedirs("../results/dl_classification/", exist_ok=True)
-            torch.save(self.model.state_dict(), "../results/dl_classification/final_vfl_model.pth")
+            functions.save_model(self.model,model_type='dl_c')
 
         # 3. Extract gradients per client_id
         sorted_ids = [int(s) for s in sorted_ids]
@@ -87,19 +100,19 @@ class VFLServer(fl.server.strategy.FedAvg):
 def start_server():
     strategy = VFLServer(
         csv_path="../target_data/data_c.csv",
-        target_feature="insurance",
-        final_round=30,
+        target_feature="marital_status",
+        final_round=100,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=5,
-        min_evaluate_clients=5,
-        min_available_clients=5
+        min_fit_clients=2,
+        min_evaluate_clients=2,
+        min_available_clients=2
     )
 
     fl.server.start_server(
         server_address="v_central_server:5000",
         strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=30), # change also the final_round attribute within the strategy.
+        config=fl.server.ServerConfig(num_rounds=100), # change also the final_round attribute within the strategy.
         certificates=(
             Path("../certs/ca.pem").read_bytes(),
             Path("../certs/central_server.pem").read_bytes(),
