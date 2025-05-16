@@ -1,0 +1,11 @@
+{
+  "features": [
+    "creatinine"
+  ],
+  "embedding_size": 1,
+  "data_shape": [
+    3061,
+    1
+  ],
+  "model_type": "dl_r"
+}

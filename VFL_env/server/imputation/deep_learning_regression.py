@@ -21,11 +21,9 @@ logger.info("Strating v_central_server ... ")
 class VFLServer(fl.server.strategy.FedAvg):
     def __init__(self,csv_path, target_feature,final_round, device="cpu",*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.model = functions.SimpleRegressor(input_dim=20)  # depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ') 
-        self.train_target, self.test_target, self.train_indices, self.test_indices = functions.preprocess_server_target(csv_path,target_feature,test_size=0.2)
+        self.model = functions.SimpleRegressor(input_dim=8)  # depends on the recived embedding from the nodes (we link the input dimention of each node with a hidden layer of 4 perceptron each.'if there is two participant so we have 8 comming embeddings. ') 
+        self.train_target, self.test_target, self.train_indices, self.test_indices = functions.preprocess_server_target(csv_path,target_feature,approche='dl_r',test_size=0.2)
 
-        self.train_target = functions.insure_none(self.train_target)
-        self.test_target = functions.insure_none(self.test_target)
         
         self.device=device
         self.model = self.model.to(self.device)
@@ -98,7 +96,7 @@ class VFLServer(fl.server.strategy.FedAvg):
         functions.save_metrics(self.test_output, self.test_target.cpu().numpy(), "../results/dl_regression", server_round)
 
         if server_round == self.final_round :
-            functions.save_model("../results/dl_regression",self.model)
+            functions.save_model(self.model,model_type='dl_r')
 
         logger.info(f"Final : Sending gradients: {grads}")
 
@@ -107,14 +105,14 @@ class VFLServer(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = VFLServer(
-        csv_path="../target_data/data_r.csv",
-        target_feature="los",
+        csv_path="../target_data/data.csv",
+        target_feature="anchor_year",
         final_round=30,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=5,
-        min_evaluate_clients=5,
-        min_available_clients=5,
+        min_fit_clients=2,
+        min_evaluate_clients=2,
+        min_available_clients=2,
     )
     
     history = fl.server.start_server(server_address="v_central_server:5000", strategy=strategy, 

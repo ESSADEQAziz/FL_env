@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import pandas as pd
 import os
+import json
 import pickle
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
@@ -17,19 +18,38 @@ class ClientEncoder(nn.Module):
     def forward(self, x):
         return self.encoder(x)
     
-def preprocess_features(csv_path,target_features,approche):
+def preprocess_features(csv_path,target_features,node_id,approche):
     df = pd.read_csv(csv_path)
     column_names = df.columns
 
     num_features=[]
     cat_features=[]
 
+    used_features = []
+
     for item in column_names:
         if item in target_features :
             if df[item].dtype in ['int64', 'float64'] :
                 num_features.append(item)
+                used_features.append(item)
             elif df[item].dtype in ['object']:
                 cat_features.append(item)
+                used_features(item)
+
+    # Handle missing values in numerical features
+    for col in num_features:
+        # Replace NaN values with column mean
+        if df[col].isna().any():
+            col_mean = df[col].mean()
+            df[col].fillna(col_mean, inplace=True)
+            # filled the numerical feature col with the mean col_mean
+
+            
+    # Handle missing values in categorical features
+    for col in cat_features:
+        if df[col].isna().any():
+            df[col].fillna(df[col].mode()[0], inplace=True)
+            # filled the categorical feature col with the mode df[col].mode()[0]
 
     preprocessor = ColumnTransformer([
         ('num', StandardScaler(), num_features),
@@ -48,17 +68,46 @@ def preprocess_features(csv_path,target_features,approche):
       
     os.makedirs(preprocessor_path, exist_ok=True)
     X = preprocessor.fit_transform(df)
-    with open(f"{preprocessor_path}preprocessor.pkl", "wb") as f:
+    with open(f"{preprocessor_path}preprocessor_{node_id}.pkl", "wb") as f:
         pickle.dump(preprocessor, f)
 
-    return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32)
+    return torch.tensor(X.toarray() if hasattr(X, "toarray") else X, dtype=torch.float32),used_features
 
-def insure_none(x):
-    if torch.isnan(x).any():
-        print("Warning: NaN values detected in target y, replacing them with 0 to avoid loss and gradients calculus.(consider it as noise)")
-        x = torch.nan_to_num(x, nan=0.0)
-    return x 
+def save_encoder(self,NODE_ID, model_type="dl_r"):
+    """Save the encoder model and metadata for future predictions"""
 
+        
+        # Map model type to server directory
+    model_type_mapping = {
+            "dl_r": "dl_regression",
+            "dl_c": "dl_classification",
+            "ml_r": "ml_regression",
+            "ml_c": "ml_classification"
+        }
+    
 
+    temp = model_type_mapping.get(model_type, "dl_regression")
+    save_dir = f"../results/{temp}/encoders"
+        
+        # Create directories
+    os.makedirs(save_dir, exist_ok=True)
+        
+        
+        # 2. Save features and metadata
+    metadata = {
+            "features": self.encoder.features,
+            "embedding_size": self.embedding_size,
+            "data_shape": list(self.data.shape),
+            "model_type": model_type
+        }  
 
-
+        # 3. Also save to server directory if it exists
+    
+    encoder_path = os.path.join(save_dir, f"client_encoder_{NODE_ID}.pth")
+    torch.save(self.encoder, encoder_path)
+            
+    metadata_path = os.path.join(save_dir, f"encoder_metadata_{NODE_ID}.json")
+    with open(metadata_path, "w") as f:
+        json.dump(metadata, f, indent=2)
+            
+            

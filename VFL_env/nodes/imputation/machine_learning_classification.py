@@ -21,12 +21,12 @@ logger.info(f"Starting node {NODE_ID} ... ")
 
 
 class VFLClient(fl.client.NumPyClient):
-    def __init__(self, data_path, feature_names):
-        self.x = functions.preprocess_features(data_path, feature_names, "ml_c")  # one or multiple features 
+    def __init__(self, data_path, features_names):
+        self.x,used_features = functions.preprocess_features(data_path, features_names, "ml_c")  # one or multiple features 
+        
         self.w = torch.randn((self.x.shape[1], 1), requires_grad=True)  # one weight per feature
         self.lr = 0.01
         logging.info(f"Initilizing node {NODE_ID} with shape: {self.x.shape} and  weights :{self.w.shape} /// {self.x} /// {self.w}")
-        self.x = functions.insure_none(self.x)
 
     def get_parameters(self, config):
         logger.info(f"(get function) node {NODE_ID} , the sent weights are : {[self.w.detach().numpy()]}")

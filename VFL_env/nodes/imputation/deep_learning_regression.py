@@ -20,14 +20,15 @@ logger.info(f"Starting node {NODE_ID} ... ")
 
 class VFLClient(fl.client.NumPyClient):
     def __init__(self, target_table,target_features, device="cpu"):
-        self.data=functions.preprocess_features(target_table,target_features,"dl_r")
-        self.data = functions.insure_none(self.data)
+        self.data,used_features=functions.preprocess_features(target_table,target_features,NODE_ID,"dl_r")
         self.embedding_size = self.data.shape[1]
-        self.encoder = functions.ClientEncoder(input_dim=self.embedding_size)
+        self.encoder = functions.ClientEncoder(input_dim=self.embedding_size) 
+        self.encoder.features = used_features
         logger.info(f"the input dimention for the node {NODE_ID} is : {self.embedding_size}")
         self.device = device
         self.data = self.data.to(self.device)
         self.encoder = self.encoder.to(self.device)
+        self.final_round = 0
 
         
         self.optimizer = torch.optim.Adam(self.encoder.parameters(), lr=0.01)
@@ -48,6 +49,7 @@ class VFLClient(fl.client.NumPyClient):
     
     
     def evaluate(self, parameters, config):
+        self.final_round+=1
         logger.info(f"(evaluate) node {NODE_ID} , the received parameters are : {parameters}")
         grad_np = parameters[int(NODE_ID)]
         if np.all(grad_np == 0) :
@@ -59,6 +61,9 @@ class VFLClient(fl.client.NumPyClient):
         embeddings.backward(grad)
         self.optimizer.step()
         self.optimizer.zero_grad()
+
+        if self.final_round == 30 :
+            functions.save_encoder(self,NODE_ID,'dl_r')
         
         return 0.0, len(self.data), {}
     
@@ -66,7 +71,7 @@ class VFLClient(fl.client.NumPyClient):
 if __name__ == "__main__" :
 
     # before testing , make sure that the numbers of sum(embeddings) from nodes == the input dimention of the global model within the server (because it may be some categorical features can scale dimention due to one hot encoder)
-    target_features=["gender","marital_status","valuenum","last_careunit"]
+    target_features=['creatinine','respiratory_rate']
     target_table = "../data/data.csv"
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")

@@ -20,11 +20,12 @@ logger.info(f"Starting node {NODE_ID} ... ")
 
 class VFLClient(fl.client.NumPyClient):
     def __init__(self, csv_path, features, device="cpu"):
-        self.data = functions.preprocess_features(csv_path, features,"dl_c").to(device)
-        self.data = functions.insure_none(self.data)
+        self.data,used_features = functions.preprocess_features(csv_path, features,"dl_c").to(device)
         self.embedding_size = self.data.shape[1]
         self.encoder = functions.ClientEncoder(input_dim=self.embedding_size).to(device)
+        self.encoder.features = used_features
         self.device = device
+        self.encoder.features = target_features
         self.optimizer = torch.optim.Adam(self.encoder.parameters(), lr=0.01)
         logger.info(f"Node {NODE_ID} initialized with input size : {self.embedding_size}")
 
