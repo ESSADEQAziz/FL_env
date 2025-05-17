@@ -1,0 +1,7 @@
+{
+  "features": [
+    "anchor_year"
+  ],
+  "input_dim": 1,
+  "model_type": "ml_r"
+}

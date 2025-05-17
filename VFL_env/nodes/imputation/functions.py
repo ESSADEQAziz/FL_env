@@ -110,4 +110,34 @@ def save_encoder(self,NODE_ID, model_type="dl_r"):
     with open(metadata_path, "w") as f:
         json.dump(metadata, f, indent=2)
             
-            
+def save_weights(self,NODE_ID,approche):
+        
+                # Map model type to server directory
+        model_type_mapping = {
+            "dl_r": "dl_regression",
+            "dl_c": "dl_classification",
+            "ml_r": "ml_regression",
+            "ml_c": "ml_classification"
+        }
+    
+        temp = model_type_mapping.get(approche, "dl_regression")
+        save_dir = f"../results/{temp}/weights"
+
+        os.makedirs(save_dir, exist_ok=True)
+        weight_path = os.path.join(save_dir, f"weights_{NODE_ID}.pth")
+        
+        torch.save(self.w, weight_path)
+        
+        # Save metadata
+        metadata = {
+            "features": self.used_features,  # You need to store this from preprocess_features
+            "input_dim": self.x.shape[1],
+            "model_type": approche
+        }
+        metadata_path = os.path.join(save_dir, f"weights_metadata_{NODE_ID}.json")
+        with open(metadata_path, "w") as f:
+            json.dump(metadata, f, indent=2)            
+
+
+
+

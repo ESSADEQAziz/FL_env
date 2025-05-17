@@ -1,0 +1,7 @@
+{
+  "features": [
+    "heart_rate"
+  ],
+  "input_dim": 1,
+  "model_type": "ml_r"
+}

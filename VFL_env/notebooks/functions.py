@@ -13,6 +13,10 @@ import warnings
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from typing import List
+from sklearn.feature_selection import mutual_info_regression
+from IPython.display import display
+from torch.serialization import add_safe_globals
+
 
 def merge_csvs_on_feature(csv_paths: List[str], merge_on: str, how: str = 'inner') -> pd.DataFrame:
     """
@@ -607,6 +611,20 @@ class SimpleClassifier(nn.Module):
     def forward(self, x):
         return self.model(x)
 
+class LinearVFLModel(torch.nn.Module):
+    def __init__(self, input_dim=1, output_dim=1):
+        super().__init__()
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+        # Use a Linear layer with bias=False and frozen weights of 1
+        # This acts as an identity but has the attributes needed for save_model
+        self.model = torch.nn.Sequential(
+            torch.nn.Linear(input_dim, output_dim, bias=False)
+        )
+    
+    def forward(self, x):
+        return x  # Just pass through the input
+
 
 class ClientEncoder(nn.Module):
     def __init__(self, input_dim, embed_dim=4):
@@ -697,7 +715,6 @@ def load_vfl_model(model_path):
             full_model_path = os.path.join(model_path, "final_model.pth")
             if os.path.exists(full_model_path):
                 try:
-                    from torch.serialization import add_safe_globals
                     add_safe_globals([SimpleRegressor, SimpleClassifier])
                     server_model = torch.load(full_model_path, weights_only=False)
                     print(f"Loaded full model from {full_model_path}")
@@ -1037,5 +1054,675 @@ def predict_dl(df, approche, client_features=None):
                                         for idx in pred_classes]
     
     return df
+
+
+def calculate_spearman_correlation(df, target_col=None):
+    """
+    Calculate and print Spearman rank correlation for all numeric columns or against a specific target,
+    with proper handling of NaN values.
+    
+    Args:
+        df: DataFrame containing the data
+        target_col: Optional target column to correlate against
+    """
+    # Get numeric columns
+    numeric_df = df.select_dtypes(include=[np.number])
+    
+    # Check for and report NaN values
+    total_rows = len(numeric_df)
+    nan_counts = numeric_df.isna().sum()
+    columns_with_nans = nan_counts[nan_counts > 0]
+    
+    if len(columns_with_nans) > 0:
+        print("\n=== NaN Values in Numeric Columns ===")
+        for col, count in columns_with_nans.items():
+            print(f"  - {col}: {count} NaN values ({count/total_rows:.2%})")
+        
+        print("\nNote: NaN values will be automatically excluded from pairwise correlation calculations.")
+    
+    if target_col:
+        # Correlation against specific target
+        if target_col not in numeric_df.columns:
+            print(f"Error: {target_col} is not a numeric column in the dataframe")
+            return
+        
+        # Check NaNs in target column
+        target_nans = numeric_df[target_col].isna().sum()
+        if target_nans > 0:
+            print(f"\nWarning: Target column '{target_col}' has {target_nans} NaN values ({target_nans/total_rows:.2%}).")
+            print("These rows will be excluded when calculating correlations.")
+        
+        # Calculate correlations (pandas automatically handles NaNs with pairwise deletion)
+        corr = numeric_df.corrwith(numeric_df[target_col], method='spearman').sort_values(ascending=False)
+        
+        # Drop NaN correlation results
+        if corr.isna().any():
+            print("\nWarning: Some features have NaN correlation with the target.")
+            print("This typically happens when a feature has no valid pairs with the target or contains constant values.")
+            print("These features will be removed from the results:")
+            for col in corr[corr.isna()].index:
+                print(f"  - {col}")
+            
+            corr = corr.dropna()
+        
+        # Create DataFrame with results
+        corr_df = pd.DataFrame(corr, columns=['Spearman Correlation'])
+        
+        # Report number of observations used
+        valid_pairs = {}
+        for col in corr_df.index:
+            if col != target_col:
+                valid_count = numeric_df[[col, target_col]].dropna().shape[0]
+                valid_pairs[col] = valid_count
+        
+        corr_df['Valid Observations'] = pd.Series(valid_pairs)
+        corr_df['% of Data Used'] = (corr_df['Valid Observations'] / total_rows * 100).round(2).astype(str) + '%'
+        
+        print("\n=== Spearman Rank Correlation with target:", target_col, "===")
+        print(corr_df)
+        
+        # Plot the correlation values as a bar chart (only for correlations, not metadata)
+        plt.figure(figsize=(10, 6))
+        plot_data = corr_df.copy()
+        # Sort by absolute correlation value for better visualization
+        plot_data = plot_data.sort_values('Spearman Correlation', key=abs, ascending=False)
+        
+        sns.barplot(x=plot_data.index, y='Spearman Correlation', data=plot_data)
+        plt.xticks(rotation=90)
+        plt.title(f'Spearman Correlation with {target_col}')
+        plt.axhline(y=0, color='r', linestyle='-', alpha=0.3)  # Add a horizontal line at y=0
+        plt.tight_layout()
+        plt.show()
+        
+        return corr_df
+    
+    else:
+        # Full correlation matrix (pandas handles NaNs with pairwise deletion)
+        corr = numeric_df.corr(method='spearman')
+        
+        # Create a counts matrix to show number of observations used for each pair
+        obs_counts = pd.DataFrame(index=corr.index, columns=corr.columns)
+        for i in corr.index:
+            for j in corr.columns:
+                obs_counts.loc[i, j] = numeric_df[[i, j]].dropna().shape[0]
+        
+        print("\n=== Spearman Rank Correlation Matrix ===")
+        print(corr)
+        
+        print("\n=== Number of observations used for each correlation pair ===")
+        print(obs_counts)
+        
+        # Calculate percentage of data used
+        pct_used = (obs_counts / total_rows * 100).round(2)
+        print("\n=== Percentage of data used for each correlation pair ===")
+        print(pct_used)
+        
+        # Check for any low data usage pairs
+        low_data_pairs = []
+        threshold = 0.7  # Flag pairs using less than 70% of the data
+        for i in pct_used.index:
+            for j in pct_used.columns:
+                if i != j and pct_used.loc[i, j] < threshold * 100:
+                    low_data_pairs.append((i, j, pct_used.loc[i, j]))
+        
+        if low_data_pairs:
+            print("\nWarning: Some correlation pairs use a low percentage of the data:")
+            for i, j, pct in sorted(low_data_pairs, key=lambda x: x[2]):
+                print(f"  - {i} vs {j}: {pct:.1f}% of data used")
+        
+        # Plot heatmap
+        plt.figure(figsize=(12, 10))
+        mask = np.triu(np.ones_like(corr, dtype=bool))
+        cmap = sns.diverging_palette(230, 20, as_cmap=True)
+        sns.heatmap(corr, mask=mask, cmap=cmap, vmax=1.0, vmin=-1.0, 
+                    center=0, square=True, linewidths=.5, annot=True, fmt=".2f")
+        plt.title("Spearman Correlation Matrix")
+        plt.tight_layout()
+        plt.show()
+        
+        return corr
+
+def calculate_mutual_information(df, target_col):
+    """
+    Calculate and print mutual information between features and target,
+    with pairwise deletion of NaN values for each feature-target pair.
+    
+    Args:
+        df: DataFrame containing the data
+        target_col: Target column to calculate MI against
+    """
+    # Get numeric columns
+    numeric_df = df.select_dtypes(include=[np.number])
+    
+    if target_col not in numeric_df.columns:
+        print(f"Error: {target_col} is not a numeric column in the dataframe")
+        return
+    
+    # Check for and report NaN values
+    total_rows = len(numeric_df)
+    nan_counts = numeric_df.isna().sum()
+    columns_with_nans = nan_counts[nan_counts > 0]
+    
+    if len(columns_with_nans) > 0:
+        print("\n=== NaN Values in Numeric Columns ===")
+        for col, count in columns_with_nans.items():
+            print(f"  - {col}: {count} NaN values ({count/total_rows:.2%})")
+        
+        print("\nNote: NaN values will be excluded on a pairwise basis for each feature-target pair.")
+    
+    # Check NaNs in target column
+    target_nans = numeric_df[target_col].isna().sum()
+    if target_nans > 0:
+        print(f"\nWarning: Target column '{target_col}' has {target_nans} NaN values ({target_nans/total_rows:.2%}).")
+        print("Rows with NaN in the target will be excluded from all calculations.")
+    
+    # Get features excluding target
+    features = [col for col in numeric_df.columns if col != target_col]
+    
+    # Calculate MI for each feature with pairwise deletion of NaNs
+    mi_scores = []
+    valid_pairs = {}
+    
+    for feature in features:
+        # Create a clean subset with this feature and the target
+        pair_df = numeric_df[[feature, target_col]].dropna()
+        valid_count = len(pair_df)
+        valid_pairs[feature] = valid_count
+        
+        # Skip features with too few valid pairs
+        if valid_count < 5:
+            print(f"Warning: Feature '{feature}' has only {valid_count} valid pairs with target. Skipping MI calculation.")
+            mi_scores.append((feature, np.nan))
+            continue
+        
+        # Calculate MI for this pair
+        try:
+            X = pair_df[[feature]].values  # sklearn expects 2D array
+            y = pair_df[target_col].values
+            mi = mutual_info_regression(X, y)[0]  # [0] because we get a 1-element array
+            mi_scores.append((feature, mi))
+        except Exception as e:
+            print(f"Error calculating MI for feature '{feature}': {e}")
+            mi_scores.append((feature, np.nan))
+    
+    # Create DataFrame with scores
+    mi_df = pd.DataFrame(mi_scores, columns=['Feature', 'MI Score'])
+    
+    # Add information about valid observations
+    valid_obs_series = pd.Series(valid_pairs)
+    # Make sure the indices match
+    mi_df['Valid Observations'] = mi_df['Feature'].map(valid_obs_series)
+    mi_df['% of Data Used'] = (mi_df['Valid Observations'] / total_rows * 100).round(2).astype(str) + '%'
+    
+    # Sort by MI Score, handling NaN values
+    mi_df = mi_df.sort_values('MI Score', ascending=False, na_position='last')
+    
+    # Handle cases where some features have NaN MI scores
+    if mi_df['MI Score'].isna().any():
+        print("\nWarning: Some features have NaN Mutual Information scores with the target.")
+        print("This typically happens when a feature has too few valid pairs with the target.")
+        print("These features will be shown at the end of the results.")
+    
+    print("\n=== Mutual Information with target:", target_col, "===")
+    print(mi_df)
+    
+    # Plot MI scores (excluding NaN values)
+    if len(mi_df.dropna(subset=['MI Score'])) > 0:
+        plt.figure(figsize=(10, 6))
+        plot_data = mi_df.dropna(subset=['MI Score']).copy()
+        sns.barplot(x='MI Score', y='Feature', data=plot_data)
+        plt.title(f'Mutual Information Scores (target: {target_col})')
+        plt.tight_layout()
+        plt.show()
+    else:
+        print("No valid MI scores to plot.")
+    
+    # Check for any low data usage pairs
+    low_data_pairs = mi_df[mi_df['Valid Observations'] < 0.7 * total_rows]
+    if len(low_data_pairs) > 0:
+        print("\nWarning: Some feature-target pairs use a low percentage of the data:")
+        for _, row in low_data_pairs.iterrows():
+            print(f"  - {row['Feature']}: {row['% of Data Used']} of data used")
+    
+    return mi_df
+
+
+
+
+def load_ml_model(model_path, verbose=True):
+    """
+    Load an ML VFL model with weights and preprocessors
+    
+    Args:
+        model_path: Path to the model directory (e.g., "../server/results/ml_regression")
+        verbose: Whether to print status messages
+        
+    Returns:
+        Dictionary containing all artifacts needed for prediction
+    """
+  
+
+    # Add classes to safe globals
+    add_safe_globals([LinearVFLModel])
+    
+    # Check if model path exists
+    if not os.path.exists(model_path):
+        if verbose:
+            print(f"Model path does not exist: {model_path}")
+        return {"error": "Model path not found"}
+    
+    # Determine if regression or classification
+    is_regression = "regression" in model_path
+    model_type = None
+    
+    if "ml_regression" in model_path:
+        model_type = "ml_r"
+    elif "ml_classification" in model_path:
+        model_type = "ml_c"
+    else:
+        if verbose:
+            print(f"Path {model_path} is not recognized as an ML model path")
+        return {"error": "Invalid model path"}
+    
+    # Initialize result dictionary
+    ml_artifacts = {
+        "node_weights": {},
+        "node_preprocessors": {},
+        "node_metadata": {},
+        "client_features": {},
+        "is_regression": is_regression,
+        "model_type": model_type
+    }
+    
+    # Load model info
+    model_info_path = os.path.join(model_path, "model_info.json")
+    if os.path.exists(model_info_path):
+        try:
+            with open(model_info_path, "r") as f:
+                model_info = json.load(f)
+            ml_artifacts["model_info"] = model_info
+            if verbose:
+                print(f"Loaded model info from {model_info_path}")
+        except Exception as e:
+            if verbose:
+                print(f"Error loading model info: {e}")
+            ml_artifacts["model_info"] = {}
+    else:
+        if verbose:
+            print(f"No model_info.json found at {model_path}")
+        ml_artifacts["model_info"] = {}
+    
+    # Create a default model
+    server_model = LinearVFLModel(input_dim=1, output_dim=1)
+    
+    # Try to load saved model
+    state_dict_path = os.path.join(model_path, "final_model_state_dict.pth")
+    if os.path.exists(state_dict_path):
+        try:
+            server_model.load_state_dict(torch.load(state_dict_path))
+            if verbose:
+                print(f"Loaded model state_dict from {state_dict_path}")
+        except Exception as e:
+            if verbose:
+                print(f"Error loading state_dict: {e}")
+            
+            # Try loading full model
+            full_model_path = os.path.join(model_path, "final_model.pth")
+            if os.path.exists(full_model_path):
+                try:
+                    server_model = torch.load(full_model_path, weights_only=False)
+                    if verbose:
+                        print(f"Loaded full model from {full_model_path}")
+                except Exception as e2:
+                    if verbose:
+                        print(f"Error loading full model: {e2}")
+    else:
+        # No state_dict, try full model
+        full_model_path = os.path.join(model_path, "final_model.pth")
+        if os.path.exists(full_model_path):
+            try:
+                server_model = torch.load(full_model_path, weights_only=False)
+                if verbose:
+                    print(f"Loaded full model from {full_model_path}")
+            except Exception as e:
+                if verbose:
+                    print(f"Error loading full model: {e}")
+        else:
+            if verbose:
+                print(f"WARNING: No model file found at {model_path}")
+    
+    ml_artifacts["server_model"] = server_model
+    
+    # Load node weights from weights/ directory
+    weights_dir = os.path.join(model_path, "weights")
+    if os.path.exists(weights_dir):
+        if verbose:
+            print(f"Loading node weights from {weights_dir}")
+        for file in os.listdir(weights_dir):
+            if file.endswith(".pth") and file.startswith("weights_"):
+                # Extract node_id from filename
+                node_id = file.split("_")[-1].split(".")[0]
+                weight_path = os.path.join(weights_dir, file)
+                try:
+                    ml_artifacts["node_weights"][node_id] = torch.load(weight_path)
+                    if verbose:
+                        print(f"Loaded weights for node {node_id}")
+                        
+                    # Try to load metadata for this node
+                    metadata_path = os.path.join(weights_dir, f"weights_metadata_{node_id}.json")
+                    if os.path.exists(metadata_path):
+                        with open(metadata_path, "r") as f:
+                            node_metadata = json.load(f)
+                            ml_artifacts["node_metadata"][node_id] = node_metadata
+                            
+                            # Extract features for convenience
+                            if "features" in node_metadata:
+                                ml_artifacts["client_features"][node_id] = node_metadata["features"]
+                except Exception as e:
+                    if verbose:
+                        print(f"Error loading weights for node {node_id}: {e}")
+    else:
+        if verbose:
+            print(f"No weights directory found at {weights_dir}")
+    
+    # Load node preprocessors from nodes_preprocessor/ directory
+    preprocessor_dir = os.path.join(model_path, "nodes_preprocessor")
+    if os.path.exists(preprocessor_dir):
+        if verbose:
+            print(f"Loading node preprocessors from {preprocessor_dir}")
+        for file in os.listdir(preprocessor_dir):
+            if file.endswith(".pkl") and file.startswith("preprocessor_"):
+                node_id = file.split("_")[-1].split(".")[0]
+                preprocessor_path = os.path.join(preprocessor_dir, file)
+                try:
+                    with open(preprocessor_path, "rb") as f:
+                        ml_artifacts["node_preprocessors"][node_id] = pickle.load(f)
+                    if verbose:
+                        print(f"Loaded preprocessor for node {node_id}")
+                except Exception as e:
+                    if verbose:
+                        print(f"Error loading preprocessor for node {node_id}: {e}")
+    else:
+        if verbose:
+            print(f"No nodes_preprocessor directory found at {preprocessor_dir}")
+    
+    # Load server preprocessor (label_map or target_scaler)
+    server_preprocessor_dir = os.path.join(model_path, "server_preprocessor")
+    if os.path.exists(server_preprocessor_dir):
+        if verbose:
+            print(f"Loading server preprocessor from {server_preprocessor_dir}")
+        
+        if is_regression:
+            # For regression, load target_scaler.pkl
+            scaler_path = os.path.join(server_preprocessor_dir, "target_scaler.pkl")
+            if os.path.exists(scaler_path):
+                try:
+                    with open(scaler_path, "rb") as f:
+                        ml_artifacts["target_scaler"] = pickle.load(f)
+                    if verbose:
+                        print("Loaded target scaler")
+                        
+                    # Check if scaler is fitted
+                    scaler = ml_artifacts["target_scaler"]
+                    if hasattr(scaler, "transformers_") or hasattr(scaler, "transformers"):
+                        attr = "transformers_" if hasattr(scaler, "transformers_") else "transformers"
+                        transformers = getattr(scaler, attr)
+                        name, transformer, cols = transformers[0]
+                        if hasattr(transformer, 'scale_') and hasattr(transformer, 'mean_'):
+                            if verbose:
+                                print(f"Target scaler transformer '{name}' is properly fitted")
+                        else:
+                            if verbose:
+                                print(f"Warning: Target scaler transformer '{name}' is not fitted")
+                    elif hasattr(scaler, 'scale_') and hasattr(scaler, 'mean_'):
+                        if verbose:
+                            print("Target scaler is properly fitted")
+                    else:
+                        if verbose:
+                            print("Warning: Target scaler does not appear to be fitted")
+                except Exception as e:
+                    if verbose:
+                        print(f"Error loading target scaler: {e}")
+        else:
+            # For classification, load label_map.pkl
+            label_map_path = os.path.join(server_preprocessor_dir, "label_map.pkl")
+            if os.path.exists(label_map_path):
+                try:
+                    with open(label_map_path, "rb") as f:
+                        ml_artifacts["label_map"] = pickle.load(f)
+                    if verbose:
+                        print(f"Loaded label map with {len(ml_artifacts['label_map'])} classes")
+                except Exception as e:
+                    if verbose:
+                        print(f"Error loading label map: {e}")
+    else:
+        if verbose:
+            print(f"No server_preprocessor directory found at {server_preprocessor_dir}")
+    
+    # Validate loaded artifacts
+    if not ml_artifacts["node_weights"]:
+        if verbose:
+            print("Warning: No node weights were loaded. Predictions may not be possible.")
+    
+    return ml_artifacts
+
+
+def predict_with_ml_model(df, approche, client_features=None, verbose=True):
+    """
+    Unified prediction function that handles both ML regression and classification models
+    
+    Args:
+        df: Pandas DataFrame with data to predict
+        approche: 'ml_r' or 'ml_c' for ML regression/classification
+        client_features: Optional dict mapping node_id to feature lists
+        verbose: Whether to print status messages
+        
+    Returns:
+        DataFrame with predictions added
+    """
+    # Map approach to model path
+    model_type_mapping = {
+        "ml_r": "ml_regression",
+        "ml_c": "ml_classification"
+    }
+    
+    if approche not in model_type_mapping:
+        raise ValueError(f"Approach '{approche}' not recognized. Use 'ml_r' or 'ml_c'")
+    
+    model_path = f"../server/results/{model_type_mapping[approche]}"
+    
+    # Load the ML model artifacts
+    ml_artifacts = load_ml_model(model_path, verbose=verbose)
+    
+    # Check if loading was successful
+    if "error" in ml_artifacts:
+        if verbose:
+            print(f"Error loading model: {ml_artifacts['error']}")
+        return df
+    
+    # Use provided client features or ones loaded from metadata
+    if client_features is not None:
+        ml_artifacts["client_features"].update(client_features)
+    
+    # Check if we have enough information to make predictions
+    if not ml_artifacts["node_weights"]:
+        if verbose:
+            print("No valid weights found. Cannot make predictions.")
+        return df
+    
+    # Set server model to evaluation mode
+    server_model = ml_artifacts["server_model"]
+    server_model.eval()
+    
+    # Process data for each node
+    node_outputs = []
+    
+    for node_id, weights in sorted(ml_artifacts["node_weights"].items()):
+        # Skip nodes with no feature information
+        if node_id not in ml_artifacts["client_features"] or not ml_artifacts["client_features"][node_id]:
+            if verbose:
+                print(f"Skipping node {node_id} - no feature information available")
+            continue
+        
+        features = ml_artifacts["client_features"][node_id]
+        
+        # Check if all features exist in the dataframe
+        missing_features = [f for f in features if f not in df.columns]
+        if missing_features:
+            if verbose:
+                print(f"Warning: Missing features for node {node_id}: {missing_features}")
+                print(f"Available columns: {df.columns.tolist()}")
+            continue
+        
+        # Extract features for this node
+        node_df = df[features].copy()
+        
+        # Handle missing values
+        num_features = [f for f in features if node_df[f].dtype in ['int64', 'float64']]
+        for col in num_features:
+            if node_df[col].isna().any():
+                col_mean = node_df[col].mean()
+                node_df[col].fillna(col_mean, inplace=True)
+                if verbose:
+                    print(f"Filled NaN values in {col} with mean: {col_mean:.3f}")
+        
+        cat_features = [f for f in features if node_df[f].dtype not in ['int64', 'float64']]
+        for col in cat_features:
+            if node_df[col].isna().any():
+                mode_val = node_df[col].mode()[0]
+                node_df[col].fillna(mode_val, inplace=True)
+                if verbose:
+                    print(f"Filled NaN values in {col} with mode: {mode_val}")
+        
+        # Preprocess using saved preprocessor or fallback
+        try:
+            if node_id in ml_artifacts["node_preprocessors"]:
+                # Use node-specific preprocessor
+                X = ml_artifacts["node_preprocessors"][node_id].transform(node_df)
+                if verbose:
+                    print(f"Used node-specific preprocessor for node {node_id}")
+            else:
+                # Create a new preprocessor if needed
+                from sklearn.compose import ColumnTransformer
+                from sklearn.preprocessing import StandardScaler, OneHotEncoder
+                
+                node_preprocessor = ColumnTransformer([
+                    ('num', StandardScaler(), num_features),
+                    ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
+                ])
+                X = node_preprocessor.fit_transform(node_df)
+                if verbose:
+                    print(f"Created new preprocessor for node {node_id}")
+            
+            # Convert to dense if sparse
+            if hasattr(X, "toarray"):
+                X = X.toarray()
+            
+            # Convert to tensor
+            X_tensor = torch.tensor(X, dtype=torch.float32)
+            
+            # Replace NaN values if any
+            if torch.isnan(X_tensor).any():
+                X_tensor = torch.nan_to_num(X_tensor, nan=0.0)
+                if verbose:
+                    print(f"Replaced NaN values in node {node_id} tensor with zeros")
+            
+            # Apply node weights
+            z = X_tensor @ weights
+            node_outputs.append(z)
+            
+        except Exception as e:
+            if verbose:
+                print(f"Error processing data for node {node_id}: {e}")
+                import traceback
+                traceback.print_exc()
+    
+    # Make predictions if we have data from at least one node
+    if not node_outputs:
+        if verbose:
+            print("No valid node outputs processed. Cannot make predictions.")
+        return df
+    
+    # Combine node outputs
+    with torch.no_grad():
+        # Sum the outputs from all nodes
+        combined_output = sum(node_outputs)
+        
+        # Apply server model (though for ML it's usually identity)
+        predictions = server_model(combined_output)
+        
+        # Process predictions based on model type
+        if ml_artifacts["is_regression"]:
+            # Regression - get raw predictions
+            pred_values = predictions.numpy().flatten() if hasattr(predictions, 'numpy') else predictions.detach().numpy().flatten()
+            
+            # Apply inverse transform if target scaler is available
+            if "target_scaler" in ml_artifacts:
+                target_scaler = ml_artifacts["target_scaler"]
+                try:
+                    # Different ways to access the actual transformer
+                    if hasattr(target_scaler, 'transformers_') or hasattr(target_scaler, 'transformers'):
+                        # It's a ColumnTransformer
+                        attr_name = 'transformers_' if hasattr(target_scaler, 'transformers_') else 'transformers'
+                        transformers = getattr(target_scaler, attr_name)
+                        name, transformer, columns = transformers[0]
+                        
+                        if hasattr(transformer, 'scale_') and hasattr(transformer, 'mean_'):
+                            # Transformer is fitted, use it
+                            pred_values = transformer.inverse_transform(
+                                pred_values.reshape(-1, 1)).flatten()
+                            if verbose:
+                                print(f"Applied inverse scaling using {name} transformer")
+                        else:
+                            if verbose:
+                                print("Transformer not fitted. Using raw predictions.")
+                    elif hasattr(target_scaler, 'scale_') and hasattr(target_scaler, 'mean_'):
+                        # Direct scaler like StandardScaler
+                        pred_values = target_scaler.inverse_transform(
+                            pred_values.reshape(-1, 1)).flatten()
+                        if verbose:
+                            print("Applied inverse scaling to predictions")
+                    else:
+                        # Try inverse_transform anyway
+                        try:
+                            pred_values = target_scaler.inverse_transform(
+                                pred_values.reshape(-1, 1)).flatten()
+                            if verbose:
+                                print("Applied inverse transform to predictions")
+                        except Exception as e:
+                            if verbose:
+                                print(f"Could not apply inverse transform: {e}")
+                except Exception as e:
+                    if verbose:
+                        print(f"Error applying inverse scaling: {e}")
+            
+            # Add predictions to dataframe
+            df['prediction'] = pred_values
+        else:
+            # Classification - add class probabilities and predicted class
+            # For ML classification, apply softmax to the raw outputs
+            probs = torch.nn.functional.softmax(predictions, dim=1).detach().numpy()
+            pred_classes = np.argmax(probs, axis=1)
+            
+            # Add predicted class
+            df['predicted_class'] = pred_classes
+            
+            # Add probabilities for each class
+            for i in range(probs.shape[1]):
+                class_name = f"class_{i}"
+                if "label_map" in ml_artifacts and ml_artifacts["label_map"] and i < len(ml_artifacts["label_map"]):
+                    class_name = ml_artifacts["label_map"][i]
+                df[f'prob_{class_name}'] = probs[:, i]
+            
+            # Map to labels if available
+            if "label_map" in ml_artifacts and ml_artifacts["label_map"]:
+                label_map = ml_artifacts["label_map"]
+                df['predicted_label'] = [label_map[idx] if idx < len(label_map) else f"Unknown-{idx}" 
+                                        for idx in pred_classes]
+    
+    return df
+
+
+
 
 

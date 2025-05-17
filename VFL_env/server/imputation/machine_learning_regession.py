@@ -2,6 +2,9 @@ import flwr as fl
 import torch
 import numpy as np
 import functions
+import os
+import json
+import pandas as pd
 from flwr.common import parameters_to_ndarrays, ndarrays_to_parameters
 import logging
 from pathlib import Path
@@ -19,11 +22,15 @@ logger.info("Strating v_central_server ... ")
 
 
 class LinearVFLServer(fl.server.strategy.FedAvg):
-    def __init__(self, data_path, target_col,final_round, *args, **kwargs):
+    def __init__(self, data_path, target_col, final_round, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.y = functions.preprocess_server_target_ml_r(data_path,target_col)
+        self.y = functions.preprocess_server_target_ml_r(data_path, target_col)
         self.loss_fn = torch.nn.MSELoss()
-        self.final_round=final_round
+        self.final_round = final_round
+        self.target_col = target_col
+        
+        # Create a model with proper attributes
+        self.model = functions.LinearVFLModel(input_dim=1, output_dim=1)
 
         logger.info(f"Initilizing the server with the shape: {self.y.shape}")
         if torch.isnan(self.y).any():
@@ -44,13 +51,17 @@ class LinearVFLServer(fl.server.strategy.FedAvg):
         # Sort and concatenate partial predictions
         sorted_ids = sorted(z_map.keys())
         z_total = sum(z_map[i] for i in sorted_ids)  # [n_samples, 1]
+        
+        # For consistency we'll pass through model, but result is same as z_total
+        z_pred = z_total  # Equivalent to self.model(z_total)
 
-        logger.info(f"the concatenation of the the partitial predictions z_total is : {z_total}")
+        logger.info(f"the concatenation of the the partitial predictions z_total is : {z_pred}")
+        
         # Compute loss
-        loss = self.loss_fn(z_total, self.y) 
+        loss = self.loss_fn(z_pred, self.y) 
         loss.backward()
 
-        functions.save_metrics_ml("../results/ml_regression",server_round,loss.item())
+        functions.save_metrics_ml("../results/ml_regression", server_round, loss.item())
 
         # Compute and return gradients
         sorted_ids = [int(s) for s in sorted_ids]
@@ -60,18 +71,27 @@ class LinearVFLServer(fl.server.strategy.FedAvg):
         logger.info(f"[Server] Round {server_round} loss: {loss.item():.4f}")
         logger.info(f"the sent gradients are : {grads}")
 
+        # Save model at the final round
+        if server_round == self.final_round:
+            logger.info("Final round reached, saving model...")
+            try:
+                functions.save_model(self.model, model_type='ml_r')
+                logger.info("Model saved successfully")
+            except Exception as e:
+                logger.error(f"Error saving model: {e}")
+
         return ndarrays_to_parameters(grads), {"loss": loss.item()}
 
 def start_server():
     strategy = LinearVFLServer(
         data_path="../target_data/data_r.csv",
-        target_col="los",
+        target_col="respiratory_rate",
         final_round=30,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=5,
-        min_evaluate_clients=5,
-        min_available_clients=5,
+        min_fit_clients=2,
+        min_evaluate_clients=2,
+        min_available_clients=2,
     )
 
     fl.server.start_server(server_address="v_central_server:5000", strategy=strategy, 

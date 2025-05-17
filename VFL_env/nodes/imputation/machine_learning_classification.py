@@ -22,10 +22,11 @@ logger.info(f"Starting node {NODE_ID} ... ")
 
 class VFLClient(fl.client.NumPyClient):
     def __init__(self, data_path, features_names):
-        self.x,used_features = functions.preprocess_features(data_path, features_names, "ml_c")  # one or multiple features 
+        self.x,self.used_features = functions.preprocess_features(data_path, features_names, NODE_ID,"ml_c")  # one or multiple features 
         
         self.w = torch.randn((self.x.shape[1], 1), requires_grad=True)  # one weight per feature
         self.lr = 0.01
+        self.final_round = 0
         logging.info(f"Initilizing node {NODE_ID} with shape: {self.x.shape} and  weights :{self.w.shape} /// {self.x} /// {self.w}")
 
     def get_parameters(self, config):
@@ -39,6 +40,7 @@ class VFLClient(fl.client.NumPyClient):
 
 
     def evaluate(self, parameters, config):
+        self.final_round+=1
         dz = parameters[int(NODE_ID)]  # Gradient of loss w.r.t. z
         if np.all(dz == 0) :
             raise ValueError(f"the node {NODE_ID} received a none value as gradients.")
@@ -58,6 +60,9 @@ class VFLClient(fl.client.NumPyClient):
         self.w.grad.zero_()
 
         logger.info(f"(evaluation function) the updated weights for node {NODE_ID} are : {self.w.shape} {self.w}")
+
+        if self.final_round == 30 :
+            functions.save_weights(self,NODE_ID,'ml_c')
 
         return 0.0, len(self.x), {}
 

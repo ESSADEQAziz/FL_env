@@ -112,10 +112,12 @@ def preprocess_server_target_ml_r(data_path, target_col):
         preprocessor_path = "../results/ml_regression/server_preprocessor/"
         os.makedirs(preprocessor_path, exist_ok=True)
 
+        Y = preprocessor.fit_transform(data)
+        
         with open(f"{preprocessor_path}target_scaler.pkl", "wb") as f:
             pickle.dump(preprocessor, f)
 
-        Y = preprocessor.fit_transform(data)
+        
         return torch.tensor(Y.toarray() if hasattr(Y, "toarray") else Y, dtype=torch.float32).view(-1, 1)
  
     else : 
@@ -171,12 +173,14 @@ def preprocess_server_target(csv_path, target_feature,approche, test_size=0.2, r
         target_mean = df[target_feature].mean()
         df[target_feature].fillna(target_mean, inplace=True)
         # Replaced NaN values in target with mean: target_mean
-
         preprocessor = ColumnTransformer([('num', StandardScaler(),[target_feature])])
-        with open(f"{preprocessor_path}target_scaler.pkl", "wb") as f:
-            pickle.dump(preprocessor, f)
+
         Y = preprocessor.fit_transform(df)
         y = torch.tensor(Y.toarray() if hasattr(Y, "toarray") else Y, dtype=torch.float32).view(-1, 1)
+
+        with open(f"{preprocessor_path}target_scaler.pkl", "wb") as f:
+            pickle.dump(preprocessor, f)
+        
 
         n = len(y)
         indices = np.arange(n)
@@ -246,5 +250,22 @@ class ClientEncoder(nn.Module):
     def forward(self, x):
         return self.encoder(x)
   
+class LinearVFLModel(torch.nn.Module):
+    def __init__(self, input_dim=1, output_dim=1):
+        super().__init__()
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+        # Use a Linear layer with bias=False and frozen weights of 1
+        # This acts as an identity but has the attributes needed for save_model
+        self.model = torch.nn.Sequential(
+            torch.nn.Linear(input_dim, output_dim, bias=False)
+        )
+        # Initialize weights to 1 and freeze them
+        with torch.no_grad():
+            self.model[0].weight.fill_(1.0)
+            self.model[0].weight.requires_grad = False
+    
+    def forward(self, x):
+        return x  # Just pass through the input
 
-  
+

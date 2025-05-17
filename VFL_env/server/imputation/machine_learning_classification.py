@@ -69,8 +69,7 @@ class VFLServer(fl.server.strategy.FedAvg):
         loss.backward()
 
         if server_round == self.final_round:
-            os.makedirs("../results/ml_classification/", exist_ok=True)
-            torch.save(self.model.state_dict(), "../results/ml_classification/final_logistic_model.pth")
+            functions.save_model(self.model,model_type='ml_c')
 
         sorted_ids = [int(s) for s in sorted_ids]
         sorted_ids = functions.reshape_list_with_none(sorted_ids)

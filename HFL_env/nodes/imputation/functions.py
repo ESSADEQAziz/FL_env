@@ -412,47 +412,47 @@ def introduce_missing_values(data, feature_indices, missing_rate=0.2, pattern="M
     return data_with_missing, missing_mask, original_values
 
 
-def evaluate_imputation_metrics(original_values, imputed_values):
-    """
-    Calculate metrics to evaluate imputation quality
+# def evaluate_imputation_metrics(original_values, imputed_values):
+#     """
+#     Calculate metrics to evaluate imputation quality
     
-    Args:
-        original_values: Dict mapping (row, col) to original values
-        imputed_values: Array containing imputed values at the same positions
+#     Args:
+#         original_values: Dict mapping (row, col) to original values
+#         imputed_values: Array containing imputed values at the same positions
     
-    Returns:
-        Dictionary of metrics
-    """
-    if not original_values:
-        return {"error": "No values to impute"}
+#     Returns:
+#         Dictionary of metrics
+#     """
+#     if not original_values:
+#         return {"error": "No values to impute"}
         
-    # Extract values for comparison
-    orig = []
-    imp = []
+#     # Extract values for comparison
+#     orig = []
+#     imp = []
     
-    for (row, col), true_val in original_values.items():
-        orig.append(true_val)
-        imp.append(imputed_values[row, col])
+#     for (row, col), true_val in original_values.items():
+#         orig.append(true_val)
+#         imp.append(imputed_values[row, col])
     
-    orig = np.array(orig)
-    imp = np.array(imp)
+#     orig = np.array(orig)
+#     imp = np.array(imp)
     
-    # Calculate metrics
-    mae = np.mean(np.abs(orig - imp))
-    rmse = np.sqrt(np.mean((orig - imp) ** 2))
+#     # Calculate metrics
+#     mae = np.mean(np.abs(orig - imp))
+#     rmse = np.sqrt(np.mean((orig - imp) ** 2))
 
-    # Mean Absolute Percentage Error (handle zeros)
-    with np.errstate(divide='ignore', invalid='ignore'):
-        mape = np.mean(np.abs((orig - imp) / orig)) * 100
-        mape = np.nan_to_num(mape, nan=0)
+#     # Mean Absolute Percentage Error (handle zeros)
+#     with np.errstate(divide='ignore', invalid='ignore'):
+#         mape = np.mean(np.abs((orig - imp) / orig)) * 100
+#         mape = np.nan_to_num(mape, nan=0)
     
-    # Correlation between original and imputed values
-    correlation = np.corrcoef(orig, imp)[0, 1] if len(orig) > 1 else 0
+#     # Correlation between original and imputed values
+#     correlation = np.corrcoef(orig, imp)[0, 1] if len(orig) > 1 else 0
     
-    return {
-        "MAE": float(mae),
-        "RMSE": float(rmse),
-        "MAPE": float(mape),
-        "correlation": float(correlation)
-    }
+#     return {
+#         "MAE": float(mae),
+#         "RMSE": float(rmse),
+#         "MAPE": float(mape),
+#         "correlation": float(correlation)
+#     }
 
