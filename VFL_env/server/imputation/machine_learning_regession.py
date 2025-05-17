@@ -30,7 +30,7 @@ class LinearVFLServer(fl.server.strategy.FedAvg):
         self.target_col = target_col
         
         # Create a model with proper attributes
-        self.model = functions.LinearVFLModel(input_dim=1, output_dim=1)
+        self.model = functions.LinearVFLModel(input_dim=2, output_dim=1)
 
         logger.info(f"Initilizing the server with the shape: {self.y.shape}")
         if torch.isnan(self.y).any():
@@ -86,7 +86,7 @@ def start_server():
     strategy = LinearVFLServer(
         data_path="../target_data/data_r.csv",
         target_col="respiratory_rate",
-        final_round=30,
+        final_round=200,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
         min_fit_clients=2,
@@ -95,7 +95,7 @@ def start_server():
     )
 
     fl.server.start_server(server_address="v_central_server:5000", strategy=strategy, 
-        config=fl.server.ServerConfig(num_rounds=30),
+        config=fl.server.ServerConfig(num_rounds=200),
         certificates=(
             Path("../certs/ca.pem").read_bytes(),
             Path("../certs/central_server.pem").read_bytes(),

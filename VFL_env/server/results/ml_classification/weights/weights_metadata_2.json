@@ -1,0 +1,7 @@
+{
+  "features": [
+    "race"
+  ],
+  "input_dim": 33,
+  "model_type": "ml_c"
+}

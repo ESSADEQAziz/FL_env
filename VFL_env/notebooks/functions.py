@@ -616,14 +616,16 @@ class LinearVFLModel(torch.nn.Module):
         super().__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
-        # Use a Linear layer with bias=False and frozen weights of 1
-        # This acts as an identity but has the attributes needed for save_model
+        # Create a proper linear layer that transforms inputs to class logits
         self.model = torch.nn.Sequential(
-            torch.nn.Linear(input_dim, output_dim, bias=False)
+            torch.nn.Linear(input_dim, output_dim, bias=True)
         )
+        # Initialize with small random weights
+        torch.nn.init.xavier_uniform_(self.model[0].weight)
     
     def forward(self, x):
-        return x  # Just pass through the input
+        # Apply the linear transformation
+        return self.model(x)
 
 
 class ClientEncoder(nn.Module):
@@ -1353,7 +1355,7 @@ def load_ml_model(model_path, verbose=True):
         ml_artifacts["model_info"] = {}
     
     # Create a default model
-    server_model = LinearVFLModel(input_dim=1, output_dim=1)
+    server_model = LinearVFLModel(input_dim=2, output_dim=4)
     
     # Try to load saved model
     state_dict_path = os.path.join(model_path, "final_model_state_dict.pth")
@@ -1506,7 +1508,6 @@ def load_ml_model(model_path, verbose=True):
     
     return ml_artifacts
 
-
 def predict_with_ml_model(df, approche, client_features=None, verbose=True):
     """
     Unified prediction function that handles both ML regression and classification models
@@ -1645,10 +1646,10 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
     
     # Combine node outputs
     with torch.no_grad():
-        # Sum the outputs from all nodes
-        combined_output = sum(node_outputs)
+        # FIX: Concatenate the outputs instead of summing them
+        combined_output = torch.cat(node_outputs, dim=1)
         
-        # Apply server model (though for ML it's usually identity)
+        # Apply server model
         predictions = server_model(combined_output)
         
         # Process predictions based on model type
@@ -1704,25 +1705,15 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
             probs = torch.nn.functional.softmax(predictions, dim=1).detach().numpy()
             pred_classes = np.argmax(probs, axis=1)
             
-            # Add predicted class
-            df['predicted_class'] = pred_classes
-            
-            # Add probabilities for each class
-            for i in range(probs.shape[1]):
-                class_name = f"class_{i}"
-                if "label_map" in ml_artifacts and ml_artifacts["label_map"] and i < len(ml_artifacts["label_map"]):
-                    class_name = ml_artifacts["label_map"][i]
-                df[f'prob_{class_name}'] = probs[:, i]
-            
-            # Map to labels if available
+            # Only add the predicted label, no probabilities or class indices
             if "label_map" in ml_artifacts and ml_artifacts["label_map"]:
                 label_map = ml_artifacts["label_map"]
                 df['predicted_label'] = [label_map[idx] if idx < len(label_map) else f"Unknown-{idx}" 
                                         for idx in pred_classes]
+            else:
+                df['predicted_label'] = [f"Class_{idx}" for idx in pred_classes]
     
     return df
-
-
 
 
 

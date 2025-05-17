@@ -61,14 +61,14 @@ class VFLClient(fl.client.NumPyClient):
 
         logger.info(f"(evaluation function) the updated weights for node {NODE_ID} are : {self.w.shape} {self.w}")
 
-        if self.final_round == 30 :
+        if self.final_round == 200 :
             functions.save_weights(self,NODE_ID,'ml_c')
 
         return 0.0, len(self.x), {}
 
 if __name__ == "__main__":
 
-    features = ["gender","marital_status","valuenum","los"]
+    features = ['gender','race']
     data_path = "../data/data.csv"
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")

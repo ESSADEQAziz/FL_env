@@ -135,7 +135,7 @@ def preprocess_server_target_ml_c(data_path, target_col,test_size=0.2,random_sta
         y = pd.get_dummies(data[target_col]).values
         label_map = list(target_f.columns)
 
-        label_map_path = "../results/ml_classification/server_preprocessor"  
+        label_map_path = "../results/ml_classification/server_preprocessor/"  
         os.makedirs(label_map_path, exist_ok=True)
 
         # Save the label map
@@ -250,22 +250,21 @@ class ClientEncoder(nn.Module):
     def forward(self, x):
         return self.encoder(x)
   
+
 class LinearVFLModel(torch.nn.Module):
     def __init__(self, input_dim=1, output_dim=1):
         super().__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
-        # Use a Linear layer with bias=False and frozen weights of 1
-        # This acts as an identity but has the attributes needed for save_model
+        # Create a proper linear layer that transforms inputs to class logits
         self.model = torch.nn.Sequential(
-            torch.nn.Linear(input_dim, output_dim, bias=False)
+            torch.nn.Linear(input_dim, output_dim, bias=True)
         )
-        # Initialize weights to 1 and freeze them
-        with torch.no_grad():
-            self.model[0].weight.fill_(1.0)
-            self.model[0].weight.requires_grad = False
+        # Initialize with small random weights
+        torch.nn.init.xavier_uniform_(self.model[0].weight)
     
     def forward(self, x):
-        return x  # Just pass through the input
-
+        # Apply the linear transformation
+        return self.model(x)
+    
 

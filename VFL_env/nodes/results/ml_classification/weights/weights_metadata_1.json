@@ -1,0 +1,7 @@
+{
+  "features": [
+    "gender"
+  ],
+  "input_dim": 2,
+  "model_type": "ml_c"
+}
