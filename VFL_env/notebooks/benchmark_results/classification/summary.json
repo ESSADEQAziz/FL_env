@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "Approach": {
+      "0": "ml",
+      "1": "dl"
+    },
+    "Accuracy": {
+      "0": 0.3181316660536962,
+      "1": 0.2261860978300846
+    },
+    "Precision": {
+      "0": 0.3206940751254204,
+      "1": 0.30710007741684736
+    },
+    "Recall": {
+      "0": 0.3181316660536962,
+      "1": 0.2261860978300846
+    },
+    "F1 Score": {
+      "0": 0.2940535609120159,
+      "1": 0.13389770218451721
+    }
+  },
+  "detailed_metrics": {
+    "ml": {
+      "accuracy": 0.3181316660536962,
+      "precision": 0.3206940751254204,
+      "recall": 0.3181316660536962,
+      "f1": 0.2940535609120159
+    },
+    "dl": {
+      "accuracy": 0.2261860978300846,
+      "precision": 0.30710007741684736,
+      "recall": 0.2261860978300846,
+      "f1": 0.13389770218451721
+    }
+  },
+  "error_analysis": {
+    "ml": {
+      "DIVORCED_precision": 0.0,
+      "DIVORCED_recall": 0.0,
+      "DIVORCED_f1-score": 0.0,
+      "MARRIED_precision": 0.42271662763466045,
+      "MARRIED_recall": 0.2580414581844174,
+      "MARRIED_f1-score": 0.32046160674656016,
+      "SINGLE_precision": 0.2873846153846154,
+      "SINGLE_recall": 0.5822942643391521,
+      "SINGLE_f1-score": 0.38483724763081995,
+      "WIDOWED_precision": 0.15416666666666667,
+      "WIDOWED_recall": 0.11384615384615385,
+      "WIDOWED_f1-score": 0.13097345132743363
+    },
+    "dl": {
+      "DIVORCED_precision": 0.05025125628140704,
+      "DIVORCED_recall": 0.15544041450777202,
+      "DIVORCED_f1-score": 0.0759493670886076,
+      "MARRIED_precision": 0.4117647058823529,
+      "MARRIED_recall": 0.010007147962830594,
+      "MARRIED_f1-score": 0.019539427773900907,
+      "SINGLE_precision": 0.27554479418886196,
+      "SINGLE_recall": 0.7094763092269327,
+      "SINGLE_f1-score": 0.39693058946634113,
+      "WIDOWED_precision": 0.08695652173913043,
+      "WIDOWED_recall": 0.006153846153846154,
+      "WIDOWED_f1-score": 0.011494252873563218
+    }
+  },
+  "best_approach": "ml",
+  "task_type": "classification"
+}
