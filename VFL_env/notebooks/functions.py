@@ -639,424 +639,6 @@ class ClientEncoder(nn.Module):
     def forward(self, x):
         return self.encoder(x)
   
-def load_vfl_model(model_path):
-    """
-    Load a VFL model with the specific directory structure:
-    - model_path/
-      - final_model_state_dict.pth
-      - final_model.pth
-      - model_info.json
-      - encoders/
-        - client_encoder_1.pth, etc.
-      - nodes_preprocessor/
-        - preprocessor_1.pkl, etc.
-      - server_preprocessor/
-        - label_map.pkl (for classification)
-        - target_scaler.pkl (for regression)
-        
-    Args:
-        model_path: Path to the server model directory
-        
-    Returns:
-        server_model: The loaded server model
-        client_encoders: Dictionary of client encoders
-        model_artifacts: Dictionary containing preprocessors and metadata
-    """
-    # Check if model path exists
-    if not os.path.exists(model_path):
-        raise ValueError(f"Model path does not exist: {model_path}")
-    
-    # Determine if regression or classification
-    is_regression = "regression" in model_path
-    model_type = None
-    
-    if "dl_regression" in model_path:
-        model_type = "dl_r"
-    elif "ml_regression" in model_path:
-        model_type = "ml_r"
-    elif "dl_classification" in model_path:
-        model_type = "dl_c" 
-    elif "ml_classification" in model_path:
-        model_type = "ml_c"
-    
-    # Load model info from model_info.json
-    model_info_path = os.path.join(model_path, "model_info.json")
-    input_dim = 20  # Default
-    output_dim = 1  # Default
-    
-    if os.path.exists(model_info_path):
-        try:
-            with open(model_info_path, "r") as f:
-                model_info = json.load(f)
-                input_dim = model_info.get("input_dim", 20)
-                output_dim = model_info.get("output_dim", 1)
-            print(f"Loaded model info from {model_info_path}")
-        except Exception as e:
-            print(f"Error loading model info: {e}")
-            model_info = {}
-    else:
-        print(f"No model_info.json found at {model_path}")
-        model_info = {}
-    
-    # Create appropriate model instance
-    if is_regression:
-        server_model = SimpleRegressor(input_dim=input_dim)
-    else:
-        server_model = SimpleClassifier(input_dim=input_dim, num_classes=output_dim)
-    
-    # Load the model - try state_dict first, then full model
-    state_dict_path = os.path.join(model_path, "final_model_state_dict.pth")
-    if os.path.exists(state_dict_path):
-        try:
-            server_model.load_state_dict(torch.load(state_dict_path))
-            print(f"Loaded model state_dict from {state_dict_path}")
-        except Exception as e:
-            print(f"Error loading state_dict: {e}")
-            
-            # Try loading full model with weights_only=False
-            full_model_path = os.path.join(model_path, "final_model.pth")
-            if os.path.exists(full_model_path):
-                try:
-                    add_safe_globals([SimpleRegressor, SimpleClassifier])
-                    server_model = torch.load(full_model_path, weights_only=False)
-                    print(f"Loaded full model from {full_model_path}")
-                except Exception as e2:
-                    print(f"Error loading full model: {e2}")
-    else:
-        # No state_dict, try full model
-        full_model_path = os.path.join(model_path, "final_model.pth")
-        if os.path.exists(full_model_path):
-            try:
-                from torch.serialization import add_safe_globals
-                add_safe_globals([SimpleRegressor, SimpleClassifier])
-                server_model = torch.load(full_model_path, weights_only=False)
-                print(f"Loaded full model from {full_model_path}")
-            except Exception as e:
-                print(f"Error loading full model: {e}")
-        else:
-            print(f"WARNING: No model file found at {model_path}")
-    
-    # Load client encoders from encoders/ directory
-    client_encoders = {}
-    encoder_dir = os.path.join(model_path, "encoders")
-    
-    if os.path.exists(encoder_dir):
-        print(f"Loading client encoders from {encoder_dir}")
-        for file in os.listdir(encoder_dir):
-            if file.endswith(".pth"):
-                # Extract node_id from filename
-                if file.startswith("client_encoder_"):
-                    node_id = file.split("_")[-1].split(".")[0]
-                else:
-                    # Try to extract a number from the filename
-                    import re
-                    match = re.search(r'(\d+)', file)
-                    if match:
-                        node_id = match.group(1)
-                    else:
-                        # Use the filename without extension as node_id
-                        node_id = os.path.splitext(file)[0]
-                
-                encoder_path = os.path.join(encoder_dir, file)
-                try:
-                    from torch.serialization import add_safe_globals
-                    add_safe_globals([ClientEncoder])
-                    client_encoders[node_id] = torch.load(encoder_path, weights_only=False)
-                    print(f"Loaded encoder for node {node_id}")
-                except Exception as e:
-                    print(f"Error loading encoder for node {node_id}: {e}")
-    else:
-        print(f"No encoders directory found at {encoder_dir}")
-    
-    # Load node preprocessors from nodes_preprocessor/ directory
-    node_preprocessors = {}
-    preprocessor_dir = os.path.join(model_path, "nodes_preprocessor")
-    
-    if os.path.exists(preprocessor_dir):
-        print(f"Loading node preprocessors from {preprocessor_dir}")
-        for file in os.listdir(preprocessor_dir):
-            if file.endswith(".pkl"):
-                # Extract node_id from filename
-                if file.startswith("preprocessor_"):
-                    node_id = file.split("_")[-1].split(".")[0]
-                else:
-                    # Try to extract a number from the filename
-                    import re
-                    match = re.search(r'(\d+)', file)
-                    if match:
-                        node_id = match.group(1)
-                    else:
-                        # Use the filename without extension as node_id
-                        node_id = os.path.splitext(file)[0]
-                
-                preprocessor_path = os.path.join(preprocessor_dir, file)
-                try:
-                    with open(preprocessor_path, "rb") as f:
-                        node_preprocessors[node_id] = pickle.load(f)
-                    print(f"Loaded preprocessor for node {node_id}")
-                except Exception as e:
-                    print(f"Error loading preprocessor for node {node_id}: {e}")
-    else:
-        print(f"No nodes_preprocessor directory found at {preprocessor_dir}")
-    
-    # Load server preprocessor (label_map or target_scaler)
-    server_preprocessor_dir = os.path.join(model_path, "server_preprocessor")
-    label_map = None
-    target_scaler = None
-    
-    if os.path.exists(server_preprocessor_dir):
-        print(f"Loading server preprocessor from {server_preprocessor_dir}")
-        
-        # For classification, look for label_map.pkl
-        if not is_regression:
-            label_map_path = os.path.join(server_preprocessor_dir, "label_map.pkl")
-            if os.path.exists(label_map_path):
-                try:
-                    with open(label_map_path, "rb") as f:
-                        label_map = pickle.load(f)
-                    print(f"Loaded label map with {len(label_map)} classes")
-                except Exception as e:
-                    print(f"Error loading label map: {e}")
-        
-        # For regression, look for target_scaler.pkl
-        if is_regression:
-            scaler_path = os.path.join(server_preprocessor_dir, "target_scaler.pkl")
-            if os.path.exists(scaler_path):
-                try:
-                    with open(scaler_path, "rb") as f:
-                        target_scaler = pickle.load(f)
-                    print("Loaded target scaler")
-                except Exception as e:
-                    print(f"Error loading target scaler: {e}")
-    else:
-        print(f"No server_preprocessor directory found at {server_preprocessor_dir}")
-    
-    # Combine all artifacts
-    model_artifacts = {
-        "model_info": model_info,
-        "model_type": model_type,
-        "is_regression": is_regression,
-        "node_preprocessors": node_preprocessors,
-        "label_map": label_map,
-        "target_scaler": target_scaler
-    }
-    
-    return server_model, client_encoders, model_artifacts
-
-
-def predict_dl(df, approche, client_features=None):
-    """
-    Process a dataframe through a VFL model and add predictions
-    
-    Args:
-        df: Pandas DataFrame to process
-        approche: The model approach ('dl_r', 'dl_c', 'ml_r', 'ml_c')
-        client_features: Optional dict mapping node_id to feature lists
-                        If None, will try to infer from client encoders
-    
-    Returns:
-        df: Original dataframe with predictions added
-    """
-    if approche == 'dl_r':
-        model_path = "../server/results/dl_regression"
-    elif approche == 'dl_c':
-        model_path = "../server/results/dl_classification"
-    elif approche == 'ml_r':
-        model_path = "../server/results/ml_regression"
-    elif approche == 'ml_c':
-        model_path = "../server/results/ml_classification"
-    else:
-        raise ValueError(f"Unknown model approach: {approche}")
-
-    # Load model, encoders and artifacts
-    server_model, client_encoders, artifacts = load_vfl_model(model_path)
-    
-    if not client_encoders:
-        print("No client encoders found. Cannot make predictions.")
-        return df
-    
-    # Set models to evaluation mode
-    server_model.eval()
-    for encoder in client_encoders.values():
-        encoder.eval()
-    
-    # Extract key artifacts
-    is_regression = artifacts.get("is_regression", True)
-    node_preprocessors = artifacts.get("node_preprocessors", {})
-    central_preprocessor = artifacts.get("central_preprocessor")
-    label_map = artifacts.get("label_map")
-    target_scaler = artifacts.get("target_scaler")
-    
-    # If client_features not provided, try to get from encoders
-    if client_features is None:
-        client_features = {}
-        for node_id, encoder in client_encoders.items():
-            if hasattr(encoder, 'features'):
-                client_features[node_id] = encoder.features
-    
-    print(f"--------------- Retrieved features are {client_features}")
-    
-    # If we still don't have features for all clients, warn
-    missing_nodes = [node_id for node_id in client_encoders.keys() 
-                    if node_id not in client_features or not client_features[node_id]]
-    
-    if missing_nodes:
-        print(f"Warning: Missing features for nodes: {missing_nodes}")
-        print("Will attempt to process other nodes.")
-    
-    # Process data for each client
-    client_data = {}
-    for node_id, encoder in client_encoders.items():
-        # Skip nodes with no feature information
-        if node_id not in client_features or not client_features[node_id]:
-            print(f"Skipping node {node_id} - no feature information available")
-            continue
-        
-        features = client_features[node_id]
-        
-        # Check if all features exist in the dataframe
-        missing_features = [f for f in features if f not in df.columns]
-        if missing_features:
-            print(f"Warning: Missing features for node {node_id}: {missing_features}")
-            print(f"Available columns: {df.columns.tolist()}")
-            continue
-        
-        # Extract features for this node
-        node_df = df[features].copy()
-        
-        # Handle missing values
-        num_features = [f for f in features if node_df[f].dtype in ['int64', 'float64']]
-        for col in num_features:
-            if node_df[col].isna().any():
-                col_mean = node_df[col].mean()
-                node_df[col].fillna(col_mean, inplace=True)
-        
-        cat_features = [f for f in features if node_df[f].dtype not in ['int64', 'float64']]
-        for col in cat_features:
-            if node_df[col].isna().any():
-                mode_val = node_df[col].mode()[0]
-                node_df[col].fillna(mode_val, inplace=True)
-        
-        # Preprocess using saved preprocessor or create a new one
-        try:
-            if node_id in node_preprocessors:
-                # Use node-specific preprocessor
-                X = node_preprocessors[node_id].transform(node_df)
-                print(f"Used node-specific preprocessor for node {node_id}")
-            elif central_preprocessor:
-                # Use central preprocessor
-                X = central_preprocessor.transform(node_df)
-                print(f"Used central preprocessor for node {node_id}")
-            else:
-                # Create a new preprocessor
-                node_preprocessor = ColumnTransformer([
-                    ('num', StandardScaler(), num_features),
-                    ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
-                ])
-                X = node_preprocessor.fit_transform(node_df)
-                print(f"Created new preprocessor for node {node_id}")
-            
-            # Convert to dense if sparse
-            if hasattr(X, "toarray"):
-                X = X.toarray()
-            
-            # Convert to tensor
-            X_tensor = torch.tensor(X, dtype=torch.float32)
-            
-            # Replace NaN values if any
-            if torch.isnan(X_tensor).any():
-                X_tensor = torch.nan_to_num(X_tensor, nan=0.0)
-            
-            client_data[node_id] = X_tensor
-            
-        except Exception as e:
-            print(f"Error processing data for node {node_id}: {e}")
-            import traceback
-            traceback.print_exc()
-    
-    # Make predictions if we have data for at least one client
-    if not client_data:
-        print("No valid client data processed. Cannot make predictions.")
-        return df
-    
-    # Generate embeddings and make predictions
-    with torch.no_grad():
-        # Generate embeddings for each client
-        embeddings = []
-        for node_id in sorted(client_data.keys()):
-            encoder = client_encoders[node_id]
-            embedding = encoder(client_data[node_id])
-            embeddings.append(embedding)
-        
-        # Concatenate embeddings
-        combined_embedding = torch.cat(embeddings, dim=1)
-        
-        # Get predictions from server model
-        predictions = server_model(combined_embedding)
-        
-        # Process predictions based on model type
-        if is_regression:
-            # Regression - add raw predictions
-            pred_values = predictions.numpy().flatten()
-            
-            # Apply inverse transform if target scaler available
-            if target_scaler:
-                try:
-                    # If target_scaler is a ColumnTransformer
-                    if hasattr(target_scaler, 'transformers_'):
-                        # Extract the actual transformer (StandardScaler) from ColumnTransformer
-                        name, transformer, columns = target_scaler.transformers_[0]
-                        # Use the actual transformer for inverse_transform
-                        pred_values = transformer.inverse_transform(
-                            pred_values.reshape(-1, 1)).flatten()
-                        print(f"Applied inverse scaling using {name} transformer")
-                    else:
-                        # If it's a direct scaler like StandardScaler
-                        pred_values = target_scaler.inverse_transform(
-                            pred_values.reshape(-1, 1)).flatten()
-                        print("Applied inverse scaling to predictions")
-                except Exception as e:
-                    print(f"Error applying inverse scaling: {e}")
-                    
-                    # Fallback: Try manual inverse scaling for anchor_age prediction
-                    try:
-                        # Extract basic statistics from the dataframe to estimate scaling
-                        if 'anchor_age' in df.columns:
-                            mean_age = df['anchor_age'].mean()
-                            std_age = df['anchor_age'].std()
-                            
-                            # Apply manual inverse transformation
-                            pred_values = pred_values * std_age + mean_age
-                            print(f"Applied manual inverse scaling using dataset statistics: mean={mean_age:.2f}, std={std_age:.2f}")
-                        else:
-                            print("Could not apply manual scaling - target column not in dataframe")
-                    except Exception as e2:
-                        print(f"Manual scaling also failed: {e2}")
-            
-            df['prediction'] = pred_values
-        else:
-            # Classification - add class probabilities and predicted class
-            logits = predictions.numpy()
-            probs = torch.softmax(predictions, dim=1).numpy()
-            pred_classes = np.argmax(probs, axis=1)
-            
-            # Add predicted class
-            df['predicted_class'] = pred_classes
-            
-            # Add probabilities for each class
-            for i in range(probs.shape[1]):
-                class_name = f"class_{i}"
-                if label_map and i < len(label_map):
-                    class_name = label_map[i]
-                df[f'prob_{class_name}'] = probs[:, i]
-            
-            # Map to labels if available
-            if label_map:
-                df['predicted_label'] = [label_map[idx] if idx < len(label_map) else f"Unknown-{idx}" 
-                                        for idx in pred_classes]
-    
-    return df
-
 
 def calculate_spearman_correlation(df, target_col=None):
     """
@@ -1289,6 +871,211 @@ def calculate_mutual_information(df, target_col):
     return mi_df
 
 
+def load_vfl_model(model_path):
+    """
+    Load a VFL model with the specific directory structure:
+    - model_path/
+      - final_model_state_dict.pth
+      - final_model.pth
+      - model_info.json
+      - encoders/
+        - client_encoder_1.pth, etc.
+      - nodes_preprocessor/
+        - preprocessor_1.pkl, etc.
+      - server_preprocessor/
+        - label_map.pkl (for classification)
+        - target_scaler.pkl (for regression)
+        
+    Args:
+        model_path: Path to the server model directory
+        
+    Returns:
+        server_model: The loaded server model
+        client_encoders: Dictionary of client encoders
+        model_artifacts: Dictionary containing preprocessors and metadata
+    """
+    # Check if model path exists
+    if not os.path.exists(model_path):
+        raise ValueError(f"Model path does not exist: {model_path}")
+    
+    # Determine if regression or classification
+    is_regression = "regression" in model_path
+    model_type = None
+    
+    if "dl_regression" in model_path:
+        model_type = "dl_r"
+    elif "ml_regression" in model_path:
+        model_type = "ml_r"
+    elif "dl_classification" in model_path:
+        model_type = "dl_c" 
+    elif "ml_classification" in model_path:
+        model_type = "ml_c"
+    
+    # Load model info from model_info.json
+    model_info_path = os.path.join(model_path, "model_info.json")
+    input_dim = 20  # Default
+    output_dim = 1  # Default
+    
+    if os.path.exists(model_info_path):
+        try:
+            with open(model_info_path, "r") as f:
+                model_info = json.load(f)
+                input_dim = model_info.get("input_dim", 20)
+                output_dim = model_info.get("output_dim", 1)
+            print(f"Loaded model info from {model_info_path}")
+        except Exception as e:
+            print(f"Error loading model info: {e}")
+            model_info = {}
+    else:
+        print(f"No model_info.json found at {model_path}")
+        model_info = {}
+    
+    # Create appropriate model instance
+    if is_regression:
+        server_model = SimpleRegressor(input_dim=input_dim)
+    else:
+        server_model = SimpleClassifier(input_dim=input_dim, num_classes=output_dim)
+    
+    # Load the model - try state_dict first, then full model
+    state_dict_path = os.path.join(model_path, "final_model_state_dict.pth")
+    if os.path.exists(state_dict_path):
+        try:
+            server_model.load_state_dict(torch.load(state_dict_path))
+            print(f"Loaded model state_dict from {state_dict_path}")
+        except Exception as e:
+            print(f"Error loading state_dict: {e}")
+            
+            # Try loading full model with weights_only=False
+            full_model_path = os.path.join(model_path, "final_model.pth")
+            if os.path.exists(full_model_path):
+                try:
+                    add_safe_globals([SimpleRegressor, SimpleClassifier])
+                    server_model = torch.load(full_model_path, weights_only=False)
+                    print(f"Loaded full model from {full_model_path}")
+                except Exception as e2:
+                    print(f"Error loading full model: {e2}")
+    else:
+        # No state_dict, try full model
+        full_model_path = os.path.join(model_path, "final_model.pth")
+        if os.path.exists(full_model_path):
+            try:
+                from torch.serialization import add_safe_globals
+                add_safe_globals([SimpleRegressor, SimpleClassifier])
+                server_model = torch.load(full_model_path, weights_only=False)
+                print(f"Loaded full model from {full_model_path}")
+            except Exception as e:
+                print(f"Error loading full model: {e}")
+        else:
+            print(f"WARNING: No model file found at {model_path}")
+    
+    # Load client encoders from encoders/ directory
+    client_encoders = {}
+    encoder_dir = os.path.join(model_path, "encoders")
+    
+    if os.path.exists(encoder_dir):
+        print(f"Loading client encoders from {encoder_dir}")
+        for file in os.listdir(encoder_dir):
+            if file.endswith(".pth"):
+                # Extract node_id from filename
+                if file.startswith("client_encoder_"):
+                    node_id = file.split("_")[-1].split(".")[0]
+                else:
+                    # Try to extract a number from the filename
+                    import re
+                    match = re.search(r'(\d+)', file)
+                    if match:
+                        node_id = match.group(1)
+                    else:
+                        # Use the filename without extension as node_id
+                        node_id = os.path.splitext(file)[0]
+                
+                encoder_path = os.path.join(encoder_dir, file)
+                try:
+                    from torch.serialization import add_safe_globals
+                    add_safe_globals([ClientEncoder])
+                    client_encoders[node_id] = torch.load(encoder_path, weights_only=False)
+                    print(f"Loaded encoder for node {node_id}")
+                except Exception as e:
+                    print(f"Error loading encoder for node {node_id}: {e}")
+    else:
+        print(f"No encoders directory found at {encoder_dir}")
+    
+    # Load node preprocessors from nodes_preprocessor/ directory
+    node_preprocessors = {}
+    preprocessor_dir = os.path.join(model_path, "nodes_preprocessor")
+    
+    if os.path.exists(preprocessor_dir):
+        print(f"Loading node preprocessors from {preprocessor_dir}")
+        for file in os.listdir(preprocessor_dir):
+            if file.endswith(".pkl"):
+                # Extract node_id from filename
+                if file.startswith("preprocessor_"):
+                    node_id = file.split("_")[-1].split(".")[0]
+                else:
+                    # Try to extract a number from the filename
+                    import re
+                    match = re.search(r'(\d+)', file)
+                    if match:
+                        node_id = match.group(1)
+                    else:
+                        # Use the filename without extension as node_id
+                        node_id = os.path.splitext(file)[0]
+                
+                preprocessor_path = os.path.join(preprocessor_dir, file)
+                try:
+                    with open(preprocessor_path, "rb") as f:
+                        node_preprocessors[node_id] = pickle.load(f)
+                    print(f"Loaded preprocessor for node {node_id}")
+                except Exception as e:
+                    print(f"Error loading preprocessor for node {node_id}: {e}")
+    else:
+        print(f"No nodes_preprocessor directory found at {preprocessor_dir}")
+    
+    # Load server preprocessor (label_map or target_scaler)
+    server_preprocessor_dir = os.path.join(model_path, "server_preprocessor")
+    label_map = None
+    target_scaler = None
+    
+    if os.path.exists(server_preprocessor_dir):
+        print(f"Loading server preprocessor from {server_preprocessor_dir}")
+        
+        # For classification, look for label_map.pkl
+        if not is_regression:
+            label_map_path = os.path.join(server_preprocessor_dir, "label_map.pkl")
+            if os.path.exists(label_map_path):
+                try:
+                    with open(label_map_path, "rb") as f:
+                        label_map = pickle.load(f)
+                    print(f"Loaded label map with {len(label_map)} classes")
+                except Exception as e:
+                    print(f"Error loading label map: {e}")
+        
+        # For regression, look for target_scaler.pkl
+        if is_regression:
+            scaler_path = os.path.join(server_preprocessor_dir, "target_scaler.pkl")
+            if os.path.exists(scaler_path):
+                try:
+                    with open(scaler_path, "rb") as f:
+                        target_scaler = pickle.load(f)
+                    print("Loaded target scaler")
+                except Exception as e:
+                    print(f"Error loading target scaler: {e}")
+    else:
+        print(f"No server_preprocessor directory found at {server_preprocessor_dir}")
+    
+    # Combine all artifacts
+    model_artifacts = {
+        "model_info": model_info,
+        "model_type": model_type,
+        "is_regression": is_regression,
+        "node_preprocessors": node_preprocessors,
+        "label_map": label_map,
+        "target_scaler": target_scaler
+    }
+    
+    return server_model, client_encoders, model_artifacts
+
+
 
 
 def load_ml_model(model_path, verbose=True):
@@ -1508,6 +1295,231 @@ def load_ml_model(model_path, verbose=True):
     
     return ml_artifacts
 
+
+def predict_dl(df, approche, client_features=None):
+    """
+    Process a dataframe through a VFL model and add predictions
+    
+    Args:
+        df: Pandas DataFrame to process
+        approche: The model approach ('dl_r', 'dl_c', 'ml_r', 'ml_c')
+        client_features: Optional dict mapping node_id to feature lists
+                        If None, will try to infer from client encoders
+    
+    Returns:
+        Tuple of (df, predictions) where predictions are the raw prediction values
+    """
+    result_df = df.copy()
+    predictions = None
+    
+    if approche == 'dl_r':
+        model_path = "../server/results/dl_regression"
+    elif approche == 'dl_c':
+        model_path = "../server/results/dl_classification"
+    elif approche == 'ml_r':
+        model_path = "../server/results/ml_regression"
+    elif approche == 'ml_c':
+        model_path = "../server/results/ml_classification"
+    else:
+        raise ValueError(f"Unknown model approach: {approche}")
+
+    # Load model, encoders and artifacts
+    server_model, client_encoders, artifacts = load_vfl_model(model_path)
+    
+    if not client_encoders:
+        print("No client encoders found. Cannot make predictions.")
+        return result_df, predictions
+    
+    # Set models to evaluation mode
+    server_model.eval()
+    for encoder in client_encoders.values():
+        encoder.eval()
+    
+    # Extract key artifacts
+    is_regression = artifacts.get("is_regression", True)
+    node_preprocessors = artifacts.get("node_preprocessors", {})
+    central_preprocessor = artifacts.get("central_preprocessor")
+    label_map = artifacts.get("label_map")
+    target_scaler = artifacts.get("target_scaler")
+    
+    # If client_features not provided, try to get from encoders
+    if client_features is None:
+        client_features = {}
+        for node_id, encoder in client_encoders.items():
+            if hasattr(encoder, 'features'):
+                client_features[node_id] = encoder.features
+    
+    print(f"--------------- Retrieved features are {client_features}")
+    
+    # If we still don't have features for all clients, warn
+    missing_nodes = [node_id for node_id in client_encoders.keys() 
+                    if node_id not in client_features or not client_features[node_id]]
+    
+    if missing_nodes:
+        print(f"Warning: Missing features for nodes: {missing_nodes}")
+        print("Will attempt to process other nodes.")
+    
+    # Process data for each client
+    client_data = {}
+    for node_id, encoder in client_encoders.items():
+        # Skip nodes with no feature information
+        if node_id not in client_features or not client_features[node_id]:
+            print(f"Skipping node {node_id} - no feature information available")
+            continue
+        
+        features = client_features[node_id]
+        
+        # Check if all features exist in the dataframe
+        missing_features = [f for f in features if f not in result_df.columns]
+        if missing_features:
+            print(f"Warning: Missing features for node {node_id}: {missing_features}")
+            print(f"Available columns: {result_df.columns.tolist()}")
+            continue
+        
+        # Extract features for this node
+        node_df = result_df[features].copy()
+        
+        # Handle missing values
+        num_features = [f for f in features if node_df[f].dtype in ['int64', 'float64']]
+        for col in num_features:
+            if node_df[col].isna().any():
+                col_mean = node_df[col].mean()
+                node_df[col].fillna(col_mean, inplace=True)
+        
+        cat_features = [f for f in features if node_df[f].dtype not in ['int64', 'float64']]
+        for col in cat_features:
+            if node_df[col].isna().any():
+                mode_val = node_df[col].mode()[0]
+                node_df[col].fillna(mode_val, inplace=True)
+        
+        # Preprocess using saved preprocessor or create a new one
+        try:
+            if node_id in node_preprocessors:
+                # Use node-specific preprocessor
+                X = node_preprocessors[node_id].transform(node_df)
+                print(f"Used node-specific preprocessor for node {node_id}")
+            elif central_preprocessor:
+                # Use central preprocessor
+                X = central_preprocessor.transform(node_df)
+                print(f"Used central preprocessor for node {node_id}")
+            else:
+                # Create a new preprocessor
+                from sklearn.compose import ColumnTransformer
+                from sklearn.preprocessing import StandardScaler, OneHotEncoder
+                node_preprocessor = ColumnTransformer([
+                    ('num', StandardScaler(), num_features),
+                    ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
+                ])
+                X = node_preprocessor.fit_transform(node_df)
+                print(f"Created new preprocessor for node {node_id}")
+            
+            # Convert to dense if sparse
+            if hasattr(X, "toarray"):
+                X = X.toarray()
+            
+            # Convert to tensor
+            X_tensor = torch.tensor(X, dtype=torch.float32)
+            
+            # Replace NaN values if any
+            if torch.isnan(X_tensor).any():
+                X_tensor = torch.nan_to_num(X_tensor, nan=0.0)
+            
+            client_data[node_id] = X_tensor
+            
+        except Exception as e:
+            print(f"Error processing data for node {node_id}: {e}")
+            import traceback
+            traceback.print_exc()
+    
+    # Make predictions if we have data for at least one client
+    if not client_data:
+        print("No valid client data processed. Cannot make predictions.")
+        return result_df, predictions
+    
+    # Generate embeddings and make predictions
+    with torch.no_grad():
+        # Generate embeddings for each client
+        embeddings = []
+        for node_id in sorted(client_data.keys()):
+            encoder = client_encoders[node_id]
+            embedding = encoder(client_data[node_id])
+            embeddings.append(embedding)
+        
+        # Concatenate embeddings
+        combined_embedding = torch.cat(embeddings, dim=1)
+        
+        # Get predictions from server model
+        model_predictions = server_model(combined_embedding)
+        
+        # Process predictions based on model type
+        if is_regression:
+            # Regression - get raw predictions
+            pred_values = model_predictions.numpy().flatten()
+            
+            # Apply inverse transform if target scaler available
+            if target_scaler:
+                try:
+                    # If target_scaler is a ColumnTransformer
+                    if hasattr(target_scaler, 'transformers_'):
+                        # Extract the actual transformer (StandardScaler) from ColumnTransformer
+                        name, transformer, columns = target_scaler.transformers_[0]
+                        # Use the actual transformer for inverse_transform
+                        pred_values = transformer.inverse_transform(
+                            pred_values.reshape(-1, 1)).flatten()
+                        print(f"Applied inverse scaling using {name} transformer")
+                    else:
+                        # If it's a direct scaler like StandardScaler
+                        pred_values = target_scaler.inverse_transform(
+                            pred_values.reshape(-1, 1)).flatten()
+                        print("Applied inverse scaling to predictions")
+                except Exception as e:
+                    print(f"Error applying inverse scaling: {e}")
+                    
+                    # Fallback: Try manual inverse scaling for anchor_age prediction
+                    try:
+                        # Extract basic statistics from the dataframe to estimate scaling
+                        if 'anchor_age' in result_df.columns:
+                            mean_age = result_df['anchor_age'].mean()
+                            std_age = result_df['anchor_age'].std()
+                            
+                            # Apply manual inverse transformation
+                            pred_values = pred_values * std_age + mean_age
+                            print(f"Applied manual inverse scaling using dataset statistics: mean={mean_age:.2f}, std={std_age:.2f}")
+                        else:
+                            print("Could not apply manual scaling - target column not in dataframe")
+                    except Exception as e2:
+                        print(f"Manual scaling also failed: {e2}")
+            
+            # Store predictions to return, don't modify dataframe
+            predictions = pred_values
+        else:
+            # Classification - handle probabilities and predicted class
+            logits = model_predictions.numpy()
+            probs = torch.softmax(model_predictions, dim=1).numpy()
+            pred_classes = np.argmax(probs, axis=1)
+            
+            # Store predicted class
+            result_df['predicted_class'] = pred_classes
+            
+            # Add probabilities for each class
+            for i in range(probs.shape[1]):
+                class_name = f"class_{i}"
+                if label_map and i < len(label_map):
+                    class_name = label_map[i]
+                result_df[f'prob_{class_name}'] = probs[:, i]
+            
+            # Map to labels if available
+            if label_map:
+                predictions = [label_map[idx] if idx < len(label_map) else f"Unknown-{idx}" 
+                              for idx in pred_classes]
+            else:
+                predictions = [f"Class_{idx}" for idx in pred_classes]
+            
+            # Store the predicted labels
+            result_df['predicted_label'] = predictions
+    
+    return result_df, predictions
+
 def predict_with_ml_model(df, approche, client_features=None, verbose=True):
     """
     Unified prediction function that handles both ML regression and classification models
@@ -1519,8 +1531,11 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
         verbose: Whether to print status messages
         
     Returns:
-        DataFrame with predictions added
+        Tuple of (df, predictions) where predictions are the raw values
     """
+    result_df = df.copy()
+    predictions = None
+    
     # Map approach to model path
     model_type_mapping = {
         "ml_r": "ml_regression",
@@ -1539,7 +1554,7 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
     if "error" in ml_artifacts:
         if verbose:
             print(f"Error loading model: {ml_artifacts['error']}")
-        return df
+        return result_df, predictions
     
     # Use provided client features or ones loaded from metadata
     if client_features is not None:
@@ -1549,7 +1564,7 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
     if not ml_artifacts["node_weights"]:
         if verbose:
             print("No valid weights found. Cannot make predictions.")
-        return df
+        return result_df, predictions
     
     # Set server model to evaluation mode
     server_model = ml_artifacts["server_model"]
@@ -1568,15 +1583,15 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
         features = ml_artifacts["client_features"][node_id]
         
         # Check if all features exist in the dataframe
-        missing_features = [f for f in features if f not in df.columns]
+        missing_features = [f for f in features if f not in result_df.columns]
         if missing_features:
             if verbose:
                 print(f"Warning: Missing features for node {node_id}: {missing_features}")
-                print(f"Available columns: {df.columns.tolist()}")
+                print(f"Available columns: {result_df.columns.tolist()}")
             continue
         
         # Extract features for this node
-        node_df = df[features].copy()
+        node_df = result_df[features].copy()
         
         # Handle missing values
         num_features = [f for f in features if node_df[f].dtype in ['int64', 'float64']]
@@ -1642,20 +1657,20 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
     if not node_outputs:
         if verbose:
             print("No valid node outputs processed. Cannot make predictions.")
-        return df
+        return result_df, predictions
     
     # Combine node outputs
     with torch.no_grad():
-        # FIX: Concatenate the outputs instead of summing them
+        # Concatenate the outputs instead of summing them
         combined_output = torch.cat(node_outputs, dim=1)
         
         # Apply server model
-        predictions = server_model(combined_output)
+        model_predictions = server_model(combined_output)
         
         # Process predictions based on model type
         if ml_artifacts["is_regression"]:
             # Regression - get raw predictions
-            pred_values = predictions.numpy().flatten() if hasattr(predictions, 'numpy') else predictions.detach().numpy().flatten()
+            pred_values = model_predictions.numpy().flatten() if hasattr(model_predictions, 'numpy') else model_predictions.detach().numpy().flatten()
             
             # Apply inverse transform if target scaler is available
             if "target_scaler" in ml_artifacts:
@@ -1697,23 +1712,138 @@ def predict_with_ml_model(df, approche, client_features=None, verbose=True):
                     if verbose:
                         print(f"Error applying inverse scaling: {e}")
             
-            # Add predictions to dataframe
-            df['prediction'] = pred_values
+            # Store predictions to return
+            predictions = pred_values
         else:
-            # Classification - add class probabilities and predicted class
+            # Classification - get class probabilities and predicted class
             # For ML classification, apply softmax to the raw outputs
-            probs = torch.nn.functional.softmax(predictions, dim=1).detach().numpy()
+            probs = torch.nn.functional.softmax(model_predictions, dim=1).detach().numpy()
             pred_classes = np.argmax(probs, axis=1)
             
-            # Only add the predicted label, no probabilities or class indices
+            # Map to labels if available
             if "label_map" in ml_artifacts and ml_artifacts["label_map"]:
                 label_map = ml_artifacts["label_map"]
-                df['predicted_label'] = [label_map[idx] if idx < len(label_map) else f"Unknown-{idx}" 
-                                        for idx in pred_classes]
+                predictions = [label_map[idx] if idx < len(label_map) else f"Unknown-{idx}" 
+                              for idx in pred_classes]
             else:
-                df['predicted_label'] = [f"Class_{idx}" for idx in pred_classes]
+                predictions = [f"Class_{idx}" for idx in pred_classes]
     
-    return df
+    return result_df, predictions
+
+def return_regression_results(dataframe, target=None, client_features=None, verbose=False):
+    """
+    Run regression prediction pipeline and add results from ML/DL VFL models.
+    
+    Args:
+        dataframe: Input DataFrame
+        target: Target column name (optional)
+        client_features: Dictionary mapping node_id to feature list (optional)
+        verbose: Whether to print status messages
+    
+    Returns:
+        DataFrame with predictions from ML/DL models
+    """
+    result_df = dataframe.copy()
+    
+    # Run prediction for ML and DL models
+    for model_type in ['ml_r', 'dl_r']:
+        try:
+            if model_type == 'ml_r':
+                # Use the ML approach
+                _, ml_predictions = predict_with_ml_model(
+                    result_df, 
+                    model_type, 
+                    client_features=client_features, 
+                    verbose=verbose
+                )
+                if ml_predictions is not None:
+                    result_df[f"{target if target else 'prediction'}_ml"] = ml_predictions
+                    if verbose:
+                        print(f"Added ML regression predictions as '{target if target else 'prediction'}_ml'")
+            else:
+                # Use the DL approach
+                _, dl_predictions = predict_dl(
+                    result_df,
+                    model_type,
+                    client_features=client_features
+                )
+                if dl_predictions is not None:
+                    result_df[f"{target if target else 'prediction'}_dl"] = dl_predictions
+                    if verbose:
+                        print(f"Added DL regression predictions as '{target if target else 'prediction'}_dl'")
+        except Exception as e:
+            if verbose:
+                print(f"Error during {model_type} prediction: {e}")
+                print("Creating empty prediction column")
+            result_df[f"{target if target else 'prediction'}_{model_type[:2]}"] = np.nan
+    
+    # Make sure there's no generic 'prediction' column (which would be a leftover from older versions)
+    if 'prediction' in result_df.columns:
+        result_df = result_df.drop('prediction', axis=1)
+    
+    return result_df
+
+def return_classification_results(dataframe, target=None, client_features=None, verbose=False):
+    """
+    Run classification prediction pipeline and add results from ML/DL models.
+    
+    Args:
+        dataframe: Input DataFrame
+        target: Target column name (optional)
+        client_features: Dictionary mapping node_id to feature list (optional)
+        verbose: Whether to print status messages
+    
+    Returns:
+        DataFrame with predictions from ML/DL models
+    """
+    result_df = dataframe.copy()
+    
+    # Run prediction for ML and DL models
+    for model_type in ['ml_c', 'dl_c']:
+        try:
+            if model_type == 'ml_c':
+                # Use the ML approach
+                temp_df, ml_predictions = predict_with_ml_model(
+                    result_df, 
+                    model_type, 
+                    client_features=client_features, 
+                    verbose=verbose
+                )
+                if ml_predictions is not None:
+                    result_df[f"{target if target else 'predicted'}_ml"] = ml_predictions
+                    if verbose:
+                        print(f"Added ML classification predictions as '{target if target else 'predicted'}_ml'")
+            else:
+                # Use the DL approach
+                temp_df, dl_predictions = predict_dl(
+                    result_df,
+                    model_type,
+                    client_features=client_features
+                )
+                if dl_predictions is not None:
+                    result_df[f"{target if target else 'predicted'}_dl"] = dl_predictions
+                    if verbose:
+                        print(f"Added DL classification predictions as '{target if target else 'predicted'}_dl'")
+        except Exception as e:
+            if verbose:
+                print(f"Error during {model_type} prediction: {e}")
+                print("Creating empty prediction column")
+            result_df[f"{target if target else 'predicted'}_{model_type[:2]}"] = None
+    
+    # Clean up any temporary prediction columns
+    for col in ['prediction', 'predicted_class', 'predicted_label']:
+        if col in result_df.columns:
+            result_df = result_df.drop(col, axis=1)
+            
+    # Remove probability columns if present (from DL predictions)
+    prob_cols = [col for col in result_df.columns if col.startswith('prob_')]
+    if prob_cols:
+        result_df = result_df.drop(prob_cols, axis=1)
+    
+    return result_df
+
+
+
 
 
 

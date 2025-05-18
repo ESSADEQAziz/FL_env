@@ -71,7 +71,7 @@ class VFLClient(fl.client.NumPyClient):
 if __name__ == "__main__" :
 
     # before testing , make sure that the numbers of sum(embeddings) from nodes == the input dimention of the global model within the server (because it may be some categorical features can scale dimention due to one hot encoder)
-    target_features=['creatinine','respiratory_rate']
+    target_features=['anchor_year','heart_rate']
     target_table = "../data/data.csv"
 
     private_key = Path(f"../auth_keys/node{NODE_ID}_key")

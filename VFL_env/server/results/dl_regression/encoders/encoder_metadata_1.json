@@ -1,6 +1,6 @@
 {
   "features": [
-    "creatinine"
+    "anchor_year"
   ],
   "embedding_size": 1,
   "data_shape": [

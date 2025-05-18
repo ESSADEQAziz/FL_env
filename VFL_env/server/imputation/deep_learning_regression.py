@@ -105,8 +105,8 @@ class VFLServer(fl.server.strategy.FedAvg):
 
 def start_server():
     strategy = VFLServer(
-        csv_path="../target_data/data.csv",
-        target_feature="anchor_year",
+        csv_path="../target_data/data_r.csv",
+        target_feature="respiratory_rate",
         final_round=30,
         fraction_fit=1.0,
         fraction_evaluate=1.0,

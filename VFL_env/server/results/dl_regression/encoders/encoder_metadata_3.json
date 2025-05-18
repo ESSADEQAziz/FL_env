@@ -1,6 +1,6 @@
 {
   "features": [
-    "respiratory_rate"
+    "heart_rate"
   ],
   "embedding_size": 1,
   "data_shape": [
