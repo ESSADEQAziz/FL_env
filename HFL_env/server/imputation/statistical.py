@@ -1,3 +1,4 @@
+# All paths based on the launch.sh file location
 import logging
 import functions
 import flwr as fl
@@ -13,7 +14,7 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger("central_server")
-
+logger.info("Starting central server ...")
 
 class CustomFedAvg(fl.server.strategy.FedAvg):
     def __init__(self,*args, **kwargs):

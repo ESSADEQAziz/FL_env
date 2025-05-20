@@ -4,7 +4,11 @@ services:
     container_name: v_central_server
     image: hfl_env-central_server
     volumes:
-      - ./server:/ServerApp
+      - ./server/imputation:/ServerApp/imputation
+      - ./server/logs:/ServerApp/logs
+      - ./server/launch.sh:/ServerApp/launch.sh
+      - ./server/results:/ServerApp/results
+      - ./server/target_data:/ServerApp/target_data
       - ./certificates/central_server:/ServerApp/certs
       - ./auth_keys/central_server:/ServerApp/auth_keys
     networks:
@@ -23,8 +27,11 @@ services:
     depends_on:
       - v_central_server
     volumes:
-      - ./nodes:/NodeApp   
       - ./data/node1_patients:/NodeApp/data 
+      - ./nodes/imputation:/NodeApp/imputation
+      - ./nodes/logs:/NodeApp/logs
+      - ./nodes/results:/NodeApp/results
+      - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./certificates/node1:/NodeApp/certs
       - ./auth_keys/node1:/NodeApp/auth_keys
     environment:
@@ -42,8 +49,11 @@ services:
     depends_on:
       - v_central_server
     volumes:
-      - ./nodes:/NodeApp    
       - ./data/node2_admissions:/NodeApp/data 
+      - ./nodes/imputation:/NodeApp/imputation
+      - ./nodes/logs:/NodeApp/logs
+      - ./nodes/results:/NodeApp/results
+      - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./certificates/node2:/NodeApp/certs
       - ./auth_keys/node2:/NodeApp/auth_keys
     environment:
@@ -61,8 +71,11 @@ services:
     depends_on:
       - v_central_server
     volumes:
-      - ./nodes:/NodeApp    
       - ./data/node3_chartevents:/NodeApp/data 
+      - ./nodes/imputation:/NodeApp/imputation
+      - ./nodes/logs:/NodeApp/logs
+      - ./nodes/results:/NodeApp/results
+      - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./certificates/node3:/NodeApp/certs
       - ./auth_keys/node3:/NodeApp/auth_keys
     environment:
@@ -80,8 +93,11 @@ services:
     depends_on:
       - v_central_server
     volumes:
-      - ./nodes:/NodeApp    
       - ./data/node4_labevents:/NodeApp/data 
+      - ./nodes/imputation:/NodeApp/imputation
+      - ./nodes/logs:/NodeApp/logs
+      - ./nodes/results:/NodeApp/results
+      - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./certificates/node4:/NodeApp/certs
       - ./auth_keys/node4:/NodeApp/auth_keys
     environment:
@@ -98,9 +114,12 @@ services:
     image: hfl_env-node
     depends_on:
       - v_central_server
-    volumes:
-      - ./nodes:/NodeApp    
+    volumes: 
       - ./data/node5_icustays:/NodeApp/data 
+      - ./nodes/imputation:/NodeApp/imputation
+      - ./nodes/logs:/NodeApp/logs
+      - ./nodes/results:/NodeApp/results
+      - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./certificates/node5:/NodeApp/certs
       - ./auth_keys/node5:/NodeApp/auth_keys
     environment:

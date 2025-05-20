@@ -47,9 +47,9 @@ def start_server():
         final_round=100,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=3,
-        min_evaluate_clients=3,
-        min_available_clients=3,
+        min_fit_clients=2,
+        min_evaluate_clients=2,
+        min_available_clients=2,
     )
     
     history = fl.server.start_server(server_address="central_server:5000", strategy=strategy, 
