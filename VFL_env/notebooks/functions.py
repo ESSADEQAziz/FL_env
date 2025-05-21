@@ -10,7 +10,7 @@ from IPython.display import display
 from scipy import stats
 import pickle
 import warnings
-from typing import List
+from typing import List ,Dict
 from sklearn.feature_selection import mutual_info_regression
 from IPython.display import display
 from torch.serialization import add_safe_globals
@@ -20,7 +20,67 @@ from sklearn.metrics import (
         explained_variance_score, accuracy_score, precision_score,
         recall_score, f1_score, confusion_matrix, classification_report
     )
+from scipy.stats import chi2_contingency, f_oneway
 
+
+
+def load_and_align_tables(csv_paths: Dict[str, str]) -> pd.DataFrame:
+    """
+    Load multiple CSV files specified in a dictionary, align them by subject_id,
+    and handle duplicate columns by appending the node name to column names.
+    
+    Args:
+        csv_paths: Dictionary where keys are node names and values are paths to CSV files
+                  Example: {'node1': '../data/node1_patients/data.csv', ...}
+        
+    Returns:
+        DataFrame with aligned data and unique column names
+    """
+    # Load all DataFrames
+    dataframes = []
+    for node_name, file_path in csv_paths.items():
+        df = pd.read_csv(file_path)
+        dataframes.append((df, node_name))
+    
+    # Find common subject_ids across all DataFrames
+    common_ids = set(dataframes[0][0]['subject_id'])
+    for df, _ in dataframes[1:]:
+        common_ids &= set(df['subject_id'])
+    common_ids = sorted(list(common_ids))  # consistent order
+    
+    # Process each DataFrame
+    aligned_dfs = []
+    all_columns = []  # To track column names we've seen
+    
+    for df, node_name in dataframes:
+        # Filter to common IDs and sort
+        df_filtered = df[df['subject_id'].isin(common_ids)].copy()
+        df_filtered = df_filtered.sort_values(by='subject_id').reset_index(drop=True)
+        
+        # Remove subject_id as it will be added back at the end
+        df_filtered = df_filtered.drop(columns=['subject_id'])
+        
+        # Rename columns to avoid duplicates by appending node_name to column names
+        # that already exist in our consolidated list
+        new_columns = []
+        for col in df_filtered.columns:
+            if col in all_columns:
+                new_col = f"{col}_{node_name}"
+                new_columns.append(new_col)
+            else:
+                new_columns.append(col)
+                all_columns.append(col)
+        
+        df_filtered.columns = new_columns
+        aligned_dfs.append(df_filtered)
+    
+    # Combine all DataFrames horizontally
+    combined_df = pd.concat(aligned_dfs, axis=1)
+    
+    # Add back the subject_id column
+    combined_df['subject_id'] = pd.Series(common_ids).reset_index(drop=True)
+    
+    return combined_df
 
 def merge_csvs_on_feature(csv_paths: List[str], merge_on: str, how: str = 'inner') -> pd.DataFrame:
     """
@@ -874,6 +934,151 @@ def calculate_mutual_information(df, target_col):
     
     return mi_df
 
+def identify_significant_features(df, target_col, significance_threshold=0.05, 
+                                  cramers_v_threshold=0.1, eta_squared_threshold=0.01,
+                                  top_n=None, show_plots=False):
+    """
+    Identifies the most significant features for predicting a categorical target
+    based on statistical metrics (p-values, Cramer's V, and eta squared).
+    
+    Args:
+        df: DataFrame containing the data
+        target_col: Categorical target column
+        significance_threshold: p-value threshold for statistical significance (default: 0.05)
+        cramers_v_threshold: minimum Cramer's V value for categorical features (default: 0.1)
+        eta_squared_threshold: minimum eta squared value for numerical features (default: 0.01)
+        top_n: optional limit on number of features to return (default: None = all significant)
+        show_plots: whether to display distribution plots (default: False)
+    
+    Returns:
+        DataFrame containing the most significant features and their metrics
+    """
+    # Check if target column exists
+    if target_col not in df.columns:
+        print(f"Error: {target_col} not found in dataframe")
+        return None
+    
+    # Get all feature columns (excluding target)
+    feature_cols = [col for col in df.columns if col != target_col]
+    
+    if not feature_cols:
+        print("No features found to analyze")
+        return None
+    
+    print(f"Analyzing {len(feature_cols)} features to identify predictors for '{target_col}'")
+    
+    # Store all feature results
+    all_features_data = []
+    
+    # Process each feature
+    for col in feature_cols:
+        # Create a clean subset with this pair
+        pair_df = df[[col, target_col]].dropna()
+        valid_count = len(pair_df)
+        total_count = len(df)
+        
+        if valid_count < 5:
+            continue
+        
+        # Determine if feature is categorical or numerical
+        is_categorical = False
+        
+        # Check if column is categorical-like
+        if not pd.api.types.is_numeric_dtype(df[col]):
+            is_categorical = True
+        # Or if it's a numeric column with few unique values (likely categorical)
+        elif df[col].nunique() <= 10:
+            is_categorical = True
+        
+        # Analysis based on feature type
+        feature_data = {
+            'Feature': col,
+            'Type': 'categorical' if is_categorical else 'numerical',
+            'Valid Observations': valid_count,
+            'Data Coverage': f"{valid_count/total_count:.1%}"
+        }
+        
+        if is_categorical:
+            metrics = _analyze_cat_feature_metrics(pair_df, col, target_col)
+            if metrics:
+                feature_data.update({
+                    'Test': 'Chi-square',
+                    'Statistic': metrics['chi2'],
+                    'p-value': metrics['p_value'],
+                    'Effect Size': metrics['cramers_v'],
+                    'Effect Size Name': "Cramer's V",
+                    'Interpretation': metrics['interpretation'],
+                    'Significant': metrics['p_value'] <= significance_threshold,
+                    'Strong Enough': metrics['cramers_v'] >= cramers_v_threshold,
+                    'Low Expected Freq': metrics['low_expected_freq'],
+                    'DoF': metrics['dof']
+                })
+                all_features_data.append(feature_data)
+        else:
+            metrics = _analyze_num_feature_metrics(pair_df, col, target_col, False)
+            if metrics and 'error' not in metrics:
+                feature_data.update({
+                    'Test': 'ANOVA',
+                    'Statistic': metrics['f_stat'],
+                    'p-value': metrics['p_value'],
+                    'Effect Size': metrics['eta_squared'],
+                    'Effect Size Name': "Eta squared",
+                    'Interpretation': metrics['interpretation'],
+                    'Significant': metrics['p_value'] <= significance_threshold,
+                    'Strong Enough': metrics['eta_squared'] >= eta_squared_threshold,
+                    'Low Expected Freq': False,
+                    'DoF': None
+                })
+                all_features_data.append(feature_data)
+    
+    # If no valid features found
+    if not all_features_data:
+        print("No valid features found for analysis")
+        return None
+        
+    # Create DataFrame with all features
+    all_features_df = pd.DataFrame(all_features_data)
+    
+    # Sort by significance and effect size
+    all_features_df['Recommended'] = all_features_df['Significant'] & all_features_df['Strong Enough']
+    all_features_df = all_features_df.sort_values(['Recommended', 'Effect Size'], ascending=[False, False])
+    
+    # Format the full results table
+    display_cols = ['Feature', 'Type', 'Test', 'Statistic', 'p-value', 
+                    'Effect Size', 'Effect Size Name', 'Interpretation',
+                    'Significant', 'Strong Enough', 'Recommended', 
+                    'Valid Observations', 'Data Coverage']
+    
+    if 'Low Expected Freq' in all_features_df.columns:
+        display_cols.insert(display_cols.index('Valid Observations'), 'Low Expected Freq')
+    
+    full_results = all_features_df[display_cols].copy()
+    
+    # Filter for significant features
+    sig_features = all_features_df[all_features_df['Recommended']].copy()
+    
+    # Apply top_n limit if specified
+    if top_n is not None and top_n > 0 and len(sig_features) > top_n:
+        sig_features = sig_features.head(top_n)
+    
+    # Display the results table
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', 1000)
+    
+    print("\n=========================================== Full Analysis Results =========================================== ")
+    print(full_results)
+    
+    print("\n===========================================  RECOMMENDED FEATURES FOR PREDICTING", target_col.upper(), "=========================================== ")
+    if len(sig_features) > 0:
+        # Simplify the recommended features display
+        recommended_cols = ['Feature', 'Type', 'Effect Size', 'Effect Size Name', 
+                           'p-value', 'Interpretation']
+        print(sig_features[recommended_cols])
+    else:
+        print("No features meet the significance and effect size criteria.")
+        print(f"Consider relaxing the thresholds (p-value < {significance_threshold}, effect size thresholds).")
+
+
 
 def load_vfl_model(model_path):
     """
@@ -1078,9 +1283,6 @@ def load_vfl_model(model_path):
     }
     
     return server_model, client_encoders, model_artifacts
-
-
-
 
 def load_ml_model(model_path, verbose=True):
     """
@@ -2361,6 +2563,112 @@ def benchmark_predictions(pred_df, original_df, target, task_type='regression'):
     
     return results_dict
 
+    
+def _analyze_num_feature_metrics(df, feature_col, target_col, show_plot=False):
+    """Get metrics for numerical feature vs categorical target"""
+    try:
+        # ANOVA test
+        groups = [df[df[target_col] == cat][feature_col].values for cat in df[target_col].unique()]
+        
+        if len(groups) < 2 or not all(len(g) > 1 for g in groups):
+            return {
+                'error': 'insufficient_groups',
+                'mean': df[feature_col].mean(),
+                'std': df[feature_col].std()
+            }
+        
+        # Run ANOVA
+        f_stat, p_value = f_oneway(*groups)
+        
+        # Calculate eta squared (effect size)
+        grand_mean = df[feature_col].mean()
+        total_ss = sum((df[feature_col] - grand_mean) ** 2)
+        between_ss = sum(len(g) * (np.mean(g) - grand_mean) ** 2 for g in groups)
+        eta_squared = between_ss / total_ss if total_ss > 0 else 0
+        
+        result = {
+            'f_stat': f_stat,
+            'p_value': p_value,
+            'eta_squared': eta_squared,
+            'interpretation': _interpret_eta_squared(eta_squared)
+        }
+        
+        # Distribution plot if requested (disabled by default)
+        if show_plot and p_value <= 0.05 and eta_squared >= 0.01:
+            plt.figure(figsize=(10, 6))
+            
+            # Plot KDE for each category
+            for category in df[target_col].unique():
+                subset = df[df[target_col] == category]
+                sns.kdeplot(subset[feature_col], label=f"{target_col}={category}")
+            
+            plt.title(f'Distribution of {feature_col} by {target_col}')
+            plt.xlabel(feature_col)
+            plt.ylabel('Density')
+            plt.legend()
+            plt.tight_layout()
+            plt.show()
+        
+        return result
+    except:
+        return None
+
+def _analyze_cat_feature_metrics(df, feature_col, target_col):
+    """Get metrics for categorical feature vs categorical target"""
+    try:
+        # Calculate contingency table
+        cross_tab = pd.crosstab(df[feature_col], df[target_col])
+        
+        # Chi-square test
+        chi2, p, dof, expected = chi2_contingency(cross_tab)
+        
+        # Calculate Cramer's V
+        n = cross_tab.sum().sum()
+        phi2 = chi2 / n
+        r, k = cross_tab.shape
+        phi2_corr = max(0, phi2 - ((k-1)*(r-1))/(n-1))
+        r_corr = r - (r-1)**2/(n-1)
+        k_corr = k - (k-1)**2/(n-1)
+        cramers_v = np.sqrt(phi2_corr / min(k_corr-1, r_corr-1)) if min(k_corr-1, r_corr-1) > 0 else 0
+        
+        # Check for low expected frequencies
+        low_exp_freq = (expected < 5).any()
+        
+        return {
+            'chi2': chi2,
+            'p_value': p,
+            'dof': dof,
+            'cramers_v': cramers_v,
+            'interpretation': _interpret_cramers_v(cramers_v),
+            'low_expected_freq': low_exp_freq
+        }
+    except:
+        return None
+
+def _interpret_eta_squared(eta_squared):
+    """Interpret eta squared value"""
+    if eta_squared < 0.01:
+        return "Negligible"
+    elif eta_squared < 0.06:
+        return "Small"
+    elif eta_squared < 0.14:
+        return "Medium"
+    else:
+        return "Large"
+
+def _interpret_cramers_v(v):
+    """Interpret Cramer's V value"""
+    if v < 0.1:
+        return "Negligible"
+    elif v < 0.2:
+        return "Weak"
+    elif v < 0.3:
+        return "Moderate"
+    elif v < 0.4:
+        return "Relatively Strong"
+    else:
+        return "Strong"
+   
 
 
 
