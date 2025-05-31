@@ -29,7 +29,6 @@ services:
       - ./nodes/imputation:/NodeApp/imputation
       - ./nodes/logs:/NodeApp/logs
       - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py
       - ./data/node1:/NodeApp/data 
       - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./certificates/node1:/NodeApp/certs
@@ -52,7 +51,6 @@ services:
       - ./nodes/imputation:/NodeApp/imputation
       - ./nodes/logs:/NodeApp/logs
       - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py 
       - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./data/node2:/NodeApp/data 
       - ./certificates/node2:/NodeApp/certs
@@ -76,7 +74,6 @@ services:
       - ./nodes/logs:/NodeApp/logs
       - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py  
       - ./data/node3:/NodeApp/data 
       - ./certificates/node3:/NodeApp/certs
       - ./auth_keys/node3:/NodeApp/auth_keys
@@ -98,7 +95,6 @@ services:
       - ./nodes/imputation:/NodeApp/imputation
       - ./nodes/logs:/NodeApp/logs
       - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py    
       - ./data/node4:/NodeApp/data 
       - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./certificates/node4:/NodeApp/certs
@@ -121,7 +117,6 @@ services:
       - ./nodes/imputation:/NodeApp/imputation
       - ./nodes/logs:/NodeApp/logs
       - ./nodes/results:/NodeApp/results
-      - ./nodes/node_app.py:/NodeApp/node_app.py  
       - ./nodes/launch.sh:/NodeApp/launch.sh
       - ./data/node5:/NodeApp/data 
       - ./certificates/node5:/NodeApp/certs

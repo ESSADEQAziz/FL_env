@@ -518,7 +518,7 @@ def get_nan_rows(dataframe, features):
     return nan_rows
 
 
-def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=None, task='regression', seed=42):
+def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=None, task='regression',index_col='subject_id', seed=42):
     """
     Introduce missing values in a specific feature of a DataFrame with a given pattern and rate,
     while saving the original values paired with appropriate time or ID index.
@@ -547,7 +547,7 @@ def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=N
         raise ValueError(f"Feature '{feature1}' not found in DataFrame columns: {df.columns.tolist()}")
     
     # Determine index column based on task type (same for both)
-    index_col = 'subject_id' 
+    index_col = index_col 
     
     # Check if index column exists
     if index_col not in df.columns:

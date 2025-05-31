@@ -18,19 +18,19 @@ def save_model(aggregated_parameters, server_round, input_dim, indx, num_classes
     """
     # Determine save path and model type based on index
     if indx == "dl_r":
-        save_path = f"../results/dl_results/regression/agg_model/model_round{server_round}.pth"
+        save_path = "../results/dl_results/regression/agg_model/model_round.pth"
         model = SimpleRegressor(input_dim=input_dim) 
     elif indx == "ml_r":
-        save_path = f"../results/ml_results/regression/agg_model/model_round{server_round}.pth"
+        save_path = "../results/ml_results/regression/agg_model/model_round.pth"
         model = LinearRegressionModel(input_dim=input_dim) 
     elif indx == "ml_c":
-        save_path = f"../results/ml_results/classification/agg_model/model_round{server_round}.pth"
+        save_path = "../results/ml_results/classification/agg_model/model_round.pth"
         model = LogisticRegressionModel(input_dim=input_dim, output_dim=num_classes) 
     elif indx == "dl_c":
-        save_path = f"../results/dl_results/classification/agg_model/model_round{server_round}.pth"
+        save_path = "../results/dl_results/classification/agg_model/model_round.pth"
         model = SimpleClassifier(input_dim=input_dim, num_classes=num_classes)
     else:
-        raise ValueError(f"Failure during saving the model: invalid index '{indx}'")
+        raise ValueError("Failure during saving the model: invalid index '{indx}'")
     
     # Create directory if it doesn't exist
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
@@ -56,7 +56,7 @@ def save_model(aggregated_parameters, server_round, input_dim, indx, num_classes
     
     info_path = os.path.join(
         os.path.dirname(save_path),
-        f"model_info_round{server_round}.json"
+        "model_info_round.json"
     )
     
     with open(info_path, 'w') as f:
@@ -78,7 +78,7 @@ class SimpleRegressor(nn.Module):
         self.model = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
+            nn.Linear(8, 8),
             nn.ReLU(),
             nn.Linear(hidden_dim, output_dim)
         )

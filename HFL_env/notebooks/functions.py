@@ -10,6 +10,8 @@ import pickle
 import json
 from scipy.stats import chi2_contingency, f_oneway
 import os
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
 import math
 from scipy import stats
 import warnings
@@ -728,7 +730,7 @@ def identify_significant_features(df, target_col, significance_threshold=0.05,
 
 
 
-def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=None, task='regression', seed=42):
+def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=None, task='regression',index_col='charttime',seed=42):
     """
     Introduce missing values in a specific feature of a DataFrame with a given pattern and rate,
     while saving the original values paired with appropriate time or ID index.
@@ -757,7 +759,7 @@ def introduce_missingness(df, feature1, missing_rate, pattern='MCAR', feature2=N
         raise ValueError(f"Feature '{feature1}' not found in DataFrame columns: {df.columns.tolist()}")
     
     # Determine index column based on task type (same for both)
-    index_col = 'charttime' 
+    index_col = index_col
     
     # Check if index column exists
     if index_col not in df.columns:
@@ -921,7 +923,8 @@ def load_model_for_prediction(model_path, preprocessor_dir, approach):
         # Load model info
         with open(info_path, 'r') as f:
             model_info = json.load(f)
-    
+            
+
     # Load feature preprocessor to determine input dimensions if needed
     with open(os.path.join(preprocessor_dir, "feature_preprocessor.pkl"), "rb") as f:
         feature_preprocessor = pickle.load(f)
@@ -1104,19 +1107,28 @@ class LogisticRegressionModel(nn.Module):
     def forward(self, x):
         return self.linear(x)    
 
+
 class SimpleRegressor(nn.Module):
     def __init__(self, input_dim=1, hidden_dim=8, output_dim=1):
         super(SimpleRegressor, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
+            nn.Linear(8, 8),
             nn.ReLU(),
             nn.Linear(hidden_dim, output_dim)
         )
     
     def forward(self, x):
         return self.model(x)
+
+class LinearRegressionModel(nn.Module):
+    def __init__(self, input_dim):
+        super().__init__()
+        self.linear = nn.Linear(input_dim, 1)
+
+    def forward(self, x):
+        return self.linear(x)
 
 class SimpleClassifier(nn.Module):
     def __init__(self, input_dim, num_classes):
@@ -1129,14 +1141,6 @@ class SimpleClassifier(nn.Module):
 
     def forward(self, x):
         return self.model(x)
-
-class LinearRegressionModel(nn.Module):
-    def __init__(self, input_dim):
-        super().__init__()
-        self.linear = nn.Linear(input_dim, 1)
-
-    def forward(self, x):
-        return self.linear(x)  
 
 def predict_with_model(model, df, features, feature_preprocessor, target_transformer, approach):
     """
@@ -1340,7 +1344,6 @@ def insure_none(x, feature_type='numerical', column_means=None, is_target=False)
     
     return x
 
-
 def return_regression_results(dataframe, features, target):
     """
     Run prediction pipeline and add statistical aggregation (mean/median) columns.
@@ -1377,7 +1380,7 @@ def return_regression_results(dataframe, features, target):
     
     # Run prediction for ML and DL models
     for i in ['dl', 'ml']:
-        model_path = f"../server/results/{i}_results/regression/agg_model/model_round100.pth"
+        model_path = f"../server/results/{i}_results/regression/agg_model/model_round.pth"
         preprocessor_dir = f"../nodes/results/{i}_regression/"
         
         try:
@@ -1463,7 +1466,7 @@ def return_classification_results(dataframe, features):
     
     # Run prediction for ML and DL models
     for i in ['dl', 'ml']:
-        model_path = f"../server/results/{i}_results/classification/agg_model/model_round100.pth"
+        model_path = f"../server/results/{i}_results/classification/agg_model/model_round.pth"
         preprocessor_dir = f"../nodes/results/{i}_classification/"
         
         try:
@@ -2155,7 +2158,12 @@ def _analyze_cat_feature_metrics(df, feature_col, target_col):
     except:
         return None
 
-   
+
+
+
+
+
+
 
 
 

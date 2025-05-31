@@ -20,27 +20,27 @@ arg2=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 cd ./imputation/
 
 # Match argument to executables
-if [ "$arg1" = "statistic" ]&& ["$arg2" = "regression"] ; then
+if [ "$arg1" = "statistic" ]&& [ "$arg2" = "regression" ] ; then
   echo "Launching statistical approche..."
   python statistical.py
 
-elif [ "$arg1" = "machine_learning" ]&& ["$arg2" = "regression"] ; then
+elif [ "$arg1" = "machine_learning" ] && [ "$arg2" = "regression" ] ; then
   echo "Launching machine learning regression approche..."
   python machine_learning_regression.py
 
 
-elif [ "$arg1" = "machine_learning" ] || [ "$arg2" = "classification" ]; then
+elif [ "$arg1" = "machine_learning" ] && [ "$arg2" = "classification" ]; then
   echo "Launching machine learning classification approche..."
   python machine_learning_classification.py
 
 
-elif [ "$arg1" = "deep_learning" ]&& ["$arg2" = "regression"] ; then
+elif [ "$arg1" = "deep_learning" ] && [ "$arg2" = "regression" ] ; then
   echo "Launching deep learning regression approche..."
   python deep_learning_regression.py
 
 
 
-elif [ "$arg1" = "deep_learning" ] || [ "$arg2" = "classification" ]; then
+elif [ "$arg1" = "deep_learning" ] && [ "$arg2" = "classification" ]; then
   echo "Launching deep learning classification approche..."
   python deep_learning_classification.py
 

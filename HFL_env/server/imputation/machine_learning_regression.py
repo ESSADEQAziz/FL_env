@@ -73,16 +73,16 @@ def fit_config(server_round):
 
 def start_server():
     strategy = CustomFedAvg(
-        final_round=100,
+        final_round=10,
         fraction_fit=1.0,
         fraction_evaluate=1.0,
-        min_fit_clients=3,
-        min_evaluate_clients=3,
-        min_available_clients=3,
+        min_fit_clients=4,
+        min_evaluate_clients=4,
+        min_available_clients=4,
         on_fit_config_fn=fit_config)
     
     history = fl.server.start_server(server_address="central_server:5000", strategy=strategy,
-        config=fl.server.ServerConfig(num_rounds=100),#if you change the num_round, change it also within the save_dl_model() function
+        config=fl.server.ServerConfig(num_rounds=10),#if you change the num_round, change it also within the save_dl_model() function
         certificates=(
         Path("../certs/ca.pem").read_bytes(),
         Path("../certs/central_server.pem").read_bytes(),

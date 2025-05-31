@@ -306,7 +306,7 @@ class SimpleRegressor(nn.Module):
         self.model = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
+            nn.Linear(8, 8),
             nn.ReLU(),
             nn.Linear(hidden_dim, output_dim)
         )

@@ -79,7 +79,7 @@ class NodeClient(fl.client.NumPyClient):
 if __name__ == "__main__":
     
     target_table = "../data/extracted_vital_signs.csv"
-    feature_x = ['heart_rate','gender']
+    feature_x = ['heart_rate']
     feature_y = "respiratory_rate"
 
 

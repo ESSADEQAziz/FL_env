@@ -1,6 +1,6 @@
 {
   "model_type": "ml_r",
-  "input_dim": 3,
+  "input_dim": 1,
   "num_classes": 0,
-  "round": 100
+  "round": 10
 }

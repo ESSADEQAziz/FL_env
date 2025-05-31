@@ -11,7 +11,7 @@ services:
       - ./server/target_data:/ServerApp/target_data
       - ./certificates/central_server:/ServerApp/certs
       - ./auth_keys/central_server:/ServerApp/auth_keys
-    networks:
+    networks: 
       - VFLnetwork
     stdin_open: true
     tty: true
