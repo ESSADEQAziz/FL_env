@@ -58,4 +58,4 @@ HFL_env/
 ## 🔁 HFL Workflow Overview
 
 The following diagram illustrates the overall workflow of the Horizontal Federated Learning (HFL) environment:
-![HFL Workflow](images/round_hfl.png)
+![HFL Workflow](../images/round_hfl.png)
