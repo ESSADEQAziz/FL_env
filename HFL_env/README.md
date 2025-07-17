@@ -1,55 +1,61 @@
-# Horizontal Federated Learning with MIMIC-IV Data
+# Horizontal Federated Learning (HFL) Environment
 
-This project implements a horizontal federated learning system using MIMIC-IV healthcare data, simulating a scenario where multiple hospitals collaborate on model training without sharing raw patient data.
+This module simulates a **Horizontal Federated Learning** (HFL) scenario, where different nodes (e.g., hospitals) possess **similar features** but **different patient cohorts**.
 
-## Choise of the tables
-the choise of the tables is based on features that are likely have missing data and are critical for decesion making. (patients-icustays-admissions-chartevents-labevents) 
+## 🏥 Use Case
 
-## Project Structure
+Hospitals share the same schema (e.g., blood pressure, vitals) but hold distinct patient records. The objective is to collaboratively impute missing values without centralizing raw patient data.
+
+---
+
+## 📁 Folder Structure
 
 ```
-HFL_ENV/
-├── docker-compose.yml           # Docker Compose configuration
-├── server/                      # Federated learning server code
-    ├── imputation/              # Starting specific approche        
-    │    ├── statictical.py
-    │    ├── machine_learning.py
-    │    └── deep_learning.py
-    ├── logs/                   
-    ├── Dockerfile
-    ├── requirements.txt
-│   └── server_app.py
-├── nodes/                      # Federated learning client code
-    ├── imputation/             # Implementation of each approche        
-    │    ├── statictical_imputation.py
-    │    ├── ml_imputation.py
-    │    └── dl_imputation.py
-    ├── logs/
-    ├── results/                # Metrics after the evaluations (json files)
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── node_app.py
-└── data/                        # Partitioned data (~2MB per file)
-    ├── node1/                   # Random patient data
-    │   ├── patients.csv
-    │   ├── icustays.csv
-    │   ├── admissions.csv
-    │   ├── chartevents.csv
-    │   └── labevents.csv
-    ├── node2/                   # Patients aged 40-60
-    ├── node3/                   # Patients with diabetes
-    ├── node4/                   # Patients with longer ICU stays
-    └── node5/                   # Patients with specific insurance type
+HFL_env/
+├── test.py                  # Test script for the environment
+├── docker-compose.yml       # Docker Compose configuration for multi-container setup
+├── README.md                # Environment-specific documentation
+├── notebooks/               # Jupyter notebooks and utility scripts
+│   ├── explanatory_variables.ipynb  # Notebook for feature exploration
+│   ├── regression.ipynb             # Regression analysis notebook
+│   ├── classification.ipynb         # Classification analysis notebook
+│   ├── functions.py                 # Python functions used in notebooks
+│   └── __pycache__/                 # Python bytecode cache
+├── data/                    # Data for each node and scripts for data processing
+│   ├── node1/ ... node5/    # Data directories for each node
+│   └── scripts/             # Data extraction and splitting scripts
+│       ├── extract_vitalSigns_labResults.py
+│       └── split_csv_files.py
+├── server/                  # Central server code and results
+│   ├── requirements.txt     # Python dependencies for server
+│   ├── launch.sh            # Script to launch the server
+│   ├── Dockerfile           # Dockerfile for server container
+│   ├── .dockerignore        # Docker ignore file
+│   ├── logs/                # Server log files (e.g., central_server.log)
+│   ├── imputation/          # Imputation scripts and results
+│       ├── machine_learning_regression.py
+│       ├── deep_learning_regression.py
+│       ├── deep_learning_classification.py
+│       ├── machine_learning_classification.py
+│       ├── functions.py
+│       └── statistical.py
+│   └── results/             # Output results (dl_results, ml_results, stat_results)
+├── nodes/                   # Node code and results
+│   ├── requirements.txt     # Python dependencies for nodes
+│   ├── launch.sh            # Script to launch nodes
+│   ├── Dockerfile           # Dockerfile for node containers
+│   ├── .dockerignore        # Docker ignore file
+│   ├── logs/                # Node log files (e.g., nodes.log)
+│   ├── imputation/          # Imputation scripts and results (similar to server)
+│   └── results/             # Output results (dl_classification, ml_classification, etc.)
+├── certificates/            # SSL certificates for secure communication
+│   ├── node1/ ... node5/    # Certificates for each node
+│   └── central_server/      # Certificate for the central server
+└── auth_keys/               # Authentication keys for secure access
+    ├── node1/ ... node5/    # Keys for each node
+    └── central_server/      # Key for the central server
 ```
+## 🔁 HFL Workflow Overview
 
-## Data Preparation
-
-The data has been partitioned into 5 nodes with different characteristics to highlight data heterogeneity:
-
-1. **Node 1**: Random patient samples
-2. **Node 2**: Patients aged 40-60
-3. **Node 3**: Patients with diabetes diagnosis
-4. **Node 4**: Patients with longer-than-median ICU stays
-5. **Node 5**: Patients with a specific insurance type
-
-Each site has approximately 2MB of data for each file type to keep the simulation manageable.
+The following diagram illustrates the overall workflow of the Horizontal Federated Learning (HFL) environment:
+![HFL Workflow](images/round_hfl.png)
